@@ -47,7 +47,7 @@ function Sidebar(props) {
             </ListItem> 
           </Link> 
 
-          <Link to="/newMember" style={{ textDecoration: 'none' }}>
+          <Link to="/newmember" style={{ textDecoration: 'none' }}>
             <ListItem button>
               <ListItemIcon>
                 <PersonAddIcon />
@@ -56,7 +56,7 @@ function Sidebar(props) {
             </ListItem>
           </Link>
 
-          <Link to="/registerMember" style={{ textDecoration: 'none' }}>
+          <Link to="/registermember" style={{ textDecoration: 'none' }}>
             <ListItem button>
               <ListItemIcon>
                 <InputIcon />
@@ -65,7 +65,7 @@ function Sidebar(props) {
             </ListItem>
           </Link>
 
-          <Link to="/membersRegistry" style={{ textDecoration: 'none' }}>
+          <Link to="/registry" style={{ textDecoration: 'none' }}>
             <ListItem button>
               <ListItemIcon>
                 <PersonIcon />

@@ -1,33 +1,43 @@
-from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
-from rest_framework import permissions, status
-from rest_framework.decorators import api_view
+from rest_framework import generics, status, serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, UserSerializerWithToken
 
+from django.contrib.auth import get_user_model
 
-@api_view(['GET'])
-def current_user(request):
-    """
-    Determine the current user by their token, and return their data
-    """
+from .models import Services, Categories, Options, CustomUser
+
+from .serializers import UserSerializer, ServicesSerializer
+
+CustomUser = get_user_model()
+
+class ListUsers(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer
+
+class ListServices(viewsets.ModelViewSet):
+    serializer_class = ServicesSerializer
     
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data)
+    def get_queryset(self):
+        return Services.objects.all()
 
-
-class UserList(APIView):
-    """
-    Create a new user. It's called 'UserList' because normally we'd have a get
-    method here too, for retrieving a list of all User objects.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self, request, format=None):
-        serializer = UserSerializerWithToken(data=request.data)
+    def create(self, request):
+        serializer = ServicesSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            service = Services(service=request.data['service'])
+            service.save()
+            category = Categories(category=request.data['category'], serviceID=service)
+            category.save()
+            options = Options(quantity=request.data['quantity'], 
+                              price=request.data['price'],
+                              duration=request.data['duration'],
+                              categoryID=category)
+            options.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+    

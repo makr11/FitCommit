@@ -1,14 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { logger} from 'redux-logger';
+import thunkMiddleware from 'redux-thunk';
 import registerServiceWorker from './registerServiceWorker';
 import App from './layout/App';
 import { BrowserRouter } from 'react-router-dom'
 
 import "./assets/spartacus-style.css";
+import { formAction, requestMembersRegistry, userProfile } from './reducers';
+
+const rootReducers = combineReducers({
+  formAction,
+  requestMembersRegistry,
+  userProfile,
+})
+
+const store = createStore(rootReducers, applyMiddleware(thunkMiddleware, logger));
 
 ReactDOM.render((
     <BrowserRouter>
-        <App/ >
+      <Provider store={store}>
+        <App />
+      </Provider>  
     </BrowserRouter>), 
     document.getElementById('root')); 
 registerServiceWorker();

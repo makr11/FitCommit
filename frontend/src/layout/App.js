@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Route } from 'react-router-dom'; 
+import { Route, Switch, } from 'react-router-dom'; 
 
 import Navbar from '../containers/Navbar';
 import Sidebar from '../containers/Sidebar';
 import NewMember from '../views/NewMember';
+import MembersRegistry from '../views/MembersRegistry';
+import Profile from '../views/Profile';
+import Services from '../views/Services';
 
 const drawerWidth = 260;
 
@@ -26,7 +29,8 @@ const styles = theme => ({
 });
 
 function App(props) {
-  const { classes } = props;
+  const { classes, userProfile } = props;
+  console.log(userProfile);
 
   return (
     <div className={classes.root}>
@@ -34,7 +38,12 @@ function App(props) {
       <Sidebar />
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Route path="/newMember" component={NewMember} />
+        <Switch>
+          <Route path="/newmember" component={NewMember} />
+          <Route path="/registry" component={MembersRegistry} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/services" component={Services} />
+        </Switch>
       </main>
     </div>
   );

@@ -1,9 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+
+import { onFormChangeFieldsNewMember } from '../actions';
+
 
 const styles = theme => ({
   container: {
@@ -15,56 +20,103 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
     width: 200,
   },
+  button: {
+    margin: theme.spacing.unit,
+  },
 });
 
-function NewMember(props) {
-  const { classes } = props;
-
-  return (
-    <Card>
-      <CardHeader
-        title="Upis novog člana"
-      />
-      <CardContent>
-      <form className={classes.container} noValidate autoComplete="off">
-          <TextField
-            id="name"
-            label="Ime"
-            className={classes.textField}
-            margin="normal"
-          />
-          <TextField
-            id="surname"
-            label="Prezime"
-            className={classes.textField}
-            margin="normal"
-          />
-          <TextField
-            id="birthdate"
-            label="Datum rođenja"
-            type="date"
-            defaultValue="11.09.1991"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            margin="normal"
-          />
-          <TextField
-            id="joindate"
-            label="Datum učlanjenja"
-            type="date"
-            defaultValue="11.09.1991"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            margin="normal"
-          />
-        </form>
-      </CardContent>   
-    </Card>  
-  )
+const mapStateToProps = (state) => {
+  return {
+    first_name: state.formAction.first_name,
+    last_name: state.formAction.last_name,
+    password: state.formAction.password,
+    email: state.formAction.email,
+  }
 };
 
-export default withStyles(styles)(NewMember);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleChange: (e) => {
+      const obj = {[e.target.id]: e.target.value};
+      dispatch(onFormChangeFieldsNewMember(obj));
+    },
+  }
+}
+
+class NewMember extends React.Component{
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { first_name, last_name, password, email } = this.props;
+    const username = first_name + '.' + last_name;
+    const lead = { first_name, last_name, username, password, email }
+    const conf = {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+  
+      body: JSON.stringify(lead),
+    };
+    fetch("http://localhost:8000/api/users/", conf).then(response => console.log(response));
+
+  };
+
+  render(){
+    const { classes, handleChange } = this.props;
+
+    return (
+      <Card>
+        <CardHeader
+          title="Upis novog člana"
+        />
+        <CardContent>
+        <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
+            <TextField
+              id="first_name"
+              label="Ime"
+              className={classes.textField}
+              margin="normal"
+              onChange={handleChange}
+            />
+            <TextField
+              id="last_name"
+              label="Prezime"
+              className={classes.textField}
+              margin="normal"
+              onChange={handleChange}
+            />
+            <TextField
+              id="password"
+              label="Lozinka"
+              className={classes.textField}
+              type="password"
+              autoComplete="current-password"
+              margin="normal"
+              onChange={handleChange}
+            />
+            <TextField
+              id="email"
+              label="E-mail"
+              type="email"
+              className={classes.textField}
+              margin="normal"
+              onChange={handleChange}
+            />
+            <Button 
+              variant="outlined" 
+              color="primary" 
+              className={classes.button}
+              type="submit"
+            >
+              Primary
+            </Button>
+          </form>
+        </CardContent>   
+      </Card>  
+    )
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NewMember));

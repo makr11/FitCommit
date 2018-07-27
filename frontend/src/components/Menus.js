@@ -1,6 +1,7 @@
 import React from 'react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { Link } from 'react-router-dom';
 
 function ProfileMenu(props) {
   
@@ -18,9 +19,11 @@ function ProfileMenu(props) {
         }}
         open={props.open}
         onClose={props.onClose}
-    >
+    >   
+      <Link to="/profile" style={{ textDecoration: 'none' }}>
         <MenuItem >Profil</MenuItem>
-        <MenuItem >Odjava</MenuItem>
+      </Link>
+        <MenuItem >Odjava</MenuItem> 
     </Menu>
   )
 };
@@ -41,7 +44,9 @@ function SettingsMenu(props) {
         open={props.open}
         onClose={props.onClose}
     >
+      <Link to="/services" style={{ textDecoration: 'none' }}>
         <MenuItem >Usluge</MenuItem>
+      </Link>
         <MenuItem >Korisnici</MenuItem>
     </Menu>    
   )
