@@ -29,8 +29,7 @@ const styles = theme => ({
 });
 
 function App(props) {
-  const { classes, userProfile } = props;
-  console.log(userProfile);
+  const { classes } = props; 
 
   return (
     <div className={classes.root}>

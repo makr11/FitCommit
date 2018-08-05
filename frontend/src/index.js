@@ -9,11 +9,12 @@ import App from './layout/App';
 import { BrowserRouter } from 'react-router-dom'
 
 import "./assets/spartacus-style.css";
-import { formAction, requestMembersRegistry, userProfile } from './reducers';
+import { formAction, requestMembersRegistry, requestServicesRegistry, userProfile } from './reducers';
 
 const rootReducers = combineReducers({
   formAction,
   requestMembersRegistry,
+  requestServicesRegistry,
   userProfile,
 })
 

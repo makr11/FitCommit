@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import { onFormChangeFieldsNewService, onSubmitFormNewService } from '../actions';
 
@@ -23,6 +24,7 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => {
     return {
+      services: state.requestServicesRegistry.services,
       service: state.formAction.service,
       category: state.formAction.category,
       quantity: state.formAction.quantity,
@@ -63,7 +65,7 @@ class Forms extends React.Component {
 
     render(){
 
-        const { classes, handleChange } = this.props
+        const { services, classes, handleChange } = this.props
         
         return(
             <form className={classes.container} onSubmit={(e) => this.submitData(e)} noValidate autoComplete="off">
@@ -73,7 +75,17 @@ class Forms extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 onChange={handleChange}
+                inputProps={{
+                    list: "services"
+                }}
                 />
+                <datalist id="services">
+                    {services.map(option => (
+                        <MenuItem key={option.id} value={option.service}>
+                        {option.service}
+                        </MenuItem>
+                    ))}
+                </datalist>
                 <TextField
                 id="category"
                 label="Opcija"

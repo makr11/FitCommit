@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 from .models import Services, Categories, Options, CustomUser
 
-from .serializers import UserSerializer, ServicesSerializer
+from .serializers import UserSerializer, ServicesSerializer, CategoriesSerializer, OptionsSerializer
 
 CustomUser = get_user_model()
 
@@ -40,4 +40,28 @@ class ListServices(viewsets.ModelViewSet):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+class ServicesDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Services.objects.all()
+    serializer_class = ServicesSerializer
+
+class ListCategories(viewsets.ModelViewSet):
+    serializer_class = CategoriesSerializer
+    
+    def get_queryset(self):
+        return Categories.objects.all()
+
+class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Categories.objects.all()
+    serializer_class = CategoriesSerializer
+
+class ListOptions(viewsets.ModelViewSet):
+    serializer_class = OptionsSerializer
+    
+    def get_queryset(self):
+        return Options.objects.all()
+
+class OptionsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Options.objects.all()
+    serializer_class = OptionsSerializer
     

@@ -17,6 +17,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import {requestMembers, requestUserProfile} from '../actions';
 
+import {users} from '../apiUrls';
+
 const styles = () => ({
     root: {
       width: '100%',
@@ -57,7 +59,7 @@ class MembersRegistry extends React.Component {
               'Content-Type': 'application/json'
             },
           };
-        fetch("http://localhost:8000/api/users/" + user, conf).then(response => console.log(response))
+        fetch(users + user, conf).then(response => console.log(response))
         .then(() => {
             this.props.onRequestMembers();
         });

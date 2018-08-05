@@ -7,8 +7,15 @@ import {
     REQUEST_USER_PROFILE_FAILED,
     ON_FORM_CHANGE_NEW_SERVICE,
     REQUEST_POST_NEW_SERVICE_SUCCESS,
-    REQUEST_POST_NEW_SERVICE_FAILED
+    REQUEST_POST_NEW_SERVICE_FAILED,
+    REQUEST_GET_SERVICES_SUCCESS,
+    REQUEST_GET_SERVICES_FAILED
 } from './constants';
+
+import {
+    users,
+    services,
+} from './apiUrls';
 
 export const onFormChangeFieldsNewMember = (obj) => ({
     type: ON_FORM_CHANGE_NEW_MEMBER,
@@ -21,7 +28,7 @@ export const onFormChangeFieldsNewService = (obj) => ({
 });
 
 export const requestMembers = () => (dispatch) => {
-    fetch('http://localhost:8000/api/users/')
+    fetch(users)
     .then(response => response.json())
     .then(data => dispatch({ type: REQUEST_MEMBERS_SUCCESS, payload: data}))
     .catch(error => dispatch({ type: REQUEST_MEMBERS_FAILED, payload: error}))
@@ -38,15 +45,22 @@ export const requestUserProfile = (id) => (dispatch) => {
         },
       }
     
-    fetch('http://localhost:8000/api/users/' + id, conf)
+    fetch(users + id, conf)
     .then(response => response.json())
     .then(data => dispatch({ type: REQUEST_USER_PROFILE_SUCCESS, payload: data}))
     .catch(error => dispatch({ type: REQUEST_USER_PROFILE_FAILED, payload: error}))
     }
 };
 
+export const requestServices = () => (dispatch) => {
+    fetch(services)
+    .then(response => response.json())
+    .then(data => dispatch({type: REQUEST_GET_SERVICES_SUCCESS, payload: data}))
+    .catch(error => dispatch({ type: REQUEST_GET_SERVICES_FAILED, payload: error}));
+}
+
 export const onSubmitFormNewService = (conf) => (dispatch) => {
-    fetch("http://localhost:8000/api/services/", conf)
+    fetch(services, conf)
     .then(response => {
         console.log(response);
         dispatch({type: REQUEST_POST_NEW_SERVICE_SUCCESS, payload: response})

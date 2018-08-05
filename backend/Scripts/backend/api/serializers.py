@@ -10,20 +10,24 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id', 'first_name', 'last_name', 'username', 'password', 'email', 'date_joined', 'phone', 'birth_date')
 
-class ServicesSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Services
-        fields = ('id', 'service',)
-
-class CategoriesSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Categories
-        fields = ('id', 'category',)
-
 class OptionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Options
-        fields = ('id', 'quantity', 'price', 'duration')
+        fields = ('id', 'quantity', 'price', 'duration', 'categoryID')
+
+class CategoriesSerializer(serializers.ModelSerializer):
+
+    options = OptionsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Categories
+        fields = ('id', 'category', 'serviceID', 'options')
+
+class ServicesSerializer(serializers.ModelSerializer):
+
+    categories = CategoriesSerializer(many=True, read_only=True)
+ 
+    class Meta:
+        model = Services
+        fields = ('id', 'service', 'categories')

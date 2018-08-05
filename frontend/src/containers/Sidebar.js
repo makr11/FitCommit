@@ -15,7 +15,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import InputIcon from '@material-ui/icons/Input';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 
-const drawerWidth = 260;
+const drawerWidth = 265;
 
 const styles = theme => ({
   drawerPaper: {
