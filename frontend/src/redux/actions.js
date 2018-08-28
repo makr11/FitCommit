@@ -15,6 +15,8 @@ import {
 import {
     users,
     services,
+    categories,
+    options
 } from './apiUrls';
 
 export const onFormChangeFieldsNewMember = (obj) => ({
@@ -59,11 +61,31 @@ export const requestServices = () => (dispatch) => {
     .catch(error => dispatch({ type: REQUEST_GET_SERVICES_FAILED, payload: error}));
 }
 
-export const onSubmitFormNewService = (conf) => (dispatch) => {
-    fetch(services, conf)
+export const onSubmitFormNewService = (lead) => (dispatch) => {
+    let url = undefined;
+
+    if (lead.categoryID!==undefined){
+        url = options
+    } else if (lead.serviceID!==undefined){
+        url = categories
+    } else {
+        url = services
+    };
+
+    const conf = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+        body: JSON.stringify(lead),
+        }
+
+    fetch(url, conf)
     .then(response => {
         console.log(response);
         dispatch({type: REQUEST_POST_NEW_SERVICE_SUCCESS, payload: response})
+        dispatch(requestServices());
     })
     .catch(error => dispatch({ type: REQUEST_POST_NEW_SERVICE_FAILED, payload: error}));
 }

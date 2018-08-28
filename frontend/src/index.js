@@ -9,7 +9,7 @@ import App from './layout/App';
 import { BrowserRouter } from 'react-router-dom'
 
 import "./assets/spartacus-style.css";
-import { formAction, requestMembersRegistry, requestServicesRegistry, userProfile } from './reducers';
+import { formAction, requestMembersRegistry, requestServicesRegistry, userProfile } from './redux/reducers';
 
 const rootReducers = combineReducers({
   formAction,

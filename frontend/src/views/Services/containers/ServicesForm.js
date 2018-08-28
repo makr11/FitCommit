@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
 
-import { onFormChangeFieldsNewService, onSubmitFormNewService } from '../actions';
+import { onFormChangeFieldsNewService, onSubmitFormNewService } from '../../../redux/actions';
 
 const styles = theme => ({
   container: {
@@ -39,33 +38,26 @@ const mapDispatchToProps = (dispatch) => {
             const obj = {[e.target.id]: e.target.value};
             dispatch(onFormChangeFieldsNewService(obj));
         },
-        handleSubmit: (conf) => {
-            dispatch(onSubmitFormNewService(conf));
-        }
+        handleSubmit: (lead) => {
+            dispatch(onSubmitFormNewService(lead));
+        },
     }    
 }
 
 
-class Forms extends React.Component {
+class ServicesForm extends React.Component {
 
     submitData(e) {
         e.preventDefault();
-        const { service, category, quantity, price, duration } = this.props;
-        const lead = { service, category, quantity, price, duration }
-        const conf = {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify(lead),
-            }
-        this.props.handleSubmit(conf)
+        const { serviceID, service, categoryID, category, quantity, price, duration } = this.props
+        const lead = { serviceID, service, categoryID, category, quantity, price, duration }
+        
+        this.props.handleSubmit(lead)
     };
 
     render(){
 
-        const { services, classes, handleChange } = this.props
+        const { classes, handleChange, serviceName, categoryName } = this.props
         
         return(
             <form className={classes.container} onSubmit={(e) => this.submitData(e)} noValidate autoComplete="off">
@@ -75,23 +67,15 @@ class Forms extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 onChange={handleChange}
-                inputProps={{
-                    list: "services"
-                }}
+                value={serviceName}
                 />
-                <datalist id="services">
-                    {services.map(option => (
-                        <MenuItem key={option.id} value={option.service}>
-                        {option.service}
-                        </MenuItem>
-                    ))}
-                </datalist>
                 <TextField
                 id="category"
                 label="Opcija"
                 className={classes.textField}
                 margin="normal"
                 onChange={handleChange}
+                value={categoryName}
                 />
                 <TextField
                 id="quantity"
@@ -130,4 +114,4 @@ class Forms extends React.Component {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Forms));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ServicesForm));

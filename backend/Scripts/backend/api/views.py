@@ -51,6 +51,22 @@ class ListCategories(viewsets.ModelViewSet):
     def get_queryset(self):
         return Categories.objects.all()
 
+    def create(self, request):
+        serializer = CategoriesSerializer(data=request.data)
+        if serializer.is_valid():
+            service = Services.objects.get(pk=request.data['serviceID'])
+            category = Categories(category=request.data['category'], serviceID=service)
+            category.save()
+            options = Options(quantity=request.data['quantity'], 
+                              price=request.data['price'],
+                              duration=request.data['duration'],
+                              categoryID=category)
+            options.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
 class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
@@ -60,6 +76,20 @@ class ListOptions(viewsets.ModelViewSet):
     
     def get_queryset(self):
         return Options.objects.all()
+
+    def create(self, request):
+        serializer = OptionsSerializer(data=request.data)
+        if serializer.is_valid():
+            category = Categories.objects.get(pk=request.data['categoryID'])
+            options = Options(quantity=request.data['quantity'], 
+                              price=request.data['price'],
+                              duration=request.data['duration'],
+                              categoryID=category)
+            options.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 class OptionsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Options.objects.all()

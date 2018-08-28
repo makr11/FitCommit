@@ -7,8 +7,9 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 
-import { onFormChangeFieldsNewMember } from '../actions';
+import { requestMembers, onFormChangeFieldsNewMember } from '../../../redux/actions';
 
+import { users } from '../../../redux/apiUrls';
 
 const styles = theme => ({
   container: {
@@ -40,10 +41,11 @@ const mapDispatchToProps = (dispatch) => {
       const obj = {[e.target.id]: e.target.value};
       dispatch(onFormChangeFieldsNewMember(obj));
     },
+    onRequestMembers: () => dispatch(requestMembers()),
   }
 }
 
-class NewMember extends React.Component{
+class SignIn extends React.Component{
 
   handleSubmit = e => {
     e.preventDefault();
@@ -59,8 +61,10 @@ class NewMember extends React.Component{
   
       body: JSON.stringify(lead),
     };
-    fetch("http://localhost:8000/api/users/", conf).then(response => console.log(response));
-
+    fetch(users, conf).then(response => console.log(response))
+    .then(() => {
+      this.props.onRequestMembers();
+    });
   };
 
   render(){
@@ -119,4 +123,4 @@ class NewMember extends React.Component{
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NewMember));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignIn));

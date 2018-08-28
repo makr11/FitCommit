@@ -3,10 +3,10 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
-import Forms from '../components/Forms';
-import ServicesList from '../components/ServicesList';
+import ServicesForm from './containers/ServicesForm';
+import ServicesList from './containers/ServicesList';
 
-class NewService extends React.Component{
+class Services extends React.Component{
 
   render(){
     
@@ -16,7 +16,7 @@ class NewService extends React.Component{
           title="Upis usluge"
         />
         <CardContent>
-          <Forms />
+          <ServicesForm />
         </CardContent>   
         <ServicesList />
       </Card>  
@@ -24,4 +24,4 @@ class NewService extends React.Component{
   }
 };
 
-export default NewService;
+export default Services;

@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Route, Switch, } from 'react-router-dom'; 
 
-import Navbar from '../containers/Navbar';
-import Sidebar from '../containers/Sidebar';
-import NewMember from '../views/NewMember';
-import MembersRegistry from '../views/MembersRegistry';
-import Profile from '../views/Profile';
-import Services from '../views/Services';
+import Navbar from './containers/Navbar';
+import Sidebar from './containers/Sidebar';
+import MembersRegistry from '../views/MembersRegistry/index';
+import Profile from '../views/MembersRegistry/containers/Profile';
+import Services from '../views/Services/index';
 
 const drawerWidth = 260;
 
@@ -38,8 +37,8 @@ function App(props) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
-          <Route path="/newmember" component={NewMember} />
           <Route path="/registry" component={MembersRegistry} />
+          <Route path="/services" component={Services} />
           <Route path="/profile" component={Profile} />
           <Route path="/services" component={Services} />
         </Switch>

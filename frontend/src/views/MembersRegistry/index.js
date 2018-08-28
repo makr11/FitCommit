@@ -15,9 +15,11 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import {requestMembers, requestUserProfile} from '../actions';
+import {requestMembers, requestUserProfile} from '../../redux/actions';
 
-import {users} from '../apiUrls';
+import SignIn from './containers/SignIn';
+
+import {users} from '../../redux/apiUrls';
 
 const styles = () => ({
     root: {
@@ -70,8 +72,10 @@ class MembersRegistry extends React.Component {
         const { classes, members, handleSelectUserClick } = this.props;
 
         return (
+            
           (members!==undefined) ?
           <Paper className={classes.root}>
+            <SignIn/>
             <Table className={classes.table}>
                 <TableHead>
                 <TableRow>

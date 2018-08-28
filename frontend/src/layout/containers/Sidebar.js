@@ -10,7 +10,7 @@ import Divider from '@material-ui/core/Divider';
 
 import { Link } from 'react-router-dom';
 
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import SettingsCellIcon from '@material-ui/icons/SettingsCell';
 import PersonIcon from '@material-ui/icons/Person';
 import InputIcon from '@material-ui/icons/Input';
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -47,12 +47,12 @@ function Sidebar(props) {
             </ListItem> 
           </Link> 
 
-          <Link to="/newmember" style={{ textDecoration: 'none' }}>
+          <Link to="/services" style={{ textDecoration: 'none' }}>
             <ListItem button>
               <ListItemIcon>
-                <PersonAddIcon />
+                <SettingsCellIcon />
               </ListItemIcon>
-              <ListItemText primary="Novi član" />
+              <ListItemText primary="Usluge" />
             </ListItem>
           </Link>
 

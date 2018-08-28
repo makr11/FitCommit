@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 
 import {connect} from 'react-redux';
 
-import {requestUserProfile} from '../actions';
+import {requestUserProfile} from '../../../redux/actions';
 
 const mapStateToProps = state => {
   return {

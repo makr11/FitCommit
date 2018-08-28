@@ -9,8 +9,6 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 
-import { ProfileMenu, SettingsMenu } from '../components/Menus';
-
 const styles = theme => ({
   appBar: {
     position: 'fixed',
@@ -22,38 +20,9 @@ const styles = theme => ({
 });
 
 class Navbar extends React.Component {
-  state = {
-    anchorEl: null,
-    settingsMenu: false,
-    profileMenu: false
-  };
-
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
-    switch (event.currentTarget.id){
-      case 'settings-menu':
-        this.setState({ settingsMenu: true });
-        break;
-      case 'profile-menu':
-        this.setState({ profileMenu: true });
-        break;
-      default:
-        break 
-    }
-  };
-
-  handleClose = () => {
-    this.setState({ 
-      anchorEl: null,
-      settingsMenu: false,
-      profileMenu: false
-    });
-
-  };
 
   render() {
   const { classes } = this.props;
-  const { anchorEl, settingsMenu, profileMenu } = this.state;
     
     return(
       <AppBar position="absolute" className={classes.appBar}>
@@ -75,11 +44,6 @@ class Navbar extends React.Component {
             >
               <SettingsIcon/>
             </IconButton> 
-            <SettingsMenu
-              anchorEl={anchorEl}
-              open={settingsMenu}
-              onClose={this.handleClose}
-            /> 
             <IconButton 
               id='profile-menu'
               color="inherit"
@@ -88,11 +52,6 @@ class Navbar extends React.Component {
             >
               <AccountCircleIcon/>
             </IconButton>
-            <ProfileMenu
-              anchorEl={anchorEl}
-              open={profileMenu}
-              onClose={this.handleClose}
-            />  
           </div>  
         </Toolbar>  
       </AppBar>
