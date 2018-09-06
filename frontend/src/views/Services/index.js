@@ -16,7 +16,7 @@ class Services extends React.Component{
           title="Upis usluge"
         />
         <CardContent>
-          <ServicesForm />
+        <ServicesForm />
         </CardContent>   
         <ServicesList />
       </Card>  

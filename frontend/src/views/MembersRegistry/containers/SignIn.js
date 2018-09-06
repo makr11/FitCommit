@@ -7,7 +7,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 
-import { requestMembers, onFormChangeFieldsNewMember } from '../../../redux/actions';
+import { requestMembers, onFormChangeFields } from '../../../redux/actions';
 
 import { users } from '../../../redux/apiUrls';
 
@@ -39,7 +39,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleChange: (e) => {
       const obj = {[e.target.id]: e.target.value};
-      dispatch(onFormChangeFieldsNewMember(obj));
+      dispatch(onFormChangeFields(obj));
     },
     onRequestMembers: () => dispatch(requestMembers()),
   }

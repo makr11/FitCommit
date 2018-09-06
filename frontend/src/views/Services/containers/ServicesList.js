@@ -17,6 +17,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AppsIcon from '@material-ui/icons/Apps';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { requestServices } from '../../../redux/actions';
 
@@ -26,15 +27,10 @@ import {services,
         categories,
         options,
 } from '../../../redux/apiUrls';
-import { IconButton } from '../../../../node_modules/@material-ui/core';
 
 const styles = theme => ({
   root: {
     width: '100%',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
   },
   table: {
     display: 'block',
@@ -59,8 +55,12 @@ class ServicesList extends React.Component {
         super(props);
         this.state = {
             serviceId: null,
-            categoryId: null
-        }
+            categoryId: null,
+            optionId: null,
+            updateId: null,
+            updateName: "",
+            openForm: false,
+        };
     };
 
     componentDidMount() {
@@ -103,24 +103,47 @@ class ServicesList extends React.Component {
 
     showForm = e => {
         e.preventDefault();
-        
-        switch (e.currentTarget.name){
-            case ('service'):
-                this.setState({
-                    serviceId: parseInt(e.currentTarget.id, 10),
-                    categoryId: null
-                })
-                break
-            case ('category'):
-                this.setState({
+
+        let nameId = parseInt(e.currentTarget.name, 10);
+        let name = e.currentTarget.name
+        let id = parseInt(e.currentTarget.id, 10);
+
+        this.setState((prevState) => {
+            if(Number.isInteger(nameId)) {
+                return{
                     serviceId: null,
-                    categoryId: parseInt(e.currentTarget.id, 10),
-                })
-                break
-            default:
-                break
+                    categoryId: nameId,
+                    optionId: id, 
+                    openForm: true,
+                    updateName: nameId,
+                    updateId: id,
+                }
+            }else if (name==="service") {
+                return{
+                    serviceId: id,
+                    categoryId: null,
+                    openForm: true,
+                    updateName: name,
+                    updateId: id,
+                }
+            }else if (name==="category"){
+                return{
+                    serviceId: null,
+                    categoryId: id,
+                    optionId: null,
+                    openForm: true,
+                    updateName: name,
+                    updateId: id, 
+                }
+            } else if (name==="close"){
+                if(prevState.openForm){
+                    return {openForm: false}
+                }else{
+                    return {openForm: true}
+                }
             }
-    }
+        })
+    };
 
     render() {
         const { classes, services } = this.props;
@@ -132,14 +155,14 @@ class ServicesList extends React.Component {
                         return(
                             <ExpansionPanel key={service.id}>
                                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                    <Typography className={classes.heading}>{service.service}</Typography>
+                                    <Typography variant="title">{service.service}</Typography>
                                     
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.table} >
                                     {service.categories.map(category => {
                                         return(
                                         <Paper key={category.id} >
-                                            <Typography>
+                                            <Typography variant="title">
                                                 {category.category}
                                             </Typography>
                                             <Button name="category" id={category.id} onClick={this.handleDeleteServiceClick}>
@@ -148,61 +171,60 @@ class ServicesList extends React.Component {
                                             <Button name="category" id={category.id} onClick={this.showForm}>
                                                 Nova cijena
                                             </Button>
-                                                <Table >
-                                                <TableHead>
-                                                <TableRow>
-                                                    <TableCell>Broj dolazaka</TableCell>
-                                                    <TableCell numeric>Cijena</TableCell>
-                                                    <TableCell numeric>Trajanje</TableCell>
-                                                    <TableCell >Obriši</TableCell>
-                                                    <TableCell >Izmijeni</TableCell>
+                                            <Table >
+                                            <TableHead>
+                                            <TableRow>
+                                                <TableCell>Broj dolazaka</TableCell>
+                                                <TableCell numeric>Cijena</TableCell>
+                                                <TableCell numeric>Trajanje</TableCell>
+                                                <TableCell >Obriši</TableCell>
+                                                <TableCell >Izmijeni</TableCell>
+                                            </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                            {category.options.map(option => {
+                                                return (
+                                                <TableRow key={option.id}>
+                                                    <TableCell numeric>{option.quantity}</TableCell>
+                                                    <TableCell numeric>{option.price}</TableCell>
+                                                    <TableCell numeric>{option.duration}</TableCell>
+                                                    <TableCell numeric>
+                                                        <Button name="option" id={option.id} onClick={this.handleDeleteServiceClick}>
+                                                            <DeleteIcon />
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Button name={category.id} id={option.id} onClick={this.showForm}>
+                                                            <AppsIcon />
+                                                        </Button>
+                                                    </TableCell>
                                                 </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                {category.options.map(option => {
-                                                    return (
-                                                    <TableRow key={option.id}>
-                                                        <TableCell numeric>{option.quantity}</TableCell>
-                                                        <TableCell numeric>{option.price}</TableCell>
-                                                        <TableCell numeric>{option.duration}</TableCell>
-                                                        <TableCell numeric>
-                                                            <Button name="option" id={option.id} onClick={this.handleDeleteServiceClick}>
-                                                            X
-                                                            </Button>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <IconButton>
-                                                                <AppsIcon id={option.id} />
-                                                            </IconButton>
-                                                        </TableCell>
-                                                    </TableRow>
-                                                    );
+                                                );
                                                 })}
                                                 </TableBody>
-                                            </Table>
-                                            {
-                                            (category.id===this.state.categoryId)?
-                                            <ServicesForm
-                                               serviceName={service.service} 
-                                               serviceID={service.id} 
-                                               categoryName={category.category} 
-                                               categoryID={category.id}
-                                           />:
-                                            <span></span>
-                                           }
+                                                </Table>
+                                                <ServicesForm
+                                                serviceID={service.id} 
+                                                serviceHidden={true}
+                                                categoryID={category.id}
+                                                categoryIDCheck={this.state.categoryId}
+                                                categoryHidden={true}
+                                                optionID={this.state.optionId}
+                                                openForm={this.state.openForm}
+                                                openFormMethod={this.showForm}
+                                                />                                       
                                         </Paper>   
                                     )
                                     })}
-
                                 </ExpansionPanelDetails>
-                                {
-                                 (service.id===this.state.serviceId)?
-                                 <ServicesForm 
-                                    serviceName={service.service} 
-                                    serviceID={service.id}
-                                />:
-                                 <span></span>
-                                }
+                                <ServicesForm 
+                                serviceName={service.service} 
+                                serviceID={service.id}
+                                serviceIDCheck={this.state.serviceId}
+                                serviceHidden={true}
+                                categoryIDCheck={false}
+                                openForm={this.state.openForm}
+                                />
                                 <ExpansionPanelActions>
                                     <Button name="service" id={service.id} onClick={this.handleDeleteServiceClick}>
                                         Obriši

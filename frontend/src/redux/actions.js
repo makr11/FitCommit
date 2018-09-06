@@ -1,13 +1,14 @@
 import {
-    ON_FORM_CHANGE_NEW_MEMBER,
+    ON_FORM_CHANGE,
     REQUEST_MEMBERS_SUCCESS,
     REQUEST_MEMBERS_FAILED,
     REQUEST_USER_PROFILE_RESET,
     REQUEST_USER_PROFILE_SUCCESS,
     REQUEST_USER_PROFILE_FAILED,
-    ON_FORM_CHANGE_NEW_SERVICE,
     REQUEST_POST_NEW_SERVICE_SUCCESS,
     REQUEST_POST_NEW_SERVICE_FAILED,
+    REQUEST_UPDATE_OPTION_SUCCESS,
+    REQUEST_UPDATE_OPTION_FAILED,
     REQUEST_GET_SERVICES_SUCCESS,
     REQUEST_GET_SERVICES_FAILED
 } from './constants';
@@ -19,13 +20,8 @@ import {
     options
 } from './apiUrls';
 
-export const onFormChangeFieldsNewMember = (obj) => ({
-    type: ON_FORM_CHANGE_NEW_MEMBER,
-    payload: obj,
-});
-
-export const onFormChangeFieldsNewService = (obj) => ({
-    type: ON_FORM_CHANGE_NEW_SERVICE,
+export const onFormChangeFields = (obj) => ({
+    type: ON_FORM_CHANGE,
     payload: obj,
 });
 
@@ -89,3 +85,24 @@ export const onSubmitFormNewService = (lead) => (dispatch) => {
     })
     .catch(error => dispatch({ type: REQUEST_POST_NEW_SERVICE_FAILED, payload: error}));
 }
+
+export const onUpdateFormOption = (lead) => (dispatch) => {
+    let url = options + lead.optionID;
+
+    const conf = {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+        body: JSON.stringify(lead),
+        };
+
+    fetch(url, conf)
+    .then(response => {
+        console.log(response);
+        dispatch({type: REQUEST_UPDATE_OPTION_SUCCESS, payload: response})
+        dispatch(requestServices());
+    })
+    .catch(error => dispatch({ type: REQUEST_UPDATE_OPTION_FAILED, payload: error}));
+};

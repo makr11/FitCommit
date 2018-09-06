@@ -1,21 +1,19 @@
 import {
-    ON_FORM_CHANGE_NEW_MEMBER,
-    ON_FORM_CHANGE_NEW_SERVICE,
+    ON_FORM_CHANGE,
     REQUEST_MEMBERS_SUCCESS,
     REQUEST_MEMBERS_FAILED,
     REQUEST_USER_PROFILE_RESET,
     REQUEST_USER_PROFILE_SUCCESS,
     REQUEST_USER_PROFILE_FAILED,
     REQUEST_GET_SERVICES_SUCCESS,
-    REQUEST_GET_SERVICES_FAILED
+    REQUEST_GET_SERVICES_FAILED,
     } from './constants';
 
 export const formAction = (state={}, action={}) => {
     switch(action.type) {
-        case ON_FORM_CHANGE_NEW_MEMBER:
+        case ON_FORM_CHANGE:
           return Object.assign({}, state, action.payload);
-        case ON_FORM_CHANGE_NEW_SERVICE:
-          return Object.assign({}, state, action.payload);          
+            
         default:
           return state  
     }   
