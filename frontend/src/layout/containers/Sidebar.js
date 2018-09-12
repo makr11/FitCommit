@@ -56,7 +56,7 @@ function Sidebar(props) {
             </ListItem>
           </Link>
 
-          <Link to="/registermember" style={{ textDecoration: 'none' }}>
+          <Link to="/arrivals" style={{ textDecoration: 'none' }}>
             <ListItem button>
               <ListItemIcon>
                 <InputIcon />

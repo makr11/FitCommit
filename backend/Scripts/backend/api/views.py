@@ -1,12 +1,16 @@
+import datetime
+
 from rest_framework import generics, status, serializers, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django.contrib.auth import get_user_model
 
-from .models import Services, Categories, Options, CustomUser
+from .models import Services, Categories, Options, CustomUser, Records
 
-from .serializers import UserSerializer, ServicesSerializer, CategoriesSerializer, OptionsSerializer
+from .serializers import UserSerializer, ServicesSerializer, CategoriesSerializer, OptionsSerializer, RecordsSerializer
+
+now = datetime.datetime.now()
 
 CustomUser = get_user_model()
 
@@ -94,4 +98,42 @@ class ListOptions(viewsets.ModelViewSet):
 class OptionsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Options.objects.all()
     serializer_class = OptionsSerializer
+
+class ListRecords(viewsets.ModelViewSet):
+    serializer_class = RecordsSerializer
     
+    def get_queryset(self):
+        return Records.objects.all()
+
+    def create(self, request):
+        serializer = RecordsSerializer(data=request.data)
+        if serializer.is_valid():
+            user = CustomUser.objects.get(pk=request.data['userID'])
+            service = Services.objects.get(pk=request.data['servicesID'])
+            category = Categories.objects.get(pk=request.data['categoryID'])
+            option = Options.objects.get(pk=request.data['optionsID'])
+            records = Records(userObj=user, 
+                              servicesObj=service,
+                              categoriesObj=category,
+                              optionsObj=option,
+                              user=user.first_name + " " + user.last_name,
+                              service=service.service,
+                              category=category.category,
+                              quantity=option.quantity,
+                              quantity_left=option.quantity,
+                              price=option.price,
+                              discount=discount/100,
+                              nett_price=price*discount,
+                              paid=option.paid,
+                              duration=option.duration,
+                              started=now,
+                              ends=started + datetime.timedelta(days=duration),
+                              days_left=ends - now)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+class RecordsDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Records.objects.all()
+    serializer_class = RecordsSerializer

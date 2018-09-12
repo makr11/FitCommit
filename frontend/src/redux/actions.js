@@ -60,9 +60,10 @@ export const requestServices = () => (dispatch) => {
 export const onSubmitFormNewService = (lead) => (dispatch) => {
     let url = undefined;
 
-    if (lead.categoryID!==undefined){
+    console.log(lead);
+    if (lead.categoryID!==null){
         url = options
-    } else if (lead.serviceID!==undefined){
+    } else if (lead.serviceID!==null){
         url = categories
     } else {
         url = services
@@ -80,7 +81,7 @@ export const onSubmitFormNewService = (lead) => (dispatch) => {
     fetch(url, conf)
     .then(response => {
         console.log(response);
-        dispatch({type: REQUEST_POST_NEW_SERVICE_SUCCESS, payload: response})
+        dispatch({type: REQUEST_POST_NEW_SERVICE_SUCCESS, payload: response});
         dispatch(requestServices());
     })
     .catch(error => dispatch({ type: REQUEST_POST_NEW_SERVICE_FAILED, payload: error}));

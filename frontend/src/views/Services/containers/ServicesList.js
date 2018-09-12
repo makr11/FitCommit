@@ -41,30 +41,26 @@ const mapStateToProps = state => {
     return {
         services: state.requestServicesRegistry.services,
     }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
         onRequestServices: () => dispatch(requestServices()),
     }
-}
+};
 
 class ServicesList extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
-            serviceId: null,
-            categoryId: null,
-            optionId: null,
-            updateId: null,
+            serviceId: undefined,
+            categoryId: undefined,
+            optionId: undefined,
+            updateId: undefined,
             updateName: "",
             openForm: false,
         };
-    };
-
-    componentDidMount() {
-        this.props.onRequestServices();
     };
 
     handleDeleteServiceClick = (e) => {
@@ -111,7 +107,7 @@ class ServicesList extends React.Component {
         this.setState((prevState) => {
             if(Number.isInteger(nameId)) {
                 return{
-                    serviceId: null,
+                    serviceId: undefined,
                     categoryId: nameId,
                     optionId: id, 
                     openForm: true,
@@ -120,17 +116,22 @@ class ServicesList extends React.Component {
                 }
             }else if (name==="service") {
                 return{
+                    openForm: true
+                }
+            }else if (name==="category") {
+                return{
                     serviceId: id,
-                    categoryId: null,
+                    categoryId: undefined,
+                    optrionId: undefined,
                     openForm: true,
                     updateName: name,
                     updateId: id,
                 }
-            }else if (name==="category"){
+            }else if (name==="option"){
                 return{
-                    serviceId: null,
+                    serviceId: undefined,
                     categoryId: id,
-                    optionId: null,
+                    optionId: undefined,
                     openForm: true,
                     updateName: name,
                     updateId: id, 
@@ -151,6 +152,17 @@ class ServicesList extends React.Component {
         return (
             (services!==undefined) ?
                 <div className={classes.root}>
+                    <Button name="service" onClick={this.showForm}>
+                        Nova usluga
+                    </Button>
+                    <ServicesForm 
+                        openFormMethod={this.showForm}
+                        openForm={this.state.openForm}
+                        serviceID={null}
+                        serviceIDCheck={null}
+                        categoryID={null}
+                        title="Nova usluga"
+                    />
                     {services.map(service => {
                         return(
                             <ExpansionPanel key={service.id}>
@@ -168,7 +180,7 @@ class ServicesList extends React.Component {
                                             <Button name="category" id={category.id} onClick={this.handleDeleteServiceClick}>
                                                 Obriši
                                             </Button>
-                                            <Button name="category" id={category.id} onClick={this.showForm}>
+                                            <Button name="option" id={category.id} onClick={this.showForm}>
                                                 Nova cijena
                                             </Button>
                                             <Table >
@@ -204,32 +216,33 @@ class ServicesList extends React.Component {
                                                 </TableBody>
                                                 </Table>
                                                 <ServicesForm
-                                                serviceID={service.id} 
-                                                serviceHidden={true}
-                                                categoryID={category.id}
-                                                categoryIDCheck={this.state.categoryId}
-                                                categoryHidden={true}
-                                                optionID={this.state.optionId}
-                                                openForm={this.state.openForm}
-                                                openFormMethod={this.showForm}
+                                                    serviceID={null}
+                                                    serviceHidden={true}
+                                                    categoryID={category.id}
+                                                    categoryIDCheck={this.state.categoryId}
+                                                    categoryHidden={true}
+                                                    optionID={this.state.optionId}
+                                                    openFormMethod={this.showForm}
+                                                    openForm={this.state.openForm}                                    
                                                 />                                       
                                         </Paper>   
                                     )
                                     })}
                                 </ExpansionPanelDetails>
-                                <ServicesForm 
-                                serviceName={service.service} 
-                                serviceID={service.id}
-                                serviceIDCheck={this.state.serviceId}
-                                serviceHidden={true}
-                                categoryIDCheck={false}
-                                openForm={this.state.openForm}
+                                <ServicesForm  
+                                    serviceID={service.id}
+                                    serviceIDCheck={this.state.serviceId}
+                                    serviceHidden={true}
+                                    categoryID={null}
+                                    openFormMethod={this.showForm}
+                                    openForm={this.state.openForm}
+                                    title="Nova opcija"
                                 />
                                 <ExpansionPanelActions>
                                     <Button name="service" id={service.id} onClick={this.handleDeleteServiceClick}>
                                         Obriši
                                     </Button>
-                                    <Button name="service" id={service.id} onClick={this.showForm}>
+                                    <Button name="category" id={service.id} onClick={this.showForm}>
                                         Nova opcija
                                     </Button>
                                 </ExpansionPanelActions>

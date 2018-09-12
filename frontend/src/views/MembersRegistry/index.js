@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import {requestMembers, requestUserProfile} from '../../redux/actions';
+import { requestUserProfile, requestMembers } from '../../redux/actions';
 
 import SignIn from './containers/SignIn';
 
@@ -47,10 +47,6 @@ const mapDispatchToProps = (dispatch) => {
 
 class MembersRegistry extends React.Component {
 
-    componentDidMount() {
-        this.props.onRequestMembers();
-    };
-
     handleDeleteUserClick = (e) => {
         e.preventDefault();
         const user = e.currentTarget.id;
@@ -70,9 +66,9 @@ class MembersRegistry extends React.Component {
     render(){
 
         const { classes, members, handleSelectUserClick } = this.props;
-
+        console.log(members)
         return (
-            
+          
           (members!==undefined) ?
           <Paper className={classes.root}>
             <SignIn/>

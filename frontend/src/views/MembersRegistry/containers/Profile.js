@@ -6,6 +6,8 @@ import {connect} from 'react-redux';
 
 import {requestUserProfile} from '../../../redux/actions';
 
+import AddRecord from './AddRecord';
+
 const mapStateToProps = state => {
   return {
       userProfile: state.userProfile.profile,
@@ -14,19 +16,22 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    unmountUser: () => dispatch(requestUserProfile()),
+    requestUserProfile: () => dispatch(requestUserProfile()),
   }
 }
 
 class Profile extends React.Component {
 
+  componentDidMount() {
+    this.props.requestUserProfile()
+  }
+
   componentWillUnmount() {
-    this.props.unmountUser()
+    this.props.requestUserProfile()
   }
   
   render() {
     const { userProfile } = this.props
-    console.log(userProfile)
     return (
       (userProfile!==undefined) ?
       <div>
@@ -37,6 +42,7 @@ class Profile extends React.Component {
           <Typography component="p">
             {userProfile.email}
           </Typography>
+          <AddRecord/>
         </Paper>
       </div>:
       <h1>Loading</h1>

@@ -68,7 +68,7 @@ class ServicesForm extends React.Component {
                        categoryID, 
                        category, 
                        optionID, 
-                       quantity, 
+                       quantity,     
                        price, 
                        duration };
         
@@ -86,15 +86,18 @@ class ServicesForm extends React.Component {
                 categoryID,
                 categoryIDCheck,
                 optionID,
-                openForm, 
+                openForm,
+                title,
               } = this.props;
         const hiddenField = [classes.textField, classes.hideField];
     
         return(
+            
             (!openForm) ? <span></span> : (serviceID===serviceIDCheck || categoryID===categoryIDCheck) ?
             <div>
+                {console.log(this.props)}
                 <Typography variant="subheading">
-                    {(optionID) ? "Izmijeni" : "Nova cijena"}
+                    {(title) ? title : (optionID) ? "Izmijeni" : "Nova cijena"}
                 </Typography>
                 <form className={classes.container} onSubmit={(e) => this.submitData(e)} noValidate autoComplete="off">
                 
