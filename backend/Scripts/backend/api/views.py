@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django.contrib.auth import get_user_model
+from django.core import serializers
 
 from .models import Services, Categories, Options, CustomUser, Records
 
@@ -106,33 +107,35 @@ class ListRecords(viewsets.ModelViewSet):
         return Records.objects.all()
 
     def create(self, request):
-        serializer = RecordsSerializer(data=request.data)
-        if serializer.is_valid():
-            user = CustomUser.objects.get(pk=request.data['userID'])
-            service = Services.objects.get(pk=request.data['servicesID'])
-            category = Categories.objects.get(pk=request.data['categoryID'])
-            option = Options.objects.get(pk=request.data['optionsID'])
-            records = Records(userObj=user, 
-                              servicesObj=service,
-                              categoriesObj=category,
-                              optionsObj=option,
-                              user=user.first_name + " " + user.last_name,
-                              service=service.service,
-                              category=category.category,
-                              quantity=option.quantity,
-                              quantity_left=option.quantity,
-                              price=option.price,
-                              discount=discount/100,
-                              nett_price=price*discount,
-                              paid=option.paid,
-                              duration=option.duration,
-                              started=now,
-                              ends=started + datetime.timedelta(days=duration),
-                              days_left=ends - now)
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+        user = CustomUser.objects.get(pk=request.data['user'])
+        service = Services.objects.get(pk=request.data['service'])
+        category = Categories.objects.get(pk=request.data['category'])
+        option = Options.objects.get(pk=request.data['option'])
+        price = option.price
+        discount = 0.5
+        started = now
+        ends = started + datetime.timedelta(days=option.duration)
+        days_left = ends - now
+        record = Records(
+            userObj=user, 
+            servicesObj=service,
+            categoriesObj=category,
+            optionsObj=option,
+            user=user.first_name + " " + user.last_name,
+            service=service.service,
+            category=category.category,
+            quantity=option.quantity,
+            quantity_left=option.quantity,
+            price=option.price,
+            discount=0.5,
+            nett_price=price*discount,
+            paid=True,
+            duration=option.duration,
+            started=started,
+            ends=ends,
+            days_left=days_left.days)
+        record.save()
+        return Response()
 
 class RecordsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Records.objects.all()

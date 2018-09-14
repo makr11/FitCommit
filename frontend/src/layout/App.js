@@ -6,12 +6,12 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 
 import Navbar from './containers/Navbar';
 import Sidebar from './containers/Sidebar';
-import MembersRegistry from '../views/MembersRegistry/index';
-import Profile from '../views/MembersRegistry/containers/Profile';
-import Services from '../views/Services/index';
-import Arrivals from '../views/MembersArrivals/index';
+import Users from '../views/Users/Users';
+import Profile from '../views/Users/containers/UserProfile';
+import Services from '../views/Services/Services';
+import Arrivals from '../views/Arrivals/Arrivals';
 
-import {requestMembers, requestServices } from '../redux/actions';
+import {requestUsers, requestServices } from '../redux/actions';
 
 const drawerWidth = 260;
 
@@ -33,16 +33,16 @@ const styles = theme => ({
 
 const mapDispatchToProps = (dispatch) => {
   return{
-    onRequestMembers: () => dispatch(requestMembers()),
-    onRequestServices: () => dispatch(requestServices()),
+    getUsers: () => dispatch(requestUsers()),
+    getServices: () => dispatch(requestServices()),
   }
 }
 
 class App extends React.Component {
 
   componentDidMount(){
-    this.props.onRequestMembers();
-    this.props.onRequestServices();
+    this.props.getUsers();
+    this.props.getServices();
   }
   
   render(){
@@ -54,7 +54,7 @@ class App extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
             <Switch>
-              <Route path="/registry" component={MembersRegistry} />
+              <Route path="/registry" component={Users} />
               <Route path="/services" component={Services} />
               <Route path="/profile" component={Profile} />
               <Route path="/services" component={Services} />

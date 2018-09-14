@@ -1,7 +1,7 @@
 import {
     ON_FORM_CHANGE,
-    REQUEST_MEMBERS_SUCCESS,
-    REQUEST_MEMBERS_FAILED,
+    REQUEST_USERS_SUCCESS,
+    REQUEST_USERS_FAILED,
     REQUEST_USER_PROFILE_RESET,
     REQUEST_USER_PROFILE_SUCCESS,
     REQUEST_USER_PROFILE_FAILED,
@@ -19,16 +19,16 @@ export const formAction = (state={}, action={}) => {
     }   
 }
 
-const initialStateMembers = {
-    members: [],
+const initialStateUsers = {
+    users: [],
     error: ''
 }
 
-export const requestMembersRegistry = (state=initialStateMembers, action={}) => {
+export const requestUsersReducer = (state=initialStateUsers, action={}) => {
     switch(action.type) {
-        case REQUEST_MEMBERS_SUCCESS:
-            return Object.assign({}, state, { members: action.payload});
-        case REQUEST_MEMBERS_FAILED:
+        case REQUEST_USERS_SUCCESS:
+            return Object.assign({}, state, { users: action.payload});
+        case REQUEST_USERS_FAILED:
             return Object.assign({}, state, { error: action.payload});
         default:
             return state;   
@@ -59,7 +59,7 @@ const initialStateServices = {
     error: ''
 }
 
-export const requestServicesRegistry = (state=initialStateServices, action={}) => {
+export const requestServicesReducer = (state=initialStateServices, action={}) => {
     switch(action.type) {
         case REQUEST_GET_SERVICES_SUCCESS:
             return Object.assign({}, state, { services: action.payload});

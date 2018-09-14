@@ -10,6 +10,8 @@ import Radio from '@material-ui/core/Radio';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
+import { submitNewRecord } from '../../../redux/actions';
+
 const styles = theme => ({
     root: {
       flexGrow: 1,
@@ -23,9 +25,15 @@ const styles = theme => ({
 
 const mapStateToProps = state => {
     return {
-        services: state.requestServicesRegistry.services,
+        services: state.requestServicesReducer.services,
     }
 };
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        submitRecord : (lead) => dispatch(submitNewRecord(lead)),
+    }
+}
 
 class AddRecord extends React.Component {
     state = {
@@ -43,8 +51,7 @@ class AddRecord extends React.Component {
                     if(this.props.services[i].service===e.target.value){
                         this.setState({ 
                             service: this.props.services[i],
-                            categories: this.props.services[i].categories});
-                            
+                            categories: this.props.services[i].categories});      
                     }
                 } 
                 break
@@ -72,10 +79,19 @@ class AddRecord extends React.Component {
         }
     };
 
+    submitRecordToUser = (e) => {
+        e.preventDefault();
+        const user = this.props.user;
+        const service = this.state.service.id;
+        const category = this.state.category.id;
+        const option = this.state.option.id;
+        const lead = {user, service, category, option};
+        this.props.submitRecord(lead);
+    }
+
     render() {
         const {classes, services } = this.props;
         const { service, categories, category, options, option } = this.state;
-        console.log(this.state);
         return(
             <div>
                 <Grid container spacing={24}>
@@ -147,7 +163,8 @@ class AddRecord extends React.Component {
                             variant="outlined" 
                             color="primary" 
                             className={classes.button}
-                            type="submit"
+                            type="button"
+                            onClick={this.submitRecordToUser}
                         >
                         Upiši uslugu
                         </Button>
@@ -158,4 +175,4 @@ class AddRecord extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, null)(withStyles(styles)(AddRecord));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AddRecord));

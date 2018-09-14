@@ -4,20 +4,6 @@ from django.contrib.auth import get_user_model
 
 CustomUser = get_user_model()
 
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CustomUser
-        fields = ('id', 
-                  'first_name', 
-                  'last_name', 
-                  'username', 
-                  'password', 
-                  'email', 
-                  'date_joined', 
-                  'phone', 
-                  'birth_date')
-
 class OptionsSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -44,7 +30,12 @@ class RecordsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Records
-        fields = ('user', 
+        fields = ('id',
+                  'userObj',
+                  'servicesObj',
+                  'categoriesObj',
+                  'optionsObj',
+                  'user', 
                   'service', 
                   'category', 
                   'quantity', 
@@ -58,3 +49,20 @@ class RecordsSerializer(serializers.ModelSerializer):
                   'ends', 
                   'days_left')
 
+class UserSerializer(serializers.ModelSerializer):
+
+    records = RecordsSerializer(source='user_records', read_only=True, many=True)
+    
+    class Meta:
+        model = CustomUser
+        fields = ('id', 
+                  'first_name', 
+                  'last_name', 
+                  'username', 
+                  'password', 
+                  'email', 
+                  'date_joined', 
+                  'phone', 
+                  'birth_date',
+                  'records',
+                  )

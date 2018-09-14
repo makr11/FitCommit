@@ -1,7 +1,7 @@
 import {
     ON_FORM_CHANGE,
-    REQUEST_MEMBERS_SUCCESS,
-    REQUEST_MEMBERS_FAILED,
+    REQUEST_USERS_SUCCESS,
+    REQUEST_USERS_FAILED,
     REQUEST_USER_PROFILE_RESET,
     REQUEST_USER_PROFILE_SUCCESS,
     REQUEST_USER_PROFILE_FAILED,
@@ -10,14 +10,17 @@ import {
     REQUEST_UPDATE_OPTION_SUCCESS,
     REQUEST_UPDATE_OPTION_FAILED,
     REQUEST_GET_SERVICES_SUCCESS,
-    REQUEST_GET_SERVICES_FAILED
+    REQUEST_GET_SERVICES_FAILED,
+    ADD_RECORD_SUCCESS,
+    ADD_RECORD_FAILED,
 } from './constants';
 
 import {
     users,
     services,
     categories,
-    options
+    options,
+    records
 } from './apiUrls';
 
 export const onFormChangeFields = (obj) => ({
@@ -25,11 +28,18 @@ export const onFormChangeFields = (obj) => ({
     payload: obj,
 });
 
-export const requestMembers = () => (dispatch) => {
+export const requestUsers = () => (dispatch) => {
     fetch(users)
     .then(response => response.json())
-    .then(data => dispatch({ type: REQUEST_MEMBERS_SUCCESS, payload: data}))
-    .catch(error => dispatch({ type: REQUEST_MEMBERS_FAILED, payload: error}))
+    .then(data => dispatch({ type: REQUEST_USERS_SUCCESS, payload: data}))
+    .catch(error => dispatch({ type: REQUEST_USERS_FAILED, payload: error}))
+}
+
+export const requestServices = () => (dispatch) => {
+    fetch(services)
+    .then(response => response.json())
+    .then(data => dispatch({type: REQUEST_GET_SERVICES_SUCCESS, payload: data}))
+    .catch(error => dispatch({ type: REQUEST_GET_SERVICES_FAILED, payload: error}));
 }
 
 export const requestUserProfile = (id) => (dispatch) => {
@@ -49,13 +59,6 @@ export const requestUserProfile = (id) => (dispatch) => {
     .catch(error => dispatch({ type: REQUEST_USER_PROFILE_FAILED, payload: error}))
     }
 };
-
-export const requestServices = () => (dispatch) => {
-    fetch(services)
-    .then(response => response.json())
-    .then(data => dispatch({type: REQUEST_GET_SERVICES_SUCCESS, payload: data}))
-    .catch(error => dispatch({ type: REQUEST_GET_SERVICES_FAILED, payload: error}));
-}
 
 export const onSubmitFormNewService = (lead) => (dispatch) => {
     let url = undefined;
@@ -95,9 +98,9 @@ export const onUpdateFormOption = (lead) => (dispatch) => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-            },
+        },
         body: JSON.stringify(lead),
-        };
+    };
 
     fetch(url, conf)
     .then(response => {
@@ -107,3 +110,57 @@ export const onUpdateFormOption = (lead) => (dispatch) => {
     })
     .catch(error => dispatch({ type: REQUEST_UPDATE_OPTION_FAILED, payload: error}));
 };
+
+export const submitNewRecord = (lead) => (dispatch) => {
+    let url = records;
+
+    const conf = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(lead),
+    };
+    fetch(url, conf)
+    .then(response => {
+        console.log(response);
+        dispatch({type: ADD_RECORD_SUCCESS, payload: response})
+    })
+    .catch(error => dispatch({ type: ADD_RECORD_FAILED, payload: error}));
+}
+
+export const deleteInstance = (id, name) => (dispatch) => {
+    let targetID = id;
+    let url = undefined;
+
+    const conf = {
+        method: "DELETE",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+      };
+
+    switch(name){
+        case ('service'):
+            url = services;
+            break;
+        case ('category'):
+            url = categories;
+            break;
+        case ('option'):
+            url = options;
+            break;
+        case ('record'):
+            url = records;
+            break;
+        case ('user'):
+            url = users;
+            break;
+        default:
+            break;
+    };
+
+    fetch(url + targetID, conf).then(response => console.log(response));
+}

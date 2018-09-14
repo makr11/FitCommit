@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import MembersArrivals from './containers/MembersArrivals';
+import UserArrival from './containers/UserArrival';
 
 const styles = (theme) => ({
     textField: {
@@ -48,7 +48,7 @@ class Arrivals extends React.Component {
                         Izaberi
                     </Button>
                 </form>
-                <MembersArrivals />
+                <UserArrival />
             </Paper>
         )
     }

@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import {requestUserProfile} from '../../../redux/actions';
 
 import AddRecord from './AddRecord';
+import ListUserRecords from './ListUserRecords';
 
 const mapStateToProps = state => {
   return {
@@ -42,7 +43,8 @@ class Profile extends React.Component {
           <Typography component="p">
             {userProfile.email}
           </Typography>
-          <AddRecord/>
+          <AddRecord user={userProfile.id}/>
+          <ListUserRecords user={userProfile.records}/>
         </Paper>
       </div>:
       <h1>Loading</h1>

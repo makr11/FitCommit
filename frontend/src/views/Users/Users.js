@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -15,11 +14,9 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import { requestUserProfile, requestMembers } from '../../redux/actions';
+import { requestUserProfile, requestUsers, deleteInstance } from '../../redux/actions';
 
-import SignIn from './containers/SignIn';
-
-import {users} from '../../redux/apiUrls';
+import AddUser from './containers/AddUser';
 
 const styles = () => ({
     root: {
@@ -33,45 +30,29 @@ const styles = () => ({
 
 const mapStateToProps = state => {
     return {
-        members: state.requestMembersRegistry.members,
+        users: state.requestUsersReducer.users,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onRequestMembers: () => dispatch(requestMembers()),
+        getUsers: () => dispatch(requestUsers()),
         handleSelectUserClick: (e) => dispatch(requestUserProfile(e.currentTarget.id)),
+        deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name))
     }
 }
 
 
 class MembersRegistry extends React.Component {
 
-    handleDeleteUserClick = (e) => {
-        e.preventDefault();
-        const user = e.currentTarget.id;
-        const conf = {
-            method: "DELETE",
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-          };
-        fetch(users + user, conf).then(response => console.log(response))
-        .then(() => {
-            this.props.onRequestMembers();
-        });
-    }
-
     render(){
 
-        const { classes, members, handleSelectUserClick } = this.props;
-        console.log(members)
+        const { classes, users, handleSelectUserClick, deleteInstance } = this.props;
         return (
           
-          (members!==undefined) ?
+          (users!==undefined) ?
           <Paper className={classes.root}>
-            <SignIn/>
+            <AddUser/>
             <Table className={classes.table}>
                 <TableHead>
                 <TableRow>
@@ -83,21 +64,21 @@ class MembersRegistry extends React.Component {
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                {members.map(n => {
+                {users.map(user => {
                     return (
-                        <TableRow key={n.id} >
+                        <TableRow key={user.id} >
                             <TableCell>     
-                                <Link to={'/profile/' + n.username}>
-                                    <IconButton id={n.id} onClick={handleSelectUserClick}>
+                                <Link to={'/profile/' + user.username}>
+                                    <IconButton id={user.id} onClick={handleSelectUserClick}>
                                         <AccountCircleIcon/>
                                     </IconButton>
                                 </Link> 
                             </TableCell>
-                            <TableCell>{n.first_name}</TableCell>
-                            <TableCell>{n.last_name}</TableCell>
-                            <TableCell>{n.email}</TableCell>
+                            <TableCell>{user.first_name}</TableCell>
+                            <TableCell>{user.last_name}</TableCell>
+                            <TableCell>{user.email}</TableCell>
                             <TableCell>
-                                <IconButton id={n.id} onClick={this.handleDeleteUserClick}>    
+                                <IconButton name="user" id={user.id} onClick={deleteInstance}>    
                                     <DeleteIcon/>
                                 </IconButton>
                             </TableCell>
@@ -113,8 +94,4 @@ class MembersRegistry extends React.Component {
     
 }
   
-  MembersRegistry.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MembersRegistry));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MembersRegistry));

@@ -27,7 +27,7 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => {
     return {
-      services: state.requestServicesRegistry.services,
+      services: state.requestServicesReducer.services,
       service: state.formAction.service,
       category: state.formAction.category,
       quantity: state.formAction.quantity,

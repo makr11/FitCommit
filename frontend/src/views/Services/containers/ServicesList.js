@@ -19,14 +19,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AppsIcon from '@material-ui/icons/Apps';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { requestServices } from '../../../redux/actions';
+import { requestServices, deleteInstance } from '../../../redux/actions';
 
 import ServicesForm from './ServicesForm';
-
-import {services,
-        categories,
-        options,
-} from '../../../redux/apiUrls';
 
 const styles = theme => ({
   root: {
@@ -39,13 +34,14 @@ const styles = theme => ({
 
 const mapStateToProps = state => {
     return {
-        services: state.requestServicesRegistry.services,
+        services: state.requestServicesReducer.services,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onRequestServices: () => dispatch(requestServices()),
+        getServices: () => dispatch(requestServices()),
+        deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name))
     }
 };
 
@@ -62,40 +58,6 @@ class ServicesList extends React.Component {
             openForm: false,
         };
     };
-
-    handleDeleteServiceClick = (e) => {
-        e.preventDefault();
-        const id = e.currentTarget.id;
-        const conf = {
-            method: "DELETE",
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-          };
-        switch (e.currentTarget.name){
-            case "service":
-                fetch(services + id, conf).then(response => console.log(response))
-                .then(() => {
-                    this.props.onRequestServices();
-                });
-                break
-            case "category":
-                fetch(categories + id, conf).then(response => console.log(response))
-                .then(() => {
-                    this.props.onRequestServices();
-                });
-                break
-            case "option":
-                fetch(options + id, conf).then(response => console.log(response))
-                .then(() => {
-                    this.props.onRequestServices();
-                });
-                break
-            default:
-                break
-        }
-    }
 
     showForm = e => {
         e.preventDefault();
@@ -147,7 +109,7 @@ class ServicesList extends React.Component {
     };
 
     render() {
-        const { classes, services } = this.props;
+        const { classes, services, deleteInstance } = this.props;
 
         return (
             (services!==undefined) ?
@@ -177,7 +139,7 @@ class ServicesList extends React.Component {
                                             <Typography variant="title">
                                                 {category.category}
                                             </Typography>
-                                            <Button name="category" id={category.id} onClick={this.handleDeleteServiceClick}>
+                                            <Button name="category" id={category.id} onClick={deleteInstance}>
                                                 Obriši
                                             </Button>
                                             <Button name="option" id={category.id} onClick={this.showForm}>
@@ -201,7 +163,7 @@ class ServicesList extends React.Component {
                                                     <TableCell numeric>{option.price}</TableCell>
                                                     <TableCell numeric>{option.duration}</TableCell>
                                                     <TableCell numeric>
-                                                        <Button name="option" id={option.id} onClick={this.handleDeleteServiceClick}>
+                                                        <Button name="option" id={option.id} onClick={deleteInstance}>
                                                             <DeleteIcon />
                                                         </Button>
                                                     </TableCell>
@@ -239,7 +201,7 @@ class ServicesList extends React.Component {
                                     title="Nova opcija"
                                 />
                                 <ExpansionPanelActions>
-                                    <Button name="service" id={service.id} onClick={this.handleDeleteServiceClick}>
+                                    <Button name="service" id={service.id} onClick={deleteInstance}>
                                         Obriši
                                     </Button>
                                     <Button name="category" id={service.id} onClick={this.showForm}>

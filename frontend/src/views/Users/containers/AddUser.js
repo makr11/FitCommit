@@ -7,7 +7,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 
-import { requestMembers, onFormChangeFields } from '../../../redux/actions';
+import { requestUsers, onFormChangeFields } from '../../../redux/actions';
 
 import { users } from '../../../redux/apiUrls';
 
@@ -41,11 +41,11 @@ const mapDispatchToProps = (dispatch) => {
       const obj = {[e.target.id]: e.target.value};
       dispatch(onFormChangeFields(obj));
     },
-    onRequestMembers: () => dispatch(requestMembers()),
+    getUsers: () => dispatch(requestUsers()),
   }
 }
 
-class SignIn extends React.Component{
+class AddUser extends React.Component{
 
   handleSubmit = e => {
     e.preventDefault();
@@ -63,7 +63,7 @@ class SignIn extends React.Component{
     };
     fetch(users, conf).then(response => console.log(response))
     .then(() => {
-      this.props.onRequestMembers();
+      this.props.getUsers();
     });
   };
 
@@ -123,4 +123,4 @@ class SignIn extends React.Component{
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignIn));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AddUser));
