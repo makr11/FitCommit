@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 const mapStateToProps = state => {
     return {
-        users: state.requestUsersReducer.users,
+        users: state.usersReducer.users,
     }
 }
 
@@ -27,11 +27,17 @@ class UserArrival extends React.Component {
 
         return(
             <div>
-            <Select
-                value={selectedOption}
-                onChange={this.handleChange}
-                options={options}
-            />
+                <Select
+                    value={selectedOption}
+                    onChange={this.handleChange}
+                    options={options}
+                />
+                <Select
+                    value={selectedOption}
+                    onChange={this.handleChange}
+                    options={options}
+                />
+
             </div>
         )
     }

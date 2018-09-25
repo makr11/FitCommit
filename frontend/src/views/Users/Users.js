@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import { requestUserProfile, requestUsers, deleteInstance } from '../../redux/actions';
+import { requestUserProfile, deleteInstance } from '../../redux/actions';
 
 import AddUser from './containers/AddUser';
 
@@ -30,17 +30,16 @@ const styles = () => ({
 
 const mapStateToProps = state => {
     return {
-        users: state.requestUsersReducer.users,
+        users: state.usersReducer.users,
     }
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getUsers: () => dispatch(requestUsers()),
         handleSelectUserClick: (e) => dispatch(requestUserProfile(e.currentTarget.id)),
         deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name))
     }
-}
+};
 
 
 class MembersRegistry extends React.Component {

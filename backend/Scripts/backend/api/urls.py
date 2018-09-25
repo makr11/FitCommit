@@ -8,7 +8,9 @@ from .views import (ListUsers,
                    ListOptions, 
                    OptionsDetail,
                    ListRecords,
-                   RecordsDetail)
+                   RecordsDetail,
+                   ListUsersActive,
+                   ListUserRecords)
 from django.contrib.auth import get_user_model
 
 CustomUser = get_user_model()
@@ -33,9 +35,15 @@ records_list = ListRecords.as_view({
     'post': 'create'
 })
 
+users_active_list = ListUsersActive.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
 urlpatterns = [
     path('users/', ListUsers.as_view(), name='users'),
     path('users/<int:pk>', UserDetail.as_view()),
+    path('user_records/<int:pk>', ListUserRecords.as_view(), name='user_records'),
     path('services/', services_list, name='services'),
     path('services/<int:pk>', ServicesDetail.as_view()),
     path('categories/', categories_list, name='categories'),
@@ -44,4 +52,5 @@ urlpatterns = [
     path('options/<int:pk>', OptionsDetail.as_view()),
     path('records/', records_list, name='records'),
     path('records/<int:pk>', RecordsDetail.as_view()),
+    path('users_active/', users_active_list, name="users_active"),
 ]

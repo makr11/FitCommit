@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import { onFormChangeFields, onSubmitFormNewService, onUpdateFormOption } from '../../../redux/actions';
+import { onFormChangeFields, submitFormService, updateFormService } from '../../../redux/actions';
 
 const styles = theme => ({
   container: {
@@ -27,12 +27,12 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => {
     return {
-      services: state.requestServicesReducer.services,
-      service: state.formAction.service,
-      category: state.formAction.category,
-      quantity: state.formAction.quantity,
-      price: state.formAction.price,
-      duration: state.formAction.duration,
+      services: state.servicesReducer.services,
+      service: state.formInput.service,
+      category: state.formInput.category,
+      quantity: state.formInput.quantity,
+      price: state.formInput.price,
+      duration: state.formInput.duration,
     }
 };
 
@@ -42,18 +42,14 @@ const mapDispatchToProps = (dispatch) => {
             const obj = {[e.target.id]: e.target.value};
             dispatch(onFormChangeFields(obj));
         },
-        handleSubmit: (lead) => dispatch(onSubmitFormNewService(lead)),
-        handleUpdate: (lead) => dispatch(onUpdateFormOption(lead))
+        handleSubmit: (lead) => dispatch(submitFormService(lead)),
+        handleUpdate: (lead) => dispatch(updateFormService(lead))
     }    
 }
 
 class ServicesForm extends React.Component {
-
-    openFormMethod = (e) => {
-        this.props.openFormMethod(e)
-    }
     
-    submitData(e) {
+    submitForm = (e) => {
         e.preventDefault();
         const { serviceID, 
                 service, 
@@ -62,7 +58,8 @@ class ServicesForm extends React.Component {
                 optionID, 
                 quantity, 
                 price, 
-                duration } = this.props;
+                duration,
+                update } = this.props;
         const lead = { serviceID, 
                        service, 
                        categoryID, 
@@ -72,53 +69,45 @@ class ServicesForm extends React.Component {
                        price, 
                        duration };
         
-        (optionID) ? this.props.handleUpdate(lead) : this.props.handleSubmit(lead);
+        (update) ? this.props.handleUpdate(lead) : this.props.handleSubmit(lead);
     };
 
     render(){
 
         const { classes, 
                 handleChange, 
-                serviceHidden,
-                serviceID, 
-                serviceIDCheck, 
-                categoryHidden, 
-                categoryID,
-                categoryIDCheck,
-                optionID,
-                openForm,
+                hideService,
+                hideCategory,
+                hideOption,
+                close,
                 title,
               } = this.props;
         const hiddenField = [classes.textField, classes.hideField];
-    
         return(
-            
-            (!openForm) ? <span></span> : (serviceID===serviceIDCheck || categoryID===categoryIDCheck) ?
             <div>
-                {console.log(this.props)}
                 <Typography variant="subheading">
-                    {(title) ? title : (optionID) ? "Izmijeni" : "Nova cijena"}
+                    {title}
                 </Typography>
-                <form className={classes.container} onSubmit={(e) => this.submitData(e)} noValidate autoComplete="off">
+                <form className={classes.container} onSubmit={this.submitForm} noValidate autoComplete="off">
                 
                     <TextField
                     id="service"
                     label="Usluga"
-                    className={(serviceHidden) ? hiddenField.join(" ") : classes.textField}
+                    className={(hideService) ? hiddenField.join(" ") : classes.textField}
                     margin="normal"
                     onChange={handleChange}
                     />
                     <TextField
                     id="category"
                     label="Opcija"
-                    className={(categoryHidden) ? hiddenField.join(" ") : classes.textField}
+                    className={(hideCategory) ? hiddenField.join(" ") : classes.textField}
                     margin="normal"
                     onChange={handleChange}
                     />
                     <TextField
                     id="quantity"
                     label="Broj dolazaka"
-                    className={classes.textField}
+                    className={(hideOption) ? hiddenField.join(" ") : classes.textField}
                     type="number"
                     margin="normal"
                     onChange={handleChange}
@@ -126,7 +115,7 @@ class ServicesForm extends React.Component {
                     <TextField
                     id="price"
                     label="Cijena"
-                    className={classes.textField}
+                    className={(hideOption) ? hiddenField.join(" ") : classes.textField}
                     type="number"
                     margin="normal"
                     onChange={handleChange}
@@ -134,7 +123,7 @@ class ServicesForm extends React.Component {
                     <TextField
                     id="duration"
                     label="Trajanje"
-                    className={classes.textField}
+                    className={(hideOption) ? hiddenField.join(" ") : classes.textField}
                     type="number"
                     margin="normal"
                     onChange={handleChange}
@@ -152,12 +141,12 @@ class ServicesForm extends React.Component {
                     type="button"
                     name="close"
                     className={classes.button}
-                    onClick={this.openFormMethod}
+                    onClick={close}
                     >
                         Zatvori
                     </Button>
                 </form>
-            </div> : <span></span>   
+            </div> 
         )
     }
 };

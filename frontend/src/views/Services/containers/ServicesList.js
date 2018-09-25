@@ -34,7 +34,7 @@ const styles = theme => ({
 
 const mapStateToProps = state => {
     return {
-        services: state.requestServicesReducer.services,
+        services: state.servicesReducer.services,
     }
 };
 
@@ -50,89 +50,88 @@ class ServicesList extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            serviceId: undefined,
-            categoryId: undefined,
-            optionId: undefined,
-            updateId: undefined,
-            updateName: "",
-            openForm: false,
+            positionParam: undefined,
+            id: null,
+            title: '',
         };
     };
-
+    
     showForm = e => {
         e.preventDefault();
-
-        let nameId = parseInt(e.currentTarget.name, 10);
-        let name = e.currentTarget.name
-        let id = parseInt(e.currentTarget.id, 10);
-
-        this.setState((prevState) => {
-            if(Number.isInteger(nameId)) {
-                return{
-                    serviceId: undefined,
-                    categoryId: nameId,
-                    optionId: id, 
-                    openForm: true,
-                    updateName: nameId,
-                    updateId: id,
-                }
-            }else if (name==="service") {
-                return{
-                    openForm: true
-                }
-            }else if (name==="category") {
-                return{
-                    serviceId: id,
-                    categoryId: undefined,
-                    optrionId: undefined,
-                    openForm: true,
-                    updateName: name,
-                    updateId: id,
-                }
-            }else if (name==="option"){
-                return{
-                    serviceId: undefined,
-                    categoryId: id,
-                    optionId: undefined,
-                    openForm: true,
-                    updateName: name,
-                    updateId: id, 
-                }
-            } else if (name==="close"){
-                if(prevState.openForm){
-                    return {openForm: false}
-                }else{
-                    return {openForm: true}
-                }
-            }
+        const name = e.currentTarget.name;
+        if(name==="service"){
+            this.setState({
+                title: 'Nova usluga'
+            })
+        }else if(name==="category"){
+            this.setState({
+                title: 'Nova opcija'
+            })
+        }else if(name==="option"){
+            this.setState({
+                title: "Nova cijena"
+            })
+        }else if(name==="close"){
+            this.setState({
+                positionParam: undefined
+            })
+        };
+        
+        this.setState({
+            positionParam: name,
+            id: parseInt(e.currentTarget.id,10),
         })
     };
+            
+    showUpdateForm = (id, e) => {
+        e.preventDefault();
+        const name = e.currentTarget.name;
 
+        if(name==="serviceUpdate"){
+            this.setState({
+                title: 'Izmijeni uslugu'
+            })
+        }else if(name==="categoryUpdate"){
+            this.setState({
+                title: 'Izmijeni opciju'
+            })
+        }else if(name==="optionUpdate"){
+            this.setState({
+                title: 'Izmijeni cijenu'
+            })
+        }
+
+        this.setState({
+            positionParam: name,
+            updateId: parseInt(e.currentTarget.id,10),
+            id: id,
+        })
+    };
+    
     render() {
         const { classes, services, deleteInstance } = this.props;
-
+        console.log(this.state);
         return (
             (services!==undefined) ?
                 <div className={classes.root}>
                     <Button name="service" onClick={this.showForm}>
                         Nova usluga
                     </Button>
-                    <ServicesForm 
-                        openFormMethod={this.showForm}
-                        openForm={this.state.openForm}
-                        serviceID={null}
-                        serviceIDCheck={null}
-                        categoryID={null}
-                        title="Nova usluga"
-                    />
+                    {(this.state.positionParam==="service")?
+                    <ServicesForm  
+                        id={this.state.id}
+                        close={this.showForm}
+                        title={this.state.title}
+                    />:undefined
+                    }
                     {services.map(service => {
                         return(
                             <ExpansionPanel key={service.id}>
                                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography variant="title">{service.service}</Typography>
-                                    
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className={classes.table} >
+
                                     {service.categories.map(category => {
                                         return(
                                         <Paper key={category.id} >
@@ -145,6 +144,20 @@ class ServicesList extends React.Component {
                                             <Button name="option" id={category.id} onClick={this.showForm}>
                                                 Nova cijena
                                             </Button>
+                                            <Button name="categoryUpdate" id={category.id} onClick={this.showUpdateForm.bind(this, category.id)}>
+                                                Izmijeni
+                                            </Button>
+                                            {(this.state.positionParam==="categoryUpdate" && category.id===this.state.id)?
+                                            <ServicesForm  
+                                                hideService={true}
+                                                hideOption={true}
+                                                serviceID={service.id}
+                                                categoryID={category.id}
+                                                close={this.showForm}
+                                                title={this.state.title}
+                                                update={true}
+                                            />:undefined
+                                            }
                                             <Table >
                                             <TableHead>
                                             <TableRow>
@@ -168,44 +181,60 @@ class ServicesList extends React.Component {
                                                         </Button>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <Button name={category.id} id={option.id} onClick={this.showForm}>
+                                                        <Button name="optionUpdate" id={option.id} onClick={this.showUpdateForm.bind(this, category.id)}>
                                                             <AppsIcon />
                                                         </Button>
                                                     </TableCell>
                                                 </TableRow>
-                                                );
+                                                );       
                                                 })}
                                                 </TableBody>
                                                 </Table>
+                                                {((this.state.positionParam==="option"||this.state.positionParam==="optionUpdate") && category.id===this.state.id)?
                                                 <ServicesForm
-                                                    serviceID={null}
-                                                    serviceHidden={true}
+                                                    hideService={true}
+                                                    hideCategory={true} 
+                                                    serviceID={service.id} 
                                                     categoryID={category.id}
-                                                    categoryIDCheck={this.state.categoryId}
-                                                    categoryHidden={true}
-                                                    optionID={this.state.optionId}
-                                                    openFormMethod={this.showForm}
-                                                    openForm={this.state.openForm}                                    
-                                                />                                       
+                                                    optionID={this.state.updateId}
+                                                    close={this.showForm}
+                                                    title={this.state.title}
+                                                    update={(this.state.positionParam==="optionUpdate")?true:false}                             
+                                                />:undefined
+                                                }                                       
                                         </Paper>   
                                     )
                                     })}
                                 </ExpansionPanelDetails>
+                                {(this.state.positionParam==="category" && service.id===this.state.id)?
                                 <ServicesForm  
+                                   hideService={true}
+                                   serviceID={service.id} 
+                                   id={(service.id===this.state.id)?this.state.id:null}
+                                   close={this.showForm}
+                                   title={this.state.title}
+                                />:undefined
+                                }
+                                {(this.state.positionParam==="serviceUpdate" && service.id===this.state.id)?
+                                <ServicesForm  
+                                    hideCategory={true}
+                                    hideOption={true}
                                     serviceID={service.id}
-                                    serviceIDCheck={this.state.serviceId}
-                                    serviceHidden={true}
-                                    categoryID={null}
-                                    openFormMethod={this.showForm}
-                                    openForm={this.state.openForm}
-                                    title="Nova opcija"
-                                />
+                                    id={(service.id===this.state.id)?this.state.id:null}
+                                    close={this.showForm}
+                                    title={this.state.title}
+                                    update={true}
+                                />:undefined
+                                }
                                 <ExpansionPanelActions>
                                     <Button name="service" id={service.id} onClick={deleteInstance}>
                                         Obriši
                                     </Button>
                                     <Button name="category" id={service.id} onClick={this.showForm}>
                                         Nova opcija
+                                    </Button>
+                                    <Button name="serviceUpdate" id={service.id} onClick={this.showUpdateForm.bind(this, service.id)}>
+                                        Izmijeni
                                     </Button>
                                 </ExpansionPanelActions>
                             </ExpansionPanel>

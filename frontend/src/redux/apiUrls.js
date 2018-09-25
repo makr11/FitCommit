@@ -7,3 +7,5 @@ export const categories = "http://localhost:8000/api/categories/";
 export const options = "http://localhost:8000/api/options/";
 
 export const records = "http://localhost:8000/api/records/";
+
+export const userRecords = "http://localhost:8000/api/user_records/";

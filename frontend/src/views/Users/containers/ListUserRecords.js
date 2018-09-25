@@ -23,17 +23,22 @@ const styles = theme => ({
   },
 });
 
+const mapStateToProps = state => {
+    return {
+    records: state.userRecordsReducer.records,
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return{
-        deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name))
+        deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name)),
     }
 }
 
 class ListRecords extends React.Component {
 
     render(){
-        const { classes, user, deleteInstance } = this.props;
-        console.log(this.props)
+        const { classes, records, deleteInstance } = this.props;
 
         return(
             <Paper className={classes.root}>
@@ -49,9 +54,9 @@ class ListRecords extends React.Component {
                         <TableCell>Obriši</TableCell>
                     </TableRow>
                     </TableHead>
-                    {(user)?
+                    {(records)?
                         <TableBody>
-                        {user.map(record => {
+                        {records.map(record => {
                             return (
                             <TableRow key={record.id}>
                                 <TableCell>{record.service}</TableCell>
@@ -68,11 +73,11 @@ class ListRecords extends React.Component {
                             </TableRow>
                             );
                         })}
-                        </TableBody>:undefined}
+                    </TableBody>:undefined}
                 </Table>
             </Paper>
         )
     }
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(ListRecords));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ListRecords));

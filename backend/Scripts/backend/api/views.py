@@ -9,7 +9,12 @@ from django.core import serializers
 
 from .models import Services, Categories, Options, CustomUser, Records
 
-from .serializers import UserSerializer, ServicesSerializer, CategoriesSerializer, OptionsSerializer, RecordsSerializer
+from .serializers import (UserSerializer, 
+                         ServicesSerializer, 
+                         CategoriesSerializer, 
+                         OptionsSerializer, 
+                         RecordsSerializer, 
+                         )
 
 now = datetime.datetime.now()
 
@@ -58,6 +63,7 @@ class ListCategories(viewsets.ModelViewSet):
 
     def create(self, request):
         serializer = CategoriesSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             service = Services.objects.get(pk=request.data['serviceID'])
             category = Categories(category=request.data['category'], serviceID=service)
@@ -104,7 +110,7 @@ class ListRecords(viewsets.ModelViewSet):
     serializer_class = RecordsSerializer
     
     def get_queryset(self):
-        return Records.objects.all()
+        return Records.objects.all().order_by('-ends')
 
     def create(self, request):
         user = CustomUser.objects.get(pk=request.data['user'])
@@ -137,6 +143,20 @@ class ListRecords(viewsets.ModelViewSet):
         record.save()
         return Response()
 
+class ListUserRecords(generics.ListAPIView):
+    serializer_class = RecordsSerializer
+
+    def get_queryset(self):
+        user=self.kwargs['pk']
+        return Records.objects.filter(userObj=user).order_by('-ends')
+
 class RecordsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Records.objects.all()
     serializer_class = RecordsSerializer
+
+class ListUsersActive(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return CustomUser.objects.filter(user_records__ends__gte=now)
+

@@ -28,10 +28,10 @@ const styles = theme => ({
 
 const mapStateToProps = (state) => {
   return {
-    first_name: state.formAction.first_name,
-    last_name: state.formAction.last_name,
-    password: state.formAction.password,
-    email: state.formAction.email,
+    first_name: state.formInput.first_name,
+    last_name: state.formInput.last_name,
+    password: state.formInput.password,
+    email: state.formInput.email,
   }
 };
 

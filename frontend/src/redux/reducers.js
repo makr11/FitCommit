@@ -1,17 +1,22 @@
 import {
-    ON_FORM_CHANGE,
-    REQUEST_USERS_SUCCESS,
-    REQUEST_USERS_FAILED,
-    REQUEST_USER_PROFILE_RESET,
-    REQUEST_USER_PROFILE_SUCCESS,
-    REQUEST_USER_PROFILE_FAILED,
-    REQUEST_GET_SERVICES_SUCCESS,
-    REQUEST_GET_SERVICES_FAILED,
+    INPUT_CHANGE,
+    GET_USERS_SUCCESS,
+    GET_USERS_FAILED,
+    GET_USER_PROFILE_SUCCESS,
+    GET_USER_PROFILE_FAILED,
+    GET_USER_RECORDS_SUCCESS,
+    GET_USER_RECORDS_FAILED,
+    GET_SERVICES_SUCCESS,
+    GET_SERVICES_FAILED,
+    DELETE_USER_SUCCESS,
+    DELETE_USER_RECORD_SUCCESS,
+    RESET_PROFILE,
+    RESET_RECORDS,
     } from './constants';
 
-export const formAction = (state={}, action={}) => {
+export const formInput = (state={}, action={}) => {
     switch(action.type) {
-        case ON_FORM_CHANGE:
+        case INPUT_CHANGE:
           return Object.assign({}, state, action.payload);
             
         default:
@@ -20,52 +25,83 @@ export const formAction = (state={}, action={}) => {
 }
 
 const initialStateUsers = {
-    users: [],
+    users: {},
     error: ''
 }
 
-export const requestUsersReducer = (state=initialStateUsers, action={}) => {
+export const usersReducer = (state=initialStateUsers, action={}) => {
     switch(action.type) {
-        case REQUEST_USERS_SUCCESS:
+        case GET_USERS_SUCCESS:
             return Object.assign({}, state, { users: action.payload});
-        case REQUEST_USERS_FAILED:
+        case GET_USERS_FAILED:
             return Object.assign({}, state, { error: action.payload});
+        case DELETE_USER_SUCCESS:
+            const users = action.state.usersReducer.users.filter(record => record.id !== parseInt(action.targetID, 10));
+            state = {
+                ...action.state.users,
+                users: users,  
+            };
+            return state;
         default:
             return state;   
     }
 }
 
 const initialStateProfile = {
-    userProfile: [],
+    profile: {},
     error: ''
 }
 
-
-export const userProfile = (state=initialStateProfile, action={}) => {
+export const userProfileReducer = (state=initialStateProfile, action={}) => {
     switch(action.type) {
-        case REQUEST_USER_PROFILE_RESET:
-            return Object.assign({}, state, {profile: state});
-        case REQUEST_USER_PROFILE_SUCCESS:
+        case GET_USER_PROFILE_SUCCESS:
             return Object.assign({}, state, { profile: action.payload});
-        case REQUEST_USER_PROFILE_FAILED:
+        case GET_USER_PROFILE_FAILED:
             return Object.assign({}, state, { error: action.payload});
+        case RESET_PROFILE:
+            return {}
+        default:
+            return state;   
+    }
+}
+
+const initialStateUserRecords = {
+    records: {},
+    error: ''
+}
+
+export const userRecordsReducer = (state=initialStateUserRecords, action={}) => {
+    switch(action.type) {
+        case GET_USER_RECORDS_SUCCESS:
+            return Object.assign({}, state, { records: action.payload});
+        case GET_USER_RECORDS_FAILED:
+            return Object.assign({}, state, { error: action.payload});
+        case DELETE_USER_RECORD_SUCCESS:
+            const records = action.state.userRecordsReducer.records.filter(record => record.id !== parseInt(action.targetID, 10));
+            state = {
+                ...action.state.userRecords,
+                records: records,  
+            };
+            return state;
+        case RESET_RECORDS:
+            return {}
         default:
             return state;   
     }
 }
 
 const initialStateServices = {
-    services: [],
+    services: {},
     error: ''
-}
+};
 
-export const requestServicesReducer = (state=initialStateServices, action={}) => {
+export const servicesReducer = (state=initialStateServices, action={}) => {
     switch(action.type) {
-        case REQUEST_GET_SERVICES_SUCCESS:
+        case GET_SERVICES_SUCCESS:
             return Object.assign({}, state, { services: action.payload});
-        case REQUEST_GET_SERVICES_FAILED:
-            return Object.assign({}, state, { error: action.payload});
+        case GET_SERVICES_FAILED:
+            return Object.assign({}, state, { error: action.payload});    
         default:
             return state;   
     }
-}
+};

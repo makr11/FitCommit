@@ -4,52 +4,51 @@ import Typography from '@material-ui/core/Typography';
 
 import {connect} from 'react-redux';
 
-import {requestUserProfile} from '../../../redux/actions';
-
 import AddRecord from './AddRecord';
 import ListUserRecords from './ListUserRecords';
 
-const mapStateToProps = state => {
-  return {
-      userProfile: state.userProfile.profile,
-  }
-};
+import { requestUserRecords, reset } from '../../../redux/actions'
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    requestUserProfile: () => dispatch(requestUserProfile()),
+      getRecords: (id) => dispatch(requestUserRecords(id)),
+      resetProfile: () => dispatch(reset('profile')),
+      resetRecords: () => dispatch(reset('records')),
   }
-}
+};
 
 class Profile extends React.Component {
 
-  componentDidMount() {
-    this.props.requestUserProfile()
-  }
+  componentDidUpdate(prevProps){
+    if(prevProps.user!==this.props.user){
+      this.props.getRecords(this.props.user.id);
+    }
+  };
 
-  componentWillUnmount() {
-    this.props.requestUserProfile()
-  }
+  componentWillUnmount(){
+    this.props.resetProfile();;
+    this.props.resetRecords();
+  };
   
   render() {
-    const { userProfile } = this.props
+    const { user } = this.props
     return (
-      (userProfile!==undefined) ?
+      (user!==undefined) ?
       <div>
         <Paper elevation={1}>
           <Typography variant="headline" component="h3">
-            {userProfile.first_name}
+            {user.first_name}
           </Typography>
           <Typography component="p">
-            {userProfile.email}
+            {user.email}
           </Typography>
-          <AddRecord user={userProfile.id}/>
-          <ListUserRecords user={userProfile.records}/>
+          <AddRecord user={user.id}/>
+          <ListUserRecords />
         </Paper>
       </div>:
-      <h1>Loading</h1>
+      <span></span>
     );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(null, mapDispatchToProps)(Profile);

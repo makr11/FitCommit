@@ -10,7 +10,7 @@ import Radio from '@material-ui/core/Radio';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
-import { submitNewRecord } from '../../../redux/actions';
+import { submitFormRecord } from '../../../redux/actions';
 
 const styles = theme => ({
     root: {
@@ -25,13 +25,13 @@ const styles = theme => ({
 
 const mapStateToProps = state => {
     return {
-        services: state.requestServicesReducer.services,
+        services: state.servicesReducer.services,
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        submitRecord : (lead) => dispatch(submitNewRecord(lead)),
+        submitRecord : (lead) => dispatch(submitFormRecord(lead)),
     }
 }
 

@@ -31,6 +31,12 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
 });
 
+const mapStateToProps = state => {
+  return {
+      userProfile: state.userProfileReducer.profile,
+  }
+};
+
 const mapDispatchToProps = (dispatch) => {
   return{
     getUsers: () => dispatch(requestUsers()),
@@ -46,7 +52,7 @@ class App extends React.Component {
   }
   
   render(){
-    const { classes } = this.props;
+    const { classes, userProfile } = this.props;
     return (
       <div className={classes.root}>
         <Navbar />
@@ -56,8 +62,7 @@ class App extends React.Component {
             <Switch>
               <Route path="/registry" component={Users} />
               <Route path="/services" component={Services} />
-              <Route path="/profile" component={Profile} />
-              <Route path="/services" component={Services} />
+              <Route path="/profile" render={() => <Profile user={userProfile}/>} />
               <Route path="/arrivals" component={Arrivals}/>
             </Switch>
         </main>
@@ -70,4 +75,4 @@ App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(withStyles(styles)(App)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App)));
