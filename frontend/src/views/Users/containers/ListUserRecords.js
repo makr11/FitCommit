@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,7 +8,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-import { deleteInstance } from '../../../redux/actions';
+import TableUserRecords from '../components/TableUserRecords'
+
+import { removeInstance, updateFormRecord } from '../../../redux/actions';
 
 const styles = theme => ({
   root: {
@@ -31,14 +31,20 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name)),
+        removeInstance: (e) => dispatch(removeInstance(e.currentTarget.id, e.currentTarget.name)),
+        paidCheck: (id, index, paid) => dispatch(updateFormRecord(id, index, paid))
     }
 }
 
 class ListRecords extends React.Component {
+    
+    handlePaidCheck(index, paid, e){
+        const id = e.currentTarget.id;
+        this.props.paidCheck(parseInt(id, 10), parseInt(index, 10), (paid) ? {paid: 0} : {paid: 1});
+    }
 
     render(){
-        const { classes, records, deleteInstance } = this.props;
+        const { classes, records, removeInstance } = this.props;
 
         return(
             <Paper className={classes.root}>
@@ -51,26 +57,22 @@ class ListRecords extends React.Component {
                         <TableCell numeric>Cijena</TableCell>
                         <TableCell>Započelo</TableCell>
                         <TableCell>Ističe</TableCell>
+                        <TableCell>Plaćeno</TableCell>
                         <TableCell>Obriši</TableCell>
                     </TableRow>
                     </TableHead>
                     {(records)?
                         <TableBody>
-                        {records.map(record => {
+                        {records.map((record, index) => {
                             return (
-                            <TableRow key={record.id}>
-                                <TableCell>{record.service}</TableCell>
-                                <TableCell>{record.category}</TableCell>
-                                <TableCell numeric>{record.quantity}</TableCell>
-                                <TableCell>{record.price + " kn"}</TableCell>
-                                <TableCell>{record.started}</TableCell>
-                                <TableCell>{record.ends}</TableCell>
-                                <TableCell>
-                                    <IconButton name="record" id={record.id} onClick={deleteInstance}>    
-                                        <DeleteIcon/>
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
+                                <TableUserRecords
+                                key={record.id}
+                                record={record}
+                                index={index}
+                                removeInstance={removeInstance}
+                                handlePaidCheck={this.handlePaidCheck}
+                                paidCheck={this.props.paidCheck}
+                                />
                             );
                         })}
                     </TableBody>:undefined}

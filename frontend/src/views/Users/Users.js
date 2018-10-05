@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-import { requestUserProfile, deleteInstance } from '../../redux/actions';
+import { requestUserProfile, removeInstance } from '../../redux/actions';
 
 import AddUser from './containers/AddUser';
 
@@ -37,7 +37,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         handleSelectUserClick: (e) => dispatch(requestUserProfile(e.currentTarget.id)),
-        deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name))
+        removeInstance: (e) => dispatch(removeInstance(e.currentTarget.id, e.currentTarget.name))
     }
 };
 
@@ -46,7 +46,7 @@ class MembersRegistry extends React.Component {
 
     render(){
 
-        const { classes, users, handleSelectUserClick, deleteInstance } = this.props;
+        const { classes, users, handleSelectUserClick, removeInstance } = this.props;
         return (
           
           (users!==undefined) ?
@@ -77,7 +77,7 @@ class MembersRegistry extends React.Component {
                             <TableCell>{user.last_name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>
-                                <IconButton name="user" id={user.id} onClick={deleteInstance}>    
+                                <IconButton name="user" id={user.id} onClick={removeInstance}>    
                                     <DeleteIcon/>
                                 </IconButton>
                             </TableCell>

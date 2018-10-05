@@ -1,11 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 import UserArrival from './containers/UserArrival';
+
+import {requestArrivalsByDate} from '../../redux/actions'
 
 const styles = (theme) => ({
     textField: {
@@ -16,42 +23,103 @@ const styles = (theme) => ({
     button: {
     margin: theme.spacing.unit,
     },
+    table: {
+        minWidth: 700,
+    },
 });
 
-class Arrivals extends React.Component {   
+const mapStateToProps = state => {
+    return {
+        arrivals: state.arrivalsByDateReducer.arrivals,
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectArrivals: (date) => dispatch(requestArrivalsByDate(date))
+    }
+};
+
+class Arrivals extends React.Component { 
+    constructor(props){
+        super(props);
+        let date = new Date(); 
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let year = date.getFullYear();
+        if(month<10) {
+            month = '0' + month
+        };
+        if(day<10){
+            day = '0' + date.getDate()
+        }; 
+        this.state = {
+            selectedDate: year + '-' + month + '-' + day,
+        };
+    }; 
+
+    componentDidMount(){
+        this.props.selectArrivals(this.state.selectedDate);
+    }
+
+    setDate = (e) => {
+        const date = e.currentTarget.value;
+        this.setState({
+            selectedDate: date
+        },
+        () => this.props.selectArrivals(date))
+    };
 
     render() {
-        const { classes } = this.props;
+        const { classes, arrivals } = this.props;
+        const { selectedDate } = this.state;
 
         return(
             <Paper>
                 <Typography variant="title">
                     Evidencija dolazaka
                 </Typography>
-                <form className={classes.container} noValidate>
-                    <TextField
-                        id="date"
-                        label="Datum"
-                        type="date"
-                        defaultValue="2017-05-24"
-                        className={classes.textField}
-                        InputLabelProps={{
-                        shrink: true,
-                        }}
-                    />
-                    <Button 
-                    variant="outlined" 
-                    color="primary" 
-                    className={classes.button}
-                    type="submit"
-                    >
-                        Izaberi
-                    </Button>
-                </form>
-                <UserArrival />
+                <TextField
+                    id="date"
+                    label="Datum"
+                    type="date"
+                    defaultValue={selectedDate}
+                    className={classes.textField}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
+                    onChange={this.setDate}
+                />
+                <UserArrival date={selectedDate}/>
+                <Table className={classes.table}>
+                    <TableHead>
+                    <TableRow>
+                        <TableCell>Korisnik</TableCell>
+                        <TableCell>Usluga</TableCell>
+                        <TableCell>Dolazak</TableCell>
+                        <TableCell>Odlazak</TableCell>
+                        <TableCell>Dug</TableCell>
+                        <TableCell>Obriši</TableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {arrivals.map(arrival => {
+                        return (
+                            <TableRow key={arrival.id} >
+                                <TableCell>{arrival.user}</TableCell>
+                                <TableCell>{arrival.category + ' (' + arrival.service + ')'}</TableCell>
+                                <TableCell>{arrival.arrival_time}</TableCell>
+                                <TableCell>{arrival.arrival_leave}</TableCell>
+                                <TableCell></TableCell>
+                                <TableCell>Ne</TableCell>
+                            </TableRow>
+                        );
+                    })}
+                    </TableBody>
+                </Table>
             </Paper>
         )
     }
 };
 
-export default withStyles(styles)(Arrivals);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Arrivals));

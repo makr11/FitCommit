@@ -12,7 +12,7 @@ import storage from 'redux-persist/lib/storage';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import "./assets/spartacus-style.css";
-import { formInput, usersReducer, servicesReducer, userProfileReducer, userRecordsReducer } from './redux/reducers';
+import { formInput, usersReducer, servicesReducer, userProfileReducer, userRecordsReducer, arrivalsByDateReducer } from './redux/reducers';
 
 const persistConfig = {
   key: 'root',
@@ -25,6 +25,7 @@ const rootReducers = combineReducers({
   servicesReducer,
   userRecordsReducer,
   userProfileReducer,
+  arrivalsByDateReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducers)

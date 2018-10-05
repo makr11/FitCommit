@@ -8,6 +8,9 @@ import {
     GET_USER_RECORDS_FAILED,
     GET_SERVICES_SUCCESS,
     GET_SERVICES_FAILED,
+    GET_ARRIVALS_BY_DATE_SUCCESS,
+    GET_ARRIVALS_BY_DATE_FAILED,
+    PATCH_RECORD_SUCCESS,
     DELETE_USER_SUCCESS,
     DELETE_USER_RECORD_SUCCESS,
     RESET_PROFILE,
@@ -36,7 +39,7 @@ export const usersReducer = (state=initialStateUsers, action={}) => {
         case GET_USERS_FAILED:
             return Object.assign({}, state, { error: action.payload});
         case DELETE_USER_SUCCESS:
-            const users = action.state.usersReducer.users.filter(record => record.id !== parseInt(action.targetID, 10));
+            const users = action.state.usersReducer.users.filter(record => record.id !== parseInt(action.lead.id, 10));
             state = {
                 ...action.state.users,
                 users: users,  
@@ -77,12 +80,21 @@ export const userRecordsReducer = (state=initialStateUserRecords, action={}) => 
         case GET_USER_RECORDS_FAILED:
             return Object.assign({}, state, { error: action.payload});
         case DELETE_USER_RECORD_SUCCESS:
-            const records = action.state.userRecordsReducer.records.filter(record => record.id !== parseInt(action.targetID, 10));
+            const records = action.state.userRecordsReducer.records.filter(record => record.id !== parseInt(action.lead.id, 10));
             state = {
                 ...action.state.userRecords,
                 records: records,  
             };
             return state;
+        case PATCH_RECORD_SUCCESS:
+            let clonedRecords = action.state.userRecordsReducer.records.slice();
+            clonedRecords[action.index].paid=(action.lead.paid) ? true:false;
+            state = {
+                ...action.state.userRecordsReducer,
+                records: [...clonedRecords]
+            };
+            console.log(state);
+            return state
         case RESET_RECORDS:
             return {}
         default:
@@ -105,3 +117,19 @@ export const servicesReducer = (state=initialStateServices, action={}) => {
             return state;   
     }
 };
+
+const initArrivalsByDate = {
+    arrivals: {},
+    error: '',
+}
+
+export const arrivalsByDateReducer = (state=initArrivalsByDate, action={}) => {
+    switch(action.type) {
+        case GET_ARRIVALS_BY_DATE_SUCCESS:
+            return Object.assign({}, state, {arrivals: action.payload})
+        case GET_ARRIVALS_BY_DATE_FAILED:
+            return Object.assign({}, state, { error: action.payload}); 
+        default:
+            return state;
+    }
+}

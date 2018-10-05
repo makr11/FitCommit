@@ -19,7 +19,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AppsIcon from '@material-ui/icons/Apps';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { requestServices, deleteInstance } from '../../../redux/actions';
+import { requestServices, removeInstance } from '../../../redux/actions';
 
 import ServicesForm from './ServicesForm';
 
@@ -41,7 +41,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
     return {
         getServices: () => dispatch(requestServices()),
-        deleteInstance: (e) => dispatch(deleteInstance(e.currentTarget.id, e.currentTarget.name))
+        removeInstance: (e) => dispatch(removeInstance(e.currentTarget.id, e.currentTarget.name))
     }
 };
 
@@ -109,7 +109,7 @@ class ServicesList extends React.Component {
     };
     
     render() {
-        const { classes, services, deleteInstance } = this.props;
+        const { classes, services, removeInstance } = this.props;
         console.log(this.state);
         return (
             (services!==undefined) ?
@@ -138,7 +138,7 @@ class ServicesList extends React.Component {
                                             <Typography variant="title">
                                                 {category.category}
                                             </Typography>
-                                            <Button name="category" id={category.id} onClick={deleteInstance}>
+                                            <Button name="category" id={category.id} onClick={removeInstance}>
                                                 Obriši
                                             </Button>
                                             <Button name="option" id={category.id} onClick={this.showForm}>
@@ -172,11 +172,11 @@ class ServicesList extends React.Component {
                                             {category.options.map(option => {
                                                 return (
                                                 <TableRow key={option.id}>
-                                                    <TableCell numeric>{option.quantity}</TableCell>
+                                                    <TableCell numeric>{option.arrivals}</TableCell>
                                                     <TableCell numeric>{option.price}</TableCell>
                                                     <TableCell numeric>{option.duration}</TableCell>
                                                     <TableCell numeric>
-                                                        <Button name="option" id={option.id} onClick={deleteInstance}>
+                                                        <Button name="option" id={option.id} onClick={removeInstance}>
                                                             <DeleteIcon />
                                                         </Button>
                                                     </TableCell>
@@ -227,7 +227,7 @@ class ServicesList extends React.Component {
                                 />:undefined
                                 }
                                 <ExpansionPanelActions>
-                                    <Button name="service" id={service.id} onClick={deleteInstance}>
+                                    <Button name="service" id={service.id} onClick={removeInstance}>
                                         Obriši
                                     </Button>
                                     <Button name="category" id={service.id} onClick={this.showForm}>

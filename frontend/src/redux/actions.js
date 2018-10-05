@@ -8,10 +8,14 @@ import {
     GET_USER_RECORDS_FAILED,
     GET_SERVICES_SUCCESS,
     GET_SERVICES_FAILED,
+    GET_ARRIVALS_BY_DATE_SUCCESS,
+    GET_ARRIVALS_BY_DATE_FAILED,
     POST_SERVICE_FAILED,
     PUT_SERVICE_SUCCESS,
     PUT_SERVICE_FAILED,
     POST_RECORD_FAILED,
+    PATCH_RECORD_SUCCESS,
+    PATCH_RECORD_FAILED,
     DELETE_USER_SUCCESS,
     DELETE_USER_RECORD_SUCCESS,
     RESET_PROFILE,
@@ -24,7 +28,8 @@ import {
     categories,
     options,
     records,
-    userRecords
+    userRecords,
+    arrivals
 } from './apiUrls';
 
 export const onFormChangeFields = (obj) => ({
@@ -51,14 +56,21 @@ export const requestUserRecords = (id) => (dispatch) => {
     .then(response => response.json())
     .then(data => dispatch({ type: GET_USER_RECORDS_SUCCESS, payload: data}))
     .catch(error => dispatch({ type: GET_USER_RECORDS_FAILED, payload: error}))
-}
+};
 
 export const requestServices = () => (dispatch) => {
     fetch(services)
     .then(response => response.json())
     .then(data => dispatch({type: GET_SERVICES_SUCCESS, payload: data}))
     .catch(error => dispatch({ type: GET_SERVICES_FAILED, payload: error}));
-}
+};
+
+export const requestArrivalsByDate = (date) => (dispatch) => {
+    fetch(arrivals + date)
+    .then(response => response.json())
+    .then(data => dispatch({ type: GET_ARRIVALS_BY_DATE_SUCCESS, payload: data}))
+    .catch(error => dispatch({ type: GET_ARRIVALS_BY_DATE_FAILED, payload: error}))
+};
 
 export const submitFormService = (lead) => (dispatch) => {
     let url = undefined;
@@ -137,19 +149,43 @@ export const submitFormRecord = (lead) => (dispatch, getState) => {
     .catch(error => dispatch({ type: POST_RECORD_FAILED, payload: error}));
 }
 
-export const deleteInstance = (id, name) => (dispatch, getState) => {
-    let targetID = id;
+export const updateFormRecord = (id, index, lead) => (dispatch, getState) => {
+    const state = getState()
+    const conf = {
+        method: "PATCH",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(lead),
+    };
+
+    fetch(records + id, conf)
+    .then(response => {
+        console.log(response);
+        dispatch({type: PATCH_RECORD_SUCCESS, index, lead, state})
+    })
+    .catch(error => {
+        console.log(error);
+        dispatch({type: PATCH_RECORD_FAILED})
+    })
+}
+
+export const removeInstance = (id, name) => (dispatch, getState) => {
+    let deleted = true;
+    const lead = { id, deleted };
     let url = undefined;
     let type = undefined;
     let state = getState();
 
     const conf = {
-        method: "DELETE",
+        method: "PATCH",
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-      };
+        body: JSON.stringify(lead),
+    };
 
     switch(name){
         case ('service'):
@@ -173,10 +209,10 @@ export const deleteInstance = (id, name) => (dispatch, getState) => {
             break;
     };
 
-    fetch(url + targetID, conf)
+    fetch(url + lead.id, conf)
     .then(response => {
         console.log(response);
-        dispatch({type: type, payload: name, targetID, state})
+        dispatch({type: type, name, lead, state})
         }
     )
     .catch(error => console.log(error));
@@ -191,4 +227,23 @@ export const reset = (name) => {
         default:
             break
     }
+};
+
+export const submitFormArrival = (lead) => (dispatch) => {
+    const conf = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(lead),
+    };
+    fetch(arrivals, conf)
+    .then(response => {
+        console.log(response);
+        dispatch(requestArrivalsByDate(lead.date))
+    })
+    .catch(error => {
+        console.log(error)
+    });
 };

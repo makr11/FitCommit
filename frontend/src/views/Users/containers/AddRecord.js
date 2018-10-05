@@ -1,13 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import FormLabel from '@material-ui/core/FormLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Radio from '@material-ui/core/Radio';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import { withStyles } from '@material-ui/core/styles';
 
 import { submitFormRecord } from '../../../redux/actions';
@@ -16,11 +21,21 @@ const styles = theme => ({
     root: {
       flexGrow: 1,
     },
+    margin: {
+        margin: theme.spacing.unit,
+    },
     paper: {
       padding: theme.spacing.unit * 2,
       textAlign: 'center',
       color: theme.palette.text.secondary,
     },
+    textField: {
+        flexBasis: 200,
+        margin: 10
+    },
+    form: {
+        flexDirection: 'row',
+    }
   });
 
 const mapStateToProps = state => {
@@ -42,9 +57,13 @@ class AddRecord extends React.Component {
         category: [],
         options:[],
         option: [],
+        price: '',
+        discount: '',
+        nettPrice: '',
+        paid: false,
       };
     
-    handleChange = e => {
+    handleSelectService = e => {
         switch(e.target.name){
             case ('service'):
                 for(let i=0; i<this.props.services.length; i++){
@@ -70,14 +89,27 @@ class AddRecord extends React.Component {
                     if(this.state.options[i].id===parseInt(e.target.value, 10)){
                         this.setState({ 
                             option: this.state.options[i],
+                            price: this.state.options[i].price,
+                            discount: 0,
+                            nettPrice: this.state.options[i].price,
                         });
                     }
                 } 
-                break
+                break 
             default:
                 break    
         }
     };
+
+    handleServiceInput = (e) => {
+        let value = (e.target.name==="paid") ? e.target.checked : e.target.value;
+        this.setState(
+            {[e.target.name]: value},
+        () => {
+            const discount = 1 - (this.state.discount / 100);
+            this.setState({nettPrice: this.state.price * discount})
+        });
+    }
 
     submitRecordToUser = (e) => {
         e.preventDefault();
@@ -85,7 +117,9 @@ class AddRecord extends React.Component {
         const service = this.state.service.id;
         const category = this.state.category.id;
         const option = this.state.option.id;
-        const lead = {user, service, category, option};
+        const price = this.state.price;
+        const {discount, nettPrice, paid} = this.state;
+        const lead = {user, service, category, option, price, discount, nettPrice, paid};
         this.props.submitRecord(lead);
     }
 
@@ -102,7 +136,7 @@ class AddRecord extends React.Component {
                             name="service"
                             aria-label="service"
                             value={service.service}
-                            onChange={this.handleChange}
+                            onChange={this.handleSelectService}
                             >
                             {services.map(service => {
                                 return(
@@ -123,7 +157,7 @@ class AddRecord extends React.Component {
                             name="category"
                             aria-label="category"
                             value={category.category}
-                            onChange={this.handleChange}
+                            onChange={this.handleSelectService}
                             >
                             {categories.map(category => {
                                 return(
@@ -144,7 +178,7 @@ class AddRecord extends React.Component {
                             name="option"
                             aria-label="option"
                             value={(option.id)?option.id.toString():""}
-                            onChange={this.handleChange}
+                            onChange={this.handleSelectService}
                             >
                             {options.map(option => {
                                 return(
@@ -152,24 +186,76 @@ class AddRecord extends React.Component {
                                     key={option.id} 
                                     value={option.id.toString()} 
                                     control={<Radio />} 
-                                    label={option.price + " kn (" + option.quantity + " dolazaka/" + option.duration + " dana)"} />
+                                    label={option.price + " kn (" + option.arrivals + " dolazaka/" + option.duration + " dana)"} />
                                 )
                             })}
                             </RadioGroup>
                         </Paper>
                     </Grid>
-                    <Grid item xs={3}>
-                        <Button
-                            variant="outlined" 
-                            color="primary" 
-                            className={classes.button}
-                            type="button"
-                            onClick={this.submitRecordToUser}
-                        >
-                        Upiši uslugu
-                        </Button>
-                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl className={classes.form}>
+                            <TextField
+                                label="Cijena"
+                                name="price"
+                                className={classes.textField}
+                                value={this.state.price}
+                                InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment variant="filled" position="end">
+                                        Kn
+                                      </InputAdornment>
+                                    ),
+                                }}
+                            />
+                            <TextField
+                                label="Popust"
+                                name="discount"
+                                className={classes.textField}
+                                onChange={this.handleServiceInput}
+                                InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment variant="filled" position="end">
+                                        %
+                                      </InputAdornment>
+                                    ),
+                                  }}
+                            />   
+                            <TextField
+                                label="Cijena sa popustom"
+                                id="discounted_price"
+                                className={classes.textField}
+                                value={this.state.nettPrice}
+                                InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment variant="filled" position="end">
+                                        Kn
+                                      </InputAdornment>
+                                    ),
+                                  }}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                    name="paid"
+                                    checked={this.state.paid}
+                                    onChange={this.handleServiceInput}
+                                    />
+                                }
+                                label={(this.state.paid)?'Plaćeno':'Nije plaćeno'}
+                            />
+                            <Button
+                                variant="outlined" 
+                                color="primary" 
+                                className={classes.button}
+                                type="button"
+                                onClick={this.submitRecordToUser}
+                            >
+                            Upiši uslugu
+                            </Button>
+                        </FormControl>
+                    </Grid>    
                 </Grid>
+                
             </div>
         )
     }

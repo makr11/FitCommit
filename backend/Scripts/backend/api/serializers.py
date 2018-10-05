@@ -1,11 +1,10 @@
 import datetime
 
 from django.contrib.auth import get_user_model
-from django.core import serializers as django_serializers
 
 from rest_framework import serializers as drf_serializers
 
-from .models import CustomUser, Services, Categories, Options, Records
+from .models import CustomUser, Services, Categories, Options, Records, Arrivals
 
 
 CustomUser = get_user_model()
@@ -15,7 +14,7 @@ class OptionsSerializer(drf_serializers.ModelSerializer):
 
     class Meta:
         model = Options
-        fields = ('id', 'quantity', 'price', 'duration', 'categoryID')
+        fields = '__all__'
 
 class CategoriesSerializer(drf_serializers.ModelSerializer):
 
@@ -23,7 +22,7 @@ class CategoriesSerializer(drf_serializers.ModelSerializer):
 
     class Meta:
         model = Categories
-        fields = ('id', 'category', 'serviceID', 'options')
+        fields = '__all__'
 
 class ServicesSerializer(drf_serializers.ModelSerializer):
 
@@ -31,9 +30,14 @@ class ServicesSerializer(drf_serializers.ModelSerializer):
  
     class Meta:
         model = Services
-        fields = ('id', 'service', 'categories')
+        fields = '__all__'
 
 class RecordsSerializer(drf_serializers.ModelSerializer):
+    user = drf_serializers.ReadOnlyField()
+    service = drf_serializers.CharField(source='serviceObj')
+    category = drf_serializers.CharField(source='categoryObj')
+    arrivals = drf_serializers.CharField(source='optionObj.arrivals')
+    duration = drf_serializers.CharField(source='optionObj.duration')
 
     class Meta:
         model = Records
@@ -45,3 +49,13 @@ class UserSerializer(drf_serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
+class ArrivalsSerializer(drf_serializers.ModelSerializer):
+    user = drf_serializers.CharField(source='userObj')
+    service = drf_serializers.CharField(source='recordObj.serviceObj')
+    category = drf_serializers.CharField(source='recordObj.categoryObj')
+    arrivals_left = drf_serializers.IntegerField(source='recordObj.arrivals_left')
+    paid = drf_serializers.BooleanField(source='recordObj.paid')
+
+    class Meta:
+        model = Arrivals
+        fields = '__all__'

@@ -1,4 +1,5 @@
 import datetime
+import pytz
 
 from rest_framework import generics, status, serializers, viewsets
 from rest_framework.response import Response
@@ -6,22 +7,38 @@ from rest_framework.views import APIView
 
 from django.contrib.auth import get_user_model
 from django.core import serializers
+from django.utils import timezone
 
-from .models import Services, Categories, Options, CustomUser, Records
+from .models import Services, Categories, Options, CustomUser, Records, Arrivals
 
 from .serializers import (UserSerializer, 
                          ServicesSerializer, 
                          CategoriesSerializer, 
                          OptionsSerializer, 
                          RecordsSerializer, 
+                         ArrivalsSerializer,
                          )
-
-now = datetime.datetime.now()
 
 CustomUser = get_user_model()
 
+def date(date_now, date_selected):
+    edit_date = date_selected.split('-')
+    if date_now.year==int(edit_date[0]) and date_now.month == int(edit_date[1]) and date_now.day == int(edit_date[2]):
+        time = str(date_now.hour) + ':' + str(date_now.minute)
+        date_time = (date_now, time)
+    else:
+        date = date_now - datetime.datetime(int(edit_date[0]), int(edit_date[1]), int(edit_date[2]), 23, 59, 59, 59, pytz.UTC)
+        date = date_now - date 
+        time = '00:00'
+        date_time = (date, time)
+    return date_time
+
 class ListUsers(generics.ListCreateAPIView):
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.filter(deleted=0)
+    serializer_class = UserSerializer
+
+class ListDeletedUsers(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.filter(deleted=1)
     serializer_class = UserSerializer
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -92,7 +109,7 @@ class ListOptions(viewsets.ModelViewSet):
         serializer = OptionsSerializer(data=request.data)
         if serializer.is_valid():
             category = Categories.objects.get(pk=request.data['categoryID'])
-            options = Options(quantity=request.data['quantity'], 
+            options = Options(arrivals=request.data['arrivals'], 
                               price=request.data['price'],
                               duration=request.data['duration'],
                               categoryID=category)
@@ -113,31 +130,25 @@ class ListRecords(viewsets.ModelViewSet):
         return Records.objects.all().order_by('-ends')
 
     def create(self, request):
+        now = timezone.now()
         user = CustomUser.objects.get(pk=request.data['user'])
         service = Services.objects.get(pk=request.data['service'])
         category = Categories.objects.get(pk=request.data['category'])
         option = Options.objects.get(pk=request.data['option'])
-        price = option.price
-        discount = 0.5
-        started = now
-        ends = started + datetime.timedelta(days=option.duration)
+        discount = request.data['discount']
+        ends = now + datetime.timedelta(days=option.duration)
         days_left = ends - now
         record = Records(
             userObj=user, 
-            servicesObj=service,
-            categoriesObj=category,
-            optionsObj=option,
-            user=user.first_name + " " + user.last_name,
-            service=service.service,
-            category=category.category,
-            quantity=option.quantity,
-            quantity_left=option.quantity,
+            serviceObj=service,
+            categoryObj=category,
+            optionObj=option,
+            arrivals_left=option.arrivals,
             price=option.price,
-            discount=0.5,
-            nett_price=price*discount,
-            paid=True,
-            duration=option.duration,
-            started=started,
+            discount=request.data['discount'],
+            nett_price=request.data['nettPrice'],
+            paid=request.data['paid'],
+            started=now,
             ends=ends,
             days_left=days_left.days)
         record.save()
@@ -148,7 +159,7 @@ class ListUserRecords(generics.ListAPIView):
 
     def get_queryset(self):
         user=self.kwargs['pk']
-        return Records.objects.filter(userObj=user).order_by('-ends')
+        return Records.objects.filter(userObj=user, deleted=0).order_by('-ends')
 
 class RecordsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Records.objects.all()
@@ -159,4 +170,33 @@ class ListUsersActive(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return CustomUser.objects.filter(user_records__ends__gte=now)
+
+class ListArrivals(viewsets.ModelViewSet):
+    serializer_class = ArrivalsSerializer
+    
+    def get_queryset(self):
+        return Arrivals.objects.all().order_by('-arrival')
+
+    def create(self, request):
+        now = timezone.now()
+        user = CustomUser.objects.get(pk=request.data['user'])
+        record = Records.objects.get(pk=request.data['record'])
+        record.arrivals_left -= 1
+        record.save()
+        date_time = date(now, request.data['date']) 
+        arrival = Arrivals(
+            userObj=user,
+            recordObj=record,
+            arrival=date_time[0],
+            arrival_time=date_time[1]
+        )
+        arrival.save()
+        return Response()
+
+class ListArrivalsByDate(generics.ListAPIView):
+    serializer_class = ArrivalsSerializer
+
+    def get_queryset(self):
+        selected_date=self.kwargs['date']
+        return Arrivals.objects.filter(arrival__date=selected_date).order_by('-arrival')
 

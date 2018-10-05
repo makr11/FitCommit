@@ -30,7 +30,7 @@ const mapStateToProps = (state) => {
       services: state.servicesReducer.services,
       service: state.formInput.service,
       category: state.formInput.category,
-      quantity: state.formInput.quantity,
+      arrivals: state.formInput.arrivals,
       price: state.formInput.price,
       duration: state.formInput.duration,
     }
@@ -56,7 +56,7 @@ class ServicesForm extends React.Component {
                 categoryID,  
                 category, 
                 optionID, 
-                quantity, 
+                arrivals, 
                 price, 
                 duration,
                 update } = this.props;
@@ -65,9 +65,10 @@ class ServicesForm extends React.Component {
                        categoryID, 
                        category, 
                        optionID, 
-                       quantity,     
+                       arrivals,     
                        price, 
-                       duration };
+                       duration,
+                       };
         
         (update) ? this.props.handleUpdate(lead) : this.props.handleSubmit(lead);
     };
@@ -105,7 +106,7 @@ class ServicesForm extends React.Component {
                     onChange={handleChange}
                     />
                     <TextField
-                    id="quantity"
+                    id="arrivals"
                     label="Broj dolazaka"
                     className={(hideOption) ? hiddenField.join(" ") : classes.textField}
                     type="number"

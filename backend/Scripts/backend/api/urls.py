@@ -1,16 +1,19 @@
 from django.urls import path
-from .views import (ListUsers, 
-                   UserDetail, 
-                   ListServices, 
-                   ServicesDetail, 
-                   ListCategories, 
-                   CategoriesDetail, 
-                   ListOptions, 
-                   OptionsDetail,
-                   ListRecords,
-                   RecordsDetail,
-                   ListUsersActive,
-                   ListUserRecords)
+from .views import (ListUsers,
+                    ListDeletedUsers,
+                    UserDetail, 
+                    ListServices, 
+                    ServicesDetail, 
+                    ListCategories, 
+                    CategoriesDetail, 
+                    ListOptions, 
+                    OptionsDetail,
+                    ListRecords,
+                    RecordsDetail,
+                    ListUsersActive,
+                    ListUserRecords,
+                    ListArrivals,
+                    ListArrivalsByDate,)
 from django.contrib.auth import get_user_model
 
 CustomUser = get_user_model()
@@ -40,8 +43,14 @@ users_active_list = ListUsersActive.as_view({
     'post': 'create'
 })
 
+arrivals_list = ListArrivals.as_view({
+    'get': 'list',
+    'post': 'create',
+})
+
 urlpatterns = [
     path('users/', ListUsers.as_view(), name='users'),
+    path('users-deleted/', ListDeletedUsers.as_view(), name='users'),
     path('users/<int:pk>', UserDetail.as_view()),
     path('user_records/<int:pk>', ListUserRecords.as_view(), name='user_records'),
     path('services/', services_list, name='services'),
@@ -53,4 +62,6 @@ urlpatterns = [
     path('records/', records_list, name='records'),
     path('records/<int:pk>', RecordsDetail.as_view()),
     path('users_active/', users_active_list, name="users_active"),
+    path('arrivals/', arrivals_list, name='users_active'),
+    path('arrivals/<str:date>', ListArrivalsByDate.as_view(), name='arrivals_by_date')
 ]
