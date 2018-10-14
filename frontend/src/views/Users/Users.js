@@ -48,8 +48,6 @@ class MembersRegistry extends React.Component {
 
         const { classes, users, handleSelectUserClick, removeInstance } = this.props;
         return (
-          
-          (users!==undefined) ?
           <Paper className={classes.root}>
             <AddUser/>
             <Table className={classes.table}>
@@ -86,8 +84,7 @@ class MembersRegistry extends React.Component {
                 })}
                 </TableBody>
             </Table>
-          </Paper> :
-          <h1>Loading</h1>
+          </Paper> 
         )
     }
     

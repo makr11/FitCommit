@@ -9,10 +9,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import UserArrival from './containers/UserArrival';
 
-import {requestArrivalsByDate} from '../../redux/actions'
+import {requestArrivalsByDate, deleteInstance} from '../../redux/actions'
 
 const styles = (theme) => ({
     textField: {
@@ -36,7 +38,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectArrivals: (date) => dispatch(requestArrivalsByDate(date))
+        selectArrivals: (date) => dispatch(requestArrivalsByDate(date)),
+        deleteArrivals: (e) => dispatch(deleteInstance(e.currentTarget.name, e.currentTarget.id))
     }
 };
 
@@ -71,7 +74,7 @@ class Arrivals extends React.Component {
     };
 
     render() {
-        const { classes, arrivals } = this.props;
+        const { classes, arrivals, deleteArrivals } = this.props;
         const { selectedDate } = this.state;
 
         return(
@@ -97,7 +100,6 @@ class Arrivals extends React.Component {
                         <TableCell>Korisnik</TableCell>
                         <TableCell>Usluga</TableCell>
                         <TableCell>Dolazak</TableCell>
-                        <TableCell>Odlazak</TableCell>
                         <TableCell>Dug</TableCell>
                         <TableCell>Obriši</TableCell>
                     </TableRow>
@@ -109,9 +111,12 @@ class Arrivals extends React.Component {
                                 <TableCell>{arrival.user}</TableCell>
                                 <TableCell>{arrival.category + ' (' + arrival.service + ')'}</TableCell>
                                 <TableCell>{arrival.arrival_time}</TableCell>
-                                <TableCell>{arrival.arrival_leave}</TableCell>
                                 <TableCell></TableCell>
-                                <TableCell>Ne</TableCell>
+                                <TableCell>
+                                    <IconButton name="arrival" id={arrival.id} onClick={deleteArrivals}>    
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         );
                     })}

@@ -11,10 +11,14 @@ import {
     GET_ARRIVALS_BY_DATE_SUCCESS,
     GET_ARRIVALS_BY_DATE_FAILED,
     PATCH_RECORD_SUCCESS,
-    DELETE_USER_SUCCESS,
-    DELETE_USER_RECORD_SUCCESS,
+    REMOVE_USER_SUCCESS,
+    REMOVE_USER_RECORD_SUCCESS,
+    REMOVE_SERVICE_SUCCESS,
+    REMOVE_CATEGORY_SUCCESS,
+    REMOVE_OPTION_SUCCESS,
     RESET_PROFILE,
     RESET_RECORDS,
+    DELETE_ARRIVAL_SUCCESS,
     } from './constants';
 
 export const formInput = (state={}, action={}) => {
@@ -28,7 +32,7 @@ export const formInput = (state={}, action={}) => {
 }
 
 const initialStateUsers = {
-    users: {},
+    users: [],
     error: ''
 }
 
@@ -38,7 +42,7 @@ export const usersReducer = (state=initialStateUsers, action={}) => {
             return Object.assign({}, state, { users: action.payload});
         case GET_USERS_FAILED:
             return Object.assign({}, state, { error: action.payload});
-        case DELETE_USER_SUCCESS:
+        case REMOVE_USER_SUCCESS:
             const users = action.state.usersReducer.users.filter(record => record.id !== parseInt(action.lead.id, 10));
             state = {
                 ...action.state.users,
@@ -51,7 +55,7 @@ export const usersReducer = (state=initialStateUsers, action={}) => {
 }
 
 const initialStateProfile = {
-    profile: {},
+    profile: [],
     error: ''
 }
 
@@ -69,7 +73,7 @@ export const userProfileReducer = (state=initialStateProfile, action={}) => {
 }
 
 const initialStateUserRecords = {
-    records: {},
+    records: [],
     error: ''
 }
 
@@ -79,7 +83,7 @@ export const userRecordsReducer = (state=initialStateUserRecords, action={}) => 
             return Object.assign({}, state, { records: action.payload});
         case GET_USER_RECORDS_FAILED:
             return Object.assign({}, state, { error: action.payload});
-        case DELETE_USER_RECORD_SUCCESS:
+        case REMOVE_USER_RECORD_SUCCESS:
             const records = action.state.userRecordsReducer.records.filter(record => record.id !== parseInt(action.lead.id, 10));
             state = {
                 ...action.state.userRecords,
@@ -103,7 +107,7 @@ export const userRecordsReducer = (state=initialStateUserRecords, action={}) => 
 }
 
 const initialStateServices = {
-    services: {},
+    services: [],
     error: ''
 };
 
@@ -112,14 +116,16 @@ export const servicesReducer = (state=initialStateServices, action={}) => {
         case GET_SERVICES_SUCCESS:
             return Object.assign({}, state, { services: action.payload});
         case GET_SERVICES_FAILED:
-            return Object.assign({}, state, { error: action.payload});    
+            return Object.assign({}, state, { error: action.payload});
+        case REMOVE_SERVICE_SUCCESS:
+            return state 
         default:
             return state;   
     }
 };
 
 const initArrivalsByDate = {
-    arrivals: {},
+    arrivals: [],
     error: '',
 }
 
@@ -128,7 +134,14 @@ export const arrivalsByDateReducer = (state=initArrivalsByDate, action={}) => {
         case GET_ARRIVALS_BY_DATE_SUCCESS:
             return Object.assign({}, state, {arrivals: action.payload})
         case GET_ARRIVALS_BY_DATE_FAILED:
-            return Object.assign({}, state, { error: action.payload}); 
+            return Object.assign({}, state, { error: action.payload});
+        case DELETE_ARRIVAL_SUCCESS:
+            const arrivals = action.state.arrivalsByDateReducer.arrivals.filter(arrival => arrival.id !== parseInt(action.id, 10));
+            state = {
+                ...action.state.arrivals,
+                arrivals: arrivals,  
+            };
+            return state; 
         default:
             return state;
     }

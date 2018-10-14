@@ -62,6 +62,4 @@ class Arrivals(models.Model):
     userObj = models.ForeignKey(CustomUser, related_name='user_arrivals', on_delete=models.CASCADE, null=True)
     recordObj = models.ForeignKey(Records, related_name='record_arrivals', on_delete=models.CASCADE, null=True)
     arrival = models.DateTimeField()
-    arrival_time = models.CharField(max_length=10)
-    leave = models.DateTimeField(blank=True, null=True)
-    leave_time = models.CharField(max_length=10, blank=True)
+    arrival_time = models.TimeField(max_length=10)

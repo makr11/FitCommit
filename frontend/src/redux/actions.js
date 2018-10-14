@@ -16,8 +16,12 @@ import {
     POST_RECORD_FAILED,
     PATCH_RECORD_SUCCESS,
     PATCH_RECORD_FAILED,
-    DELETE_USER_SUCCESS,
-    DELETE_USER_RECORD_SUCCESS,
+    REMOVE_USER_SUCCESS,
+    REMOVE_USER_RECORD_SUCCESS,
+    REMOVE_SERVICE_SUCCESS,
+    REMOVE_CATEGORY_SUCCESS,
+    REMOVE_OPTION_SUCCESS,
+    DELETE_ARRIVAL_SUCCESS,
     RESET_PROFILE,
     RESET_RECORDS,
 } from './constants';
@@ -190,20 +194,23 @@ export const removeInstance = (id, name) => (dispatch, getState) => {
     switch(name){
         case ('service'):
             url = services;
+            type = REMOVE_SERVICE_SUCCESS
             break;
         case ('category'):
             url = categories;
+            type = REMOVE_CATEGORY_SUCCESS
             break;
         case ('option'):
             url = options;
+            type = REMOVE_OPTION_SUCCESS
             break;
         case ('record'):
             url = records;
-            type = DELETE_USER_RECORD_SUCCESS;
+            type = REMOVE_USER_RECORD_SUCCESS;
             break;
         case ('user'):
             url = users;
-            type = DELETE_USER_SUCCESS;
+            type = REMOVE_USER_SUCCESS;
             break;
         default:
             break;
@@ -211,8 +218,42 @@ export const removeInstance = (id, name) => (dispatch, getState) => {
 
     fetch(url + lead.id, conf)
     .then(response => {
-        console.log(response);
+        console.log(response.json());
         dispatch({type: type, name, lead, state})
+        }
+    )
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => console.log(error));
+}
+
+export const deleteInstance = (name, id) => (dispatch, getState) => {
+    let url = undefined;
+    let type = undefined;
+    let state = getState();
+    
+    const conf = {
+        method: "DELETE",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+    };
+
+    switch(name){   
+        case ('arrival'):
+            url = 'http://localhost:8000/api/arrival/';
+            type = DELETE_ARRIVAL_SUCCESS;
+            break;
+        default:
+            break;
+    };
+
+    fetch(url + id, conf)
+    .then(response => {
+        console.log(response);
+        dispatch({type: type, id, name, state})
         }
     )
     .catch(error => console.log(error));
