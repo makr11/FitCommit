@@ -17,8 +17,10 @@ const styles = theme => ({
 });
 
 class ServicesFormDialog extends React.Component {
+  
   render() {
-    const { classes, handleChange, closeFormDialog, title, service, category, option } = this.props
+    const { classes, handleChange, handleSubmit, closeFormDialog, title, service, category, price, arrivals, duration } = this.props;
+
     return (
       <Dialog
         open={this.props.open}
@@ -37,7 +39,7 @@ class ServicesFormDialog extends React.Component {
           className={classes.textField}
           margin="normal"
           onChange={handleChange}
-          defaultValue={(service)?service.service:undefined}
+          defaultValue={service}
           />
           <TextField
           id="category"
@@ -45,7 +47,7 @@ class ServicesFormDialog extends React.Component {
           className={classes.textField}
           margin="normal"
           onChange={handleChange}
-          defaultValue={(category)?category.category:undefined}
+          defaultValue={category}
           />
           <TextField
           id="arrivals"
@@ -54,7 +56,7 @@ class ServicesFormDialog extends React.Component {
           type="number"
           margin="normal"
           onChange={handleChange}
-          defaultValue={(option)?option.arrivals:undefined}
+          defaultValue={arrivals}
           />
           <TextField
           id="price"
@@ -63,7 +65,7 @@ class ServicesFormDialog extends React.Component {
           type="number"
           margin="normal"
           onChange={handleChange}
-          defaultValue={(option)?option.price:undefined}
+          defaultValue={price}
           />
           <TextField
           id="duration"
@@ -72,14 +74,14 @@ class ServicesFormDialog extends React.Component {
           type="number"
           margin="normal"
           onChange={handleChange}
-          defaultValue={(option)?option.duration:undefined}
+          defaultValue={duration}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={closeFormDialog} color="primary">
             Zatvori
           </Button>
-          <Button onClick={this.handleClose} color="primary">
+          <Button onClick={handleSubmit} color="primary">
             Spremi
           </Button>
         </DialogActions>
