@@ -1,0 +1,17 @@
+backend/backend/.vscode/*
+backend/include/*
+backend/lib/*
+backend/bin/*
+backend/pip-selfcheck.json
+
+__pycache__
+migrations
+.vscode
+
+*.exe
+*.bat
+*.dll
+*.ps1
+*.sqlite3
+
+backend/backend/manage.py
