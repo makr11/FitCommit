@@ -18,7 +18,12 @@ class OptionsSerializer(drf_serializers.ModelSerializer):
 
 class CategoriesSerializer(drf_serializers.ModelSerializer):
 
-    options = OptionsSerializer(many=True, read_only=True)
+    options = drf_serializers.SerializerMethodField()
+
+    def get_options(self, obj):
+        qs = Options.objects.filter(deleted=0, categoryID=obj.id)
+        serializer = OptionsSerializer(instance=qs, many=True, read_only=True)
+        return serializer.data
 
     class Meta:
         model = Categories
@@ -26,8 +31,13 @@ class CategoriesSerializer(drf_serializers.ModelSerializer):
 
 class ServicesSerializer(drf_serializers.ModelSerializer):
 
-    categories = CategoriesSerializer(many=True, read_only=True)
- 
+    categories = drf_serializers.SerializerMethodField()
+
+    def get_categories(self, obj):
+        qs = Categories.objects.filter(deleted=0, serviceID=obj.id)
+        serializer = CategoriesSerializer(instance=qs, many=True, read_only=True)
+        return serializer.data
+
     class Meta:
         model = Services
         fields = '__all__'
@@ -46,7 +56,7 @@ class RecordsSerializer(drf_serializers.ModelSerializer):
         fields = '__all__'
 
 class UserSerializer(drf_serializers.ModelSerializer):
-    
+
     class Meta:
         model = CustomUser
         fields = '__all__'

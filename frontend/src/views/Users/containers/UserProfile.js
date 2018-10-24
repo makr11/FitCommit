@@ -1,19 +1,24 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-
 import {connect} from 'react-redux';
-
 import AddRecord from './AddRecord';
-import ListUserRecords from './ListUserRecords';
+import UserRecordsTable from '../components/UserRecordsTable';
+import { requestUserRecords, reset, removeInstance, updateFormRecord } from '../../../redux/actions'
 
-import { requestUserRecords, reset } from '../../../redux/actions'
+const mapStateToProps = state => {
+  return{
+    records: state.userRecordsReducer.records,
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      getRecords: (id) => dispatch(requestUserRecords(id)),
-      resetProfile: () => dispatch(reset('profile')),
-      resetRecords: () => dispatch(reset('records')),
+    getRecords: (id) => dispatch(requestUserRecords(id)),
+    resetProfile: () => dispatch(reset('profile')),
+    resetRecords: () => dispatch(reset('records')),
+    removeInstance: (e) => dispatch(removeInstance(e.currentTarget.id, e.currentTarget.name)),
+    paidCheck: (id, index, paid) => dispatch(updateFormRecord(id, index, paid))
   }
 };
 
@@ -29,9 +34,9 @@ class Profile extends React.Component {
     this.props.resetProfile();;
     this.props.resetRecords();
   };
-  
+
   render() {
-    const { user } = this.props
+    const { user, records, removeInstance, paidCheck } = this.props
     return (
       (user!==undefined) ?
       <div>
@@ -43,7 +48,11 @@ class Profile extends React.Component {
             {user.email}
           </Typography>
           <AddRecord user={user.id}/>
-          <ListUserRecords />
+          <UserRecordsTable
+            records={records}
+            removeInstance={removeInstance}
+            paidCheck={paidCheck}
+          />
         </Paper>
       </div>:
       <span></span>
@@ -51,4 +60,4 @@ class Profile extends React.Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

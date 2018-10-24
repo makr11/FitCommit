@@ -7,11 +7,11 @@ from django.contrib.auth import get_user_model
 from django.core import serializers
 from django.utils import timezone
 from .models import Services, Categories, Options, CustomUser, Records, Arrivals
-from .serializers import (UserSerializer, 
-                         ServicesSerializer, 
-                         CategoriesSerializer, 
-                         OptionsSerializer, 
-                         RecordsSerializer, 
+from .serializers import (UserSerializer,
+                         ServicesSerializer,
+                         CategoriesSerializer,
+                         OptionsSerializer,
+                         RecordsSerializer,
                          ArrivalsSerializer,
                          )
 
@@ -21,7 +21,15 @@ class ListUsers(generics.ListCreateAPIView):
     queryset = CustomUser.objects.filter(deleted=0)
     serializer_class = UserSerializer
 
-class ListDeletedUsers(generics.ListCreateAPIView):
+    def create(self, request, *args, **kwargs):
+        print(request.data)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class ListDeletedUsers(generics.ListAPIView):
     queryset = CustomUser.objects.filter(deleted=1)
     serializer_class = UserSerializer
 
@@ -30,7 +38,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
 class ListServices(generics.ListCreateAPIView):
-    queryset = Services.objects.all()
+    queryset = Services.objects.filter(deleted=0)
     serializer_class = ServicesSerializer
 
     def create(self, request):
@@ -40,7 +48,7 @@ class ListServices(generics.ListCreateAPIView):
             service.save()
             category = Categories(category=request.data['category'], serviceID=service)
             category.save()
-            options = Options(quantity=request.data['quantity'], 
+            options = Options(arrivals=request.data['arrivals'],
                               price=request.data['price'],
                               duration=request.data['duration'],
                               categoryID=category)
@@ -50,12 +58,16 @@ class ListServices(generics.ListCreateAPIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
+class ListDeletedServices(generics.ListAPIView):
+    queryset = Services.objects.filter(deleted=1)
+    serializer_class = ServicesSerializer
+
 class ServicesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Services.objects.all()
     serializer_class = ServicesSerializer
 
 class ListCategories(generics.ListCreateAPIView):
-    queryset = Categories.objects.all()
+    queryset = Categories.objects.filter(deleted=0)
     serializer_class = CategoriesSerializer
 
     def create(self, request):
@@ -65,29 +77,34 @@ class ListCategories(generics.ListCreateAPIView):
             service = Services.objects.get(pk=request.data['serviceID'])
             category = Categories(category=request.data['category'], serviceID=service)
             category.save()
-            options = Options(quantity=request.data['quantity'], 
+            options = Options(arrivals=request.data['arrivals'],
                               price=request.data['price'],
                               duration=request.data['duration'],
                               categoryID=category)
             options.save()
             return Response(serializer.data)
         else:
+            print(serializer.errors)
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+class ListDeletedCategories(generics.ListAPIView):
+    queryset = Categories.objects.filter(deleted=1)
+    serializer_class = CategoriesSerializer
 
 class CategoriesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
 
 class ListOptions(generics.ListCreateAPIView):
-    queryset = Options.objects.all()
+    queryset = Options.objects.filter(deleted=0)
     serializer_class = OptionsSerializer
 
     def create(self, request):
         serializer = OptionsSerializer(data=request.data)
         if serializer.is_valid():
             category = Categories.objects.get(pk=request.data['categoryID'])
-            options = Options(arrivals=request.data['arrivals'], 
+            options = Options(arrivals=request.data['arrivals'],
                               price=request.data['price'],
                               duration=request.data['duration'],
                               categoryID=category)
@@ -96,6 +113,10 @@ class ListOptions(generics.ListCreateAPIView):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
+
+class ListDeletedOptions(generics.ListAPIView):
+    queryset = Options.objects.filter(deleted=1)
+    serializer_class = OptionsSerializer
 
 class OptionsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Options.objects.all()
@@ -115,7 +136,7 @@ class ListRecords(generics.ListCreateAPIView):
         ends = now + datetime.timedelta(days=option.duration)
         days_left = ends - now
         record = Records(
-            userObj=user, 
+            userObj=user,
             serviceObj=service,
             categoryObj=category,
             optionObj=option,
@@ -135,14 +156,14 @@ class ListUserRecords(generics.ListAPIView):
 
     def get_queryset(self):
         user=self.kwargs['pk']
-        return Records.objects.filter(userObj=user, deleted=0).order_by('-ends')
+        return Records.objects.filter(userObj=user, deleted=0, active=1).order_by('-ends')
 
 class RecordsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Records.objects.all()
     serializer_class = RecordsSerializer
 
 class ListArrivals(generics.ListCreateAPIView):
-    queryset = Arrivals.objects.all().order_by('-arrival')
+    queryset = Arrivals.objects.all()
     serializer_class = ArrivalsSerializer
 
     def create(self, request):
@@ -150,12 +171,15 @@ class ListArrivals(generics.ListCreateAPIView):
         time = now.timetz()
         user = CustomUser.objects.get(pk=request.data['user'])
         record = Records.objects.get(pk=request.data['record'])
+        dt = datetime.datetime.strptime(request.data['date'], '%Y-%m-%d')
+        arrival = datetime.datetime.combine(dt, time)
         record.arrivals_left -= 1
-        record.save() 
+        record.save()
+        record.is_active()
         arrival = Arrivals(
             userObj=user,
             recordObj=record,
-            arrival=now,
+            arrival=arrival,
             arrival_time=str(time.hour + 2) + ":" + str(time.minute)
         )
         arrival.save()
@@ -166,7 +190,7 @@ class ListArrivalsByDate(generics.ListAPIView):
 
     def get_queryset(self):
         selected_date=self.kwargs['date']
-        return Arrivals.objects.filter(arrival__date=selected_date).order_by('-arrival')
+        return Arrivals.objects.filter(arrival__date=selected_date).order_by('-arrival_time')
 
 class ArrivalsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Arrivals.objects.all()
@@ -177,5 +201,6 @@ class ArrivalsDetail(generics.RetrieveUpdateDestroyAPIView):
         record = Records.objects.get(pk=instance.recordObj.id)
         record.arrivals_left+=1
         record.save()
+        record.is_active()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,130 +1,166 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 
-import UserArrival from './containers/UserArrival';
+import UserArrivalsTable from './components/UserArrivalsTable';
+import UserArrivalsSelect from './components/UserArrivalsSelect';
 
-import {requestArrivalsByDate, deleteInstance} from '../../redux/actions'
-
-const styles = (theme) => ({
-    textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 150,
-    },
-    button: {
-    margin: theme.spacing.unit,
-    },
-    table: {
-        minWidth: 700,
-    },
-});
+import { requestArrivalsByDate, deleteInstance, requestUserRecords, submitFormArrival, reset } from '../../redux/actions'
 
 const mapStateToProps = state => {
-    return {
-        arrivals: state.arrivalsByDateReducer.arrivals,
-    }
+  return {
+    users: state.usersReducer.users,
+    userRecords: state.userRecordsReducer,
+    arrivals: state.arrivalsByDateReducer.arrivals,
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        selectArrivals: (date) => dispatch(requestArrivalsByDate(date)),
-        deleteArrivals: (e) => dispatch(deleteInstance(e.currentTarget.name, e.currentTarget.id))
-    }
+  return {
+    selectRecords: (id) => dispatch(requestUserRecords(id)),
+    resetRecords: () => dispatch(reset('records')),
+    selectArrivals: (date) => dispatch(requestArrivalsByDate(date)),
+    deleteArrivals: (e) => dispatch(deleteInstance(e.currentTarget.name, e.currentTarget.id)),
+    handleSubmitForm: (lead) => dispatch(submitFormArrival(lead)),
+  }
 };
 
-class Arrivals extends React.Component { 
-    constructor(props){
-        super(props);
-        let date = new Date(); 
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-        let year = date.getFullYear();
-        if(month<10) {
-            month = '0' + month
-        };
-        if(day<10){
-            day = '0' + date.getDate()
-        }; 
-        this.state = {
-            selectedDate: year + '-' + month + '-' + day,
-        };
-    }; 
-
-    componentDidMount(){
-        this.props.selectArrivals(this.state.selectedDate);
-    }
-
-    setDate = (e) => {
-        const date = e.currentTarget.value;
-        this.setState({
-            selectedDate: date
-        },
-        () => this.props.selectArrivals(date))
+class Arrivals extends React.Component {
+  constructor(props){
+    super(props);
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let year = date.getFullYear();
+    if(month<10) {
+      month = '0' + month
     };
+    if(day<10){
+      day = '0' + date.getDate()
+    };
+    this.state = {
+      selectedDate: year + '-' + month + '-' + day,
+      selectedUser: '',
+      selectedRecord: '',
+      usersOpt: [],
+      recordsOpt: [],
+    };
+  };
 
-    render() {
-        const { classes, arrivals, deleteArrivals } = this.props;
-        const { selectedDate } = this.state;
+  componentDidMount(){
+    this.props.selectArrivals(this.state.selectedDate);
+    let options = [];
+    for(let i=0; i<this.props.users.length; i++){
+      options.push({value: this.props.users[i], label: this.props.users[i].first_name + " " + this.props.users[i].last_name})
+    };
+    this.setState({usersOpt: options})
+  }
 
-        return(
-            <Paper>
-                <Typography variant="title">
-                    Evidencija dolazaka
-                </Typography>
-                <TextField
-                    id="date"
-                    label="Datum"
-                    type="date"
-                    defaultValue={selectedDate}
-                    className={classes.textField}
-                    InputLabelProps={{
-                    shrink: true,
-                    }}
-                    onChange={this.setDate}
-                />
-                <UserArrival date={selectedDate}/>
-                <Table className={classes.table}>
-                    <TableHead>
-                    <TableRow>
-                        <TableCell>Korisnik</TableCell>
-                        <TableCell>Usluga</TableCell>
-                        <TableCell>Dolazak</TableCell>
-                        <TableCell>Dug</TableCell>
-                        <TableCell>Obriši</TableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {arrivals.map(arrival => {
-                        return (
-                            <TableRow key={arrival.id} >
-                                <TableCell>{arrival.user}</TableCell>
-                                <TableCell>{arrival.category + ' (' + arrival.service + ')'}</TableCell>
-                                <TableCell>{arrival.arrival_time}</TableCell>
-                                <TableCell></TableCell>
-                                <TableCell>
-                                    <IconButton name="arrival" id={arrival.id} onClick={deleteArrivals}>    
-                                        <DeleteIcon/>
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                    </TableBody>
-                </Table>
-            </Paper>
-        )
+  componentDidUpdate(){
+    function isEmpty(obj) {
+      for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+      }
+      return true;
     }
+    if(!isEmpty(this.props.userRecords)){
+      let records = [];
+      let uRec = this.props.userRecords;
+      for(let i=0; i<uRec.records.length; i++){
+        records.push({value: uRec.records[i], label: uRec.records[i].service + " (" + uRec.records[i].category + ") (" + uRec.records[i].arrivals_left + ")"});
+      };
+      this.setState({recordsOpt: records});
+      this.props.resetRecords();
+    }
+  }
+
+  componentWillUnmount(){
+    this.props.resetRecords();
+  };
+
+  selectUser = (selectedUser) => {
+    this.setState({
+      selectedUser: selectedUser,
+      recordsOpt: [],
+      },
+    () => this.props.selectRecords(this.state.selectedUser.value.id)
+    )
+  };
+
+  selectRecord = (selectedRecord) => {
+    this.setState({
+      selectedRecord: selectedRecord,
+    })
+  };
+
+  deleteArrival = (e) => {
+    this.setState({
+      selectedUser: '',
+      selectedRecord: '',
+      recordsOpt: [],
+    })
+    this.props.deleteArrivals(e);
+  }
+
+  setDate = (e) => {
+    const date = e.currentTarget.value;
+    this.setState({
+      selectedDate: date
+    },
+    () => this.props.selectArrivals(date))
+  };
+
+  submitForm = (e) => {
+    e.preventDefault();
+    const user = this.state.selectedUser.value.id;
+    const record = this.state.selectedRecord.value.id;
+    const date = this.state.selectedDate;
+    const lead = {user, record, date};
+    this.props.handleSubmitForm(lead);
+    this.setState({
+      selectedUser: '',
+      selectedRecord: '',
+      recordsOpt: [],
+    })
+  };
+
+  render() {
+    const { arrivals } = this.props;
+    const { selectedDate, selectedUser, selectedRecord, usersOpt, recordsOpt } = this.state;
+    return(
+      <Paper>
+        <Typography variant="title">
+          Evidencija dolazaka
+        </Typography>
+        <TextField
+          id="date"
+          label="Datum"
+          type="date"
+          defaultValue={selectedDate}
+          InputLabelProps={{
+          shrink: true,
+          }}
+          onChange={this.setDate}
+        />
+        <UserArrivalsSelect
+          selectedUser={selectedUser}
+          selectedRecord={selectedRecord}
+          usersOpt={usersOpt}
+          recordsOpt={recordsOpt}
+          selectUser={this.selectUser}
+          selectRecord={this.selectRecord}
+          submitForm={this.submitForm}
+        />
+        <UserArrivalsTable
+          arrivals={arrivals}
+          deleteArrival={this.deleteArrival}
+        />
+      </Paper>
+    )
+  }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Arrivals));
+export default connect(mapStateToProps, mapDispatchToProps)(Arrivals);

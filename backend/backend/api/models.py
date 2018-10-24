@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
+    IDUser = models.CharField(max_length=4, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     deleted = models.BooleanField(default=0, blank=True)
@@ -49,10 +50,19 @@ class Records(models.Model):
     discount = models.IntegerField()
     nett_price = models.IntegerField()
     paid = models.BooleanField(default=0)
-    started = models.DateField()
+    started = models.DateField(auto_now_add=True)
     ends = models.DateField()
     days_left = models.IntegerField()
     deleted = models.BooleanField(default=0, blank=True)
+    active = models.BooleanField(default=1, blank=True)
+
+    def is_active(self):
+        if self.arrivals_left == 0:
+            self.active = 0
+            self.save()
+        else:
+            self.active = 1
+            self.save()
 
     @property
     def user(self):

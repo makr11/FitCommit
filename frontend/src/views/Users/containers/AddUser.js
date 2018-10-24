@@ -58,7 +58,7 @@ class AddUser extends React.Component{
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-  
+
       body: JSON.stringify(lead),
     };
     fetch(users, conf).then(response => console.log(response))
@@ -76,7 +76,7 @@ class AddUser extends React.Component{
           title="Upis novog člana"
         />
         <CardContent>
-        <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
+          <form className={classes.container} onSubmit={this.handleSubmit} noValidate autoComplete="off">
             <TextField
               id="first_name"
               label="Ime"
@@ -108,17 +108,17 @@ class AddUser extends React.Component{
               margin="normal"
               onChange={handleChange}
             />
-            <Button 
-              variant="outlined" 
-              color="primary" 
+            <Button
+              variant="outlined"
+              color="primary"
               className={classes.button}
               type="submit"
             >
               Primary
             </Button>
           </form>
-        </CardContent>   
-      </Card>  
+        </CardContent>
+      </Card>
     )
   }
 };

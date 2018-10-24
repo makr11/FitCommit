@@ -1,93 +1,41 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-
 import { requestUserProfile, removeInstance } from '../../redux/actions';
-
 import AddUser from './containers/AddUser';
-
-const styles = () => ({
-    root: {
-      width: '100%',
-      overflowX: 'auto',
-    },
-    table: {
-      minWidth: 700,
-    },
-  });
+import UsersTable from './components/UsersTable';
 
 const mapStateToProps = state => {
-    return {
-        users: state.usersReducer.users,
-    }
+  return {
+    users: state.usersReducer.users,
+  }
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        handleSelectUserClick: (e) => dispatch(requestUserProfile(e.currentTarget.id)),
-        removeInstance: (e) => dispatch(removeInstance(e.currentTarget.id, e.currentTarget.name))
-    }
+  return {
+    selectUser: (e) => dispatch(requestUserProfile(e.currentTarget.id)),
+    removeInstance: (e) => dispatch(removeInstance(e.currentTarget.id, e.currentTarget.name))
+  }
 };
 
 
 class MembersRegistry extends React.Component {
 
-    render(){
+  render(){
 
-        const { classes, users, handleSelectUserClick, removeInstance } = this.props;
-        return (
-          <Paper className={classes.root}>
-            <AddUser/>
-            <Table className={classes.table}>
-                <TableHead>
-                <TableRow>
-                    <TableCell>Profil</TableCell>
-                    <TableCell>Ime</TableCell>
-                    <TableCell>Prezime</TableCell>
-                    <TableCell>E-mail</TableCell>
-                    <TableCell>Obriši</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {users.map(user => {
-                    return (
-                        <TableRow key={user.id} >
-                            <TableCell>     
-                                <Link to={'/profile/' + user.username}>
-                                    <IconButton id={user.id} onClick={handleSelectUserClick}>
-                                        <AccountCircleIcon/>
-                                    </IconButton>
-                                </Link> 
-                            </TableCell>
-                            <TableCell>{user.first_name}</TableCell>
-                            <TableCell>{user.last_name}</TableCell>
-                            <TableCell>{user.email}</TableCell>
-                            <TableCell>
-                                <IconButton name="user" id={user.id} onClick={removeInstance}>    
-                                    <DeleteIcon/>
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
-                    );
-                })}
-                </TableBody>
-            </Table>
-          </Paper> 
-        )
-    }
-    
+    const { users, selectUser, removeInstance } = this.props;
+    return (
+      <Paper >
+        <AddUser/>
+        <UsersTable
+          users={users}
+          selectUser={selectUser}
+          removeInstance={removeInstance}
+        />
+      </Paper>
+    )
+  }
+
 }
-  
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(MembersRegistry));
+
+export default connect(mapStateToProps, mapDispatchToProps)(MembersRegistry);
