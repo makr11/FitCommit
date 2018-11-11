@@ -1,47 +1,22 @@
 import React from 'react';
+// redux
 import { connect } from 'react-redux';
-import Typography from '@material-ui/core/Typography';
+import { requestArrivalsByDate, deleteArrival, submitFormArrival } from '../../../actions/arrivalsActions';
+import { requestUserRecords, resetRecords } from '../../../actions/userRecordsActions';
+// material ui core components
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-
-import UserArrivalsTable from './components/UserArrivalsTable';
-import UserArrivalsSelect from './components/UserArrivalsSelect';
-
-import { requestArrivalsByDate, deleteInstance, requestUserRecords, submitFormArrival, reset } from '../../redux/actions'
-
-const mapStateToProps = state => {
-  return {
-    users: state.usersReducer.users,
-    userRecords: state.userRecordsReducer,
-    arrivals: state.arrivalsByDateReducer.arrivals,
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    selectRecords: (id) => dispatch(requestUserRecords(id)),
-    resetRecords: () => dispatch(reset('records')),
-    selectArrivals: (date) => dispatch(requestArrivalsByDate(date)),
-    deleteArrivals: (e) => dispatch(deleteInstance(e.currentTarget.name, e.currentTarget.id)),
-    handleSubmitForm: (lead) => dispatch(submitFormArrival(lead)),
-  }
-};
+// arrivals components
+import UserArrivalsTable from '../components/UserArrivalsTable';
+import UserArrivalsSelect from '../components/UserArrivalsSelect';
+// helper functions
+import { date, isEmpty } from '../../../assets/js/functions.js'
 
 class Arrivals extends React.Component {
   constructor(props){
     super(props);
-    let date = new Date();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let year = date.getFullYear();
-    if(month<10) {
-      month = '0' + month
-    };
-    if(day<10){
-      day = '0' + date.getDate()
-    };
     this.state = {
-      selectedDate: year + '-' + month + '-' + day,
+      selectedDate: date(),
       selectedUser: '',
       selectedRecord: '',
       usersOpt: [],
@@ -56,16 +31,9 @@ class Arrivals extends React.Component {
       options.push({value: this.props.users[i], label: this.props.users[i].first_name + " " + this.props.users[i].last_name})
     };
     this.setState({usersOpt: options})
-  }
+  };
 
   componentDidUpdate(){
-    function isEmpty(obj) {
-      for(var key in obj) {
-        if(obj.hasOwnProperty(key))
-            return false;
-      }
-      return true;
-    }
     if(!isEmpty(this.props.userRecords)){
       let records = [];
       let uRec = this.props.userRecords;
@@ -75,7 +43,7 @@ class Arrivals extends React.Component {
       this.setState({recordsOpt: records});
       this.props.resetRecords();
     }
-  }
+  };
 
   componentWillUnmount(){
     this.props.resetRecords();
@@ -96,14 +64,14 @@ class Arrivals extends React.Component {
     })
   };
 
-  deleteArrival = (e) => {
+  handleDelete = (e) => {
     this.setState({
       selectedUser: '',
       selectedRecord: '',
       recordsOpt: [],
     })
-    this.props.deleteArrivals(e);
-  }
+    this.props.deleteArrival(e);
+  };
 
   setDate = (e) => {
     const date = e.currentTarget.value;
@@ -132,9 +100,6 @@ class Arrivals extends React.Component {
     const { selectedDate, selectedUser, selectedRecord, usersOpt, recordsOpt } = this.state;
     return(
       <Paper>
-        <Typography variant="title">
-          Evidencija dolazaka
-        </Typography>
         <TextField
           id="date"
           label="Datum"
@@ -156,10 +121,28 @@ class Arrivals extends React.Component {
         />
         <UserArrivalsTable
           arrivals={arrivals}
-          deleteArrival={this.deleteArrival}
+          handleDelete={this.handleDelete}
         />
       </Paper>
     )
+  }
+};
+
+const mapStateToProps = state => {
+  return {
+    users: state.usersReducer.users,
+    userRecords: state.userRecordsReducer,
+    arrivals: state.arrivalsByDateReducer.arrivals,
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    selectRecords: (id) => dispatch(requestUserRecords(id)),
+    resetRecords: () => dispatch(resetRecords()),
+    selectArrivals: (date) => dispatch(requestArrivalsByDate(date)),
+    deleteArrival: (e) => dispatch(deleteArrival(e.currentTarget.id)),
+    handleSubmitForm: (lead) => dispatch(submitFormArrival(lead)),
   }
 };
 

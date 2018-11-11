@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
-    IDUser = models.CharField(max_length=4, blank=True)
+    IDUser = models.CharField(max_length=5, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     deleted = models.BooleanField(default=0, blank=True)

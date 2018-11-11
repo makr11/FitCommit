@@ -1,48 +1,21 @@
 import React from 'react';
+// redux
 import { connect } from 'react-redux';
+// prop type check
 import PropTypes from 'prop-types';
+// redux
+import { requestUsers } from '../actions/usersActions'; 
+import { requestServices } from '../actions/servicesActions';
+// react router
+import { withRouter } from 'react-router-dom';
+// material ui core
 import { withStyles } from '@material-ui/core/styles';
-import { Route, Switch, withRouter } from 'react-router-dom'; 
-
-import Navbar from './containers/Navbar';
-import Sidebar from './containers/Sidebar';
-import Users from '../views/Users/Users';
-import Profile from '../views/Users/containers/UserProfile';
-import Services from '../views/Services/Services';
-import Arrivals from '../views/Arrivals/Arrivals';
-
-import {requestUsers, requestServices } from '../redux/actions';
-
-const drawerWidth = 260;
-
-const styles = theme => ({
-  root: {
-    zIndex: 1,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  content: {
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
-    width: `calc(100% - ${drawerWidth+48}px)`,
-    minHeight: '100vh',
-    float: 'right',
-  },
-  toolbar: theme.mixins.toolbar,
-});
-
-const mapStateToProps = state => {
-  return {
-      userProfile: state.userProfileReducer.profile,
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return{
-    getUsers: () => dispatch(requestUsers()),
-    getServices: () => dispatch(requestServices()),
-  }
-}
+// jss styles
+import { appStyle } from '../assets/jss/appLayout';
+// app components
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+import Main from './components/Main';
 
 class App extends React.Component {
 
@@ -50,29 +23,31 @@ class App extends React.Component {
     this.props.getUsers();
     this.props.getServices();
   }
-  
+
   render(){
-    const { classes, userProfile } = this.props;
+    const { classes } = this.props;
     return (
-      <div className={classes.root}>
-        <Navbar />
-        <Sidebar />
+      <div className={classes.container}>
+        <Navbar/>
+        <Sidebar/>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-            <Switch>
-              <Route path="/registry" component={Users} />
-              <Route path="/services" component={Services} />
-              <Route path="/profile" render={() => <Profile user={userProfile}/>} />
-              <Route path="/arrivals" component={Arrivals}/>
-            </Switch>
+            <Main/>
         </main>
       </div>
     );
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return{
+    getUsers: () => dispatch(requestUsers()),
+    getServices: () => dispatch(requestServices()),
+  }
+};
+
 App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App)));
+export default withRouter(connect(null, mapDispatchToProps)(withStyles(appStyle)(App)));

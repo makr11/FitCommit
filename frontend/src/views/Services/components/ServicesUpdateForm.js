@@ -1,19 +1,15 @@
 import React from 'react';
+// material ui core
 import { withStyles } from '@material-ui/core/styles';
+// material ui core components
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-const styles = theme => ({
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
-});
+// jss style
+import { servicesFormStyle } from '../../../assets/jss/services';
 
 class ServicesFormDialog extends React.Component {
 
@@ -92,4 +88,4 @@ class ServicesFormDialog extends React.Component {
   }
 }
 
-export default withStyles(styles)(ServicesFormDialog);
+export default withStyles(servicesFormStyle)(ServicesFormDialog);

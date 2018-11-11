@@ -1,5 +1,10 @@
 import React from 'react';
+// redux
 import { connect } from 'react-redux';
+import { submitFormRecord } from '../../../actions/userRecordsActions';
+// material ui core
+import { withStyles } from '@material-ui/core/styles';
+// material ui core components
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -11,41 +16,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Radio from '@material-ui/core/Radio';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import { withStyles } from '@material-ui/core/styles';
-import { submitFormRecord } from '../../../redux/actions';
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  margin: {
-    margin: theme.spacing.unit,
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  textField: {
-    flexBasis: 200,
-    margin: 10
-  },
-  form: {
-    flexDirection: 'row',
-  }
-});
-
-const mapStateToProps = state => {
-  return {
-    services: state.servicesReducer.services,
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return{
-    submitRecord : (lead) => dispatch(submitFormRecord(lead)),
-  }
-}
+// jss styles
+import { addRecordStyle } from '../../../assets/jss/userProfile'
 
 class AddRecord extends React.Component {
   state = {
@@ -67,7 +39,15 @@ class AddRecord extends React.Component {
           if(this.props.services[i].service===e.target.value){
             this.setState({
               service: this.props.services[i],
-              categories: this.props.services[i].categories});
+              categories: this.props.services[i].categories,
+              category: [],
+              options: [],
+              option: [],
+              price: '',
+              discount: '',
+              nettPrice: '',
+              paid: false,
+            });
           }
         }
         break
@@ -76,7 +56,12 @@ class AddRecord extends React.Component {
           if(this.state.categories[i].category===e.target.value){
             this.setState({
               category: this.state.categories[i],
-              options: this.state.categories[i].options
+              options: this.state.categories[i].options,
+              option: [],
+              price: '',
+              discount: '',
+              nettPrice: '',
+              paid: false,
             });
           }
         }
@@ -259,4 +244,16 @@ class AddRecord extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AddRecord));
+const mapStateToProps = state => {
+  return {
+    services: state.servicesReducer.services,
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    submitRecord : (lead) => dispatch(submitFormRecord(lead)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(addRecordStyle)(AddRecord));

@@ -1,38 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import registerServiceWorker from './registerServiceWorker';
+// redux
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { logger} from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
-import registerServiceWorker from './registerServiceWorker';
-import App from './layout/App';
-import { BrowserRouter } from 'react-router-dom';
-import { persistStore, persistReducer } from 'redux-persist';
+import { rootReducers } from './reducers/reducers';
+// redux persist
 import storage from 'redux-persist/lib/storage';
+import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-
-import "./assets/spartacus-style.css";
-import { formInput, usersReducer, servicesReducer, userProfileReducer, userRecordsReducer, arrivalsByDateReducer } from './redux/reducers';
+// react router
+import { BrowserRouter } from 'react-router-dom';
+// css
+import "./assets/css/spartacus-style.css";
+// app main components
+import App from './layout/App';
 
 const persistConfig = {
   key: 'root',
   storage,
-}
+};
 
-const rootReducers = combineReducers({
-  formInput,
-  usersReducer,
-  servicesReducer,
-  userRecordsReducer,
-  userProfileReducer,
-  arrivalsByDateReducer,
-})
-
-const persistedReducer = persistReducer(persistConfig, rootReducers)
+const persistedReducer = persistReducer(persistConfig, rootReducers);
 
 const store = createStore(persistedReducer, applyMiddleware(thunkMiddleware, logger));
 
-const persistor = persistStore(store)
+const persistor = persistStore(store);
 
 ReactDOM.render((
       <Provider store={store}>
@@ -40,7 +35,7 @@ ReactDOM.render((
           <BrowserRouter>
             <App />
           </BrowserRouter>
-        </PersistGate>  
-      </Provider>  ), 
-    document.getElementById('root')); 
+        </PersistGate>
+      </Provider>  ),
+    document.getElementById('root'));
 registerServiceWorker();

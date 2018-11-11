@@ -22,7 +22,10 @@ class ListUsers(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
+        last_user = CustomUser.objects.last()
+        ID = str(int(last_user.IDUser) + 1).zfill(5)
+        print(ID)
+        request.data["IDUser"] = ID
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

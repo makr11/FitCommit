@@ -1,17 +1,69 @@
 import React from 'react';
-import Paper from '@material-ui/core/Card';
+// services containers
+import { connect } from 'react-redux';
+import { requestServices, removeServices, submitFormService, updateFormService } from '../../actions/servicesActions';
+import PropTypes from 'prop-types';
 import ServicesList from './containers/ServicesList';
+import FormDialog from '../../components/FormDialog';
 
 class Services extends React.Component{
 
-  render(){
-    
+  state={
+    opened: false,
+  }
+
+  openFormDialog = () => {
+    this.setState({opened: true})
+  };
+
+  closeFormDialog = () => {
+    this.setState({opened: false})
+  }
+
+  handleFormInput = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+      componentUpdate: false
+    });
+  };
+
+  render(){  
+    const { services } = this.props;
+
     return (
-      <Paper> 
-        <ServicesList />
-      </Paper>  
+      <div>
+        <ServicesList 
+          services={services}
+          openFormDialog={this.openFormDialog}
+        />
+        <FormDialog
+          open={this.state.opened}
+          close={this.closeFormDialog}        
+          handleFormInput={this.handleFormInput}
+        />
+      </div>
     )
   }
 };
 
-export default Services;
+const mapStateToProps = state => {
+  return {
+    services: state.servicesReducer.services,
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleSubmit: (lead) => dispatch(submitFormService(lead)),
+    handleUpdate: (lead) => dispatch(updateFormService(lead)),
+    getServices: () => dispatch(requestServices()),
+    removeServices: (e) => dispatch(removeServices(e.currentTarget.id, e.currentTarget.name))
+  }
+};
+
+
+ServicesList.propTypes = {
+  services: PropTypes.array.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Services);

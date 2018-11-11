@@ -1,13 +1,14 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+// react select module
 import Select from 'react-select';
+// material ui core components
+import Button from '@material-ui/core/Button';
 
 class UserArrivalsSelect extends React.Component {
 
   render() {
 
     const { selectedUser, selectedRecord, usersOpt, recordsOpt, selectUser, selectRecord, submitForm } = this.props;
-    console.log(selectedRecord)
     return(
       <form onSubmit={submitForm} noValidate autoComplete="off">
         <Select

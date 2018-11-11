@@ -11,3 +11,5 @@ export const records = "http://localhost:8000/api/records/";
 export const userRecords = "http://localhost:8000/api/user_records/";
 
 export const arrivals = "http://localhost:8000/api/arrivals/";
+
+export const arrival = "http://localhost:8000/api/arrival/";
