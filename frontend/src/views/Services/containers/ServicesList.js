@@ -2,17 +2,17 @@ import React from 'react';
 import ServiceCard from '../components/ServiceCard';
 
 function ServicesList(props){
-  const { services, openFormDialog } = props;
+  const { services, openFormDialog, openUpdateFormDialog } = props;
 
   return(  
     <div>
-    {services.map((service, serviceIndex) => {
+    {services.map((service) => {
       return(
         <ServiceCard 
           service={service} 
-          index={serviceIndex} 
           key={service.id}
           openFormDialog={openFormDialog}
+          openUpdateFormDialog={openUpdateFormDialog}
         />
       )
     })}

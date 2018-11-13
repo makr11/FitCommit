@@ -1,19 +1,21 @@
 import React from 'react';
+// prop types check
+import PropTypes from 'prop-types';
+// material ui core components
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
+import { Typography } from '@material-ui/core';
+// app components
 import OptionsTable from './OptionsTable';
 import Editor from '../../../components/Editor';
-import { Typography } from '@material-ui/core';
 
 function ServiceCard(props){
-  const { service, openFormDialog } = props;
+  const { service, openFormDialog, openUpdateFormDialog } = props;
 
   return (
     <Card >
-      <Editor type="service" id={service.id} open={openFormDialog}>
+      <Editor name="service" id={service.id} open={openFormDialog} update={openUpdateFormDialog}>
         <CardHeader
           title={service.service}
         />
@@ -22,20 +24,27 @@ function ServiceCard(props){
         return(
           <div key={category.id}>
             <CardContent>
-              <Editor type="category" id={category.id} open={openFormDialog}>
-                <Typography color="primary" variant="headline">
+              <Editor name="category" id={category.id} open={openFormDialog} update={openUpdateFormDialog}>
+                <Typography variant="title">
                   {category.category}
                 </Typography>
               </Editor>  
             </CardContent>
             <OptionsTable 
               options={category.options} 
+              openFormDialog={openFormDialog}
+              openUpdateFormDialog={openUpdateFormDialog}
             />
           </div>
         )
       })}
     </Card>
   );
+};
+
+ServiceCard.propTypes = {
+  service: PropTypes.object.isRequired,
+  openFormDialog: PropTypes.func.isRequired,
 }
 
 export default ServiceCard;
