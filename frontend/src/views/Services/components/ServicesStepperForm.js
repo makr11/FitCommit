@@ -1,15 +1,15 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Typography from '@material-ui/core/Typography';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 const steps = ['Usluga', 'Kategorija', 'Opcija'];
 
 function ServicesStepperForm(props){
   const { activeStep, setStep, getStepContent, handleNext, handleBack } = props
-  console.log(props);
   return (
     <div >
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -20,29 +20,27 @@ function ServicesStepperForm(props){
             </Step>
           );
         })}
-      </Stepper>
+      </Stepper>    
       <div>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography></Typography>
-          </div>
-        ) : (
-            <div>
-              {getStepContent(activeStep)}
-              <div>
-                <Button
-                  disabled={activeStep === setStep}
-                  onClick={handleBack}
-                >
-                  Natrag
-              </Button>
-                <Button variant="contained" color="primary" onClick={handleNext}>
-                  {activeStep === steps.length - 1 ? 'Spremi' : 'Sljedeći'}
-                </Button>
-              </div>
-            </div>
-          )}
-      </div>
+        {getStepContent(activeStep)}
+        <div>
+          <IconButton
+            disabled={activeStep === setStep}
+            onClick={handleBack}
+            color="primary"
+          >
+            <NavigateBeforeIcon/>
+          </IconButton>
+          <IconButton 
+            variant="contained" 
+            color="primary" 
+            onClick={handleNext}
+            disabled={activeStep === steps.length - 1}
+          >
+            <NavigateNextIcon/>
+          </IconButton>
+        </div>
+      </div>  
     </div>
   )
 }

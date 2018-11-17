@@ -5,30 +5,72 @@ import OptionForm from '../components/OptionForm';
 import ServicesStepperForm from '../components/ServicesStepperForm';
 import FormDialog from '../../../components/FormDialog';
 
+const formState = (update) => {
+  if(update){
+    if (update.service) {
+      return (
+        { service: update.service }
+      )
+    } else if (update.category) {
+      return (
+        { category: update.category }
+      )
+    } else if (update.duration) {
+      return (
+        {
+          duration: update.duration,
+          price: update.price,
+          arrivals: update.arrivals,
+        }
+      )
+    } 
+  }else{
+    return (
+      {
+        service: '',
+        category: '',
+        duration: '',
+        arrivals: '',
+        price: '',
+      }
+    )
+  }
+}
+
 class ServicesFormRouter extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state={     
-        activeStep: this.props.setStep,    
-    }   
+    this.state = {
+      activeStep: props.setStep,
+      form: formState(props.update)
+    }
   }
 
   getStepContent = (stepIndex) => {
+    const { service, category, duration, arrivals, price } = this.state.form;
     switch (stepIndex) {
       case 0:
         return (
-          <ServiceForm 
-            service={this.state.service}
+          <ServiceForm
+            service={service}
             handleInput={this.handleFormInput}
           />
         );
       case 1:
         return (
-          <CategoryForm />
+          <CategoryForm
+            category={category}
+            handleInput={this.handleFormInput}
+          />
         );
       case 2:
         return (
-          <OptionForm />
+          <OptionForm
+            duration={duration}
+            arrivals={arrivals}
+            price={price}
+            handleInput={this.handleFormInput}
+          />
         );
       default:
         return 'Uknown stepIndex';
@@ -49,41 +91,65 @@ class ServicesFormRouter extends React.Component {
 
   handleFormInput = (e) => {
     this.setState({
-      [e.target.name]: e.target.value,
+      form: {
+        ...this.state.form,
+        [e.target.name]: e.target.value,
+      }
     });
   };
 
-  submit = (e) => {
-    e.preventDefault();
-    console.log('yes');
-  }
+  submit = () => {
+    const { id, name, update, handleSubmit, handleUpdate, closeFormDialog } = this.props;
+    const { service, category, duration, price, arrivals } = this.state.form;
+    closeFormDialog();
+    const lead = { id, name, service, category, duration, price, arrivals }
+    if (update !== undefined) {
+      return (handleUpdate(lead))
+    } else {
+      return (handleSubmit(lead))
+    }
+  };
 
   render() {
     const { opened, closeFormDialog, name, setStep } = this.props;
-    const {
-      activeStep,
-    } = this.state;
-    
+    const { activeStep } = this.state;
+    const { service, category, duration, price, arrivals } = this.state.form;
+  
     return (
       <FormDialog
         activeStep={activeStep}
         open={opened}
+        submit={this.submit}
         close={closeFormDialog}
         form={
-          (this.props.setStep!==undefined)?          
-          <ServicesStepperForm
-            activeStep={activeStep}
-            setStep={setStep}
-            getStepContent={this.getStepContent}
-            handleNext={this.handleNext}
-            handleBack={this.handleBack}
-          />:(name==="service")?
-          <ServiceForm 
-          />:(name==="category")?
-          <CategoryForm
-          />:(name==="option")?
-          <OptionForm
-          />:undefined}
+          (this.props.setStep !== undefined) ?
+            <ServicesStepperForm
+              activeStep={activeStep}
+              setStep={setStep}
+              getStepContent={this.getStepContent}
+              handleNext={this.handleNext}
+              handleBack={this.handleBack}
+            /> :
+            (name === "service") ?
+            <ServiceForm
+              service={service}
+              handleInput={this.handleFormInput}
+              submit={this.submit}
+            /> :
+            (name === "category") ?
+            <CategoryForm
+              category={category}
+              handleInput={this.handleFormInput}
+              submit={this.submit}
+            /> :
+            (name === "option") ?
+            <OptionForm
+              duration={duration}
+              arrivals={arrivals}
+              price={price}
+              handleInput={this.handleFormInput}
+              submit={this.submit}
+            /> : undefined}
       >
       </FormDialog>
     )

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
 // redux
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { logger} from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import { rootReducers } from './reducers/reducers';
@@ -25,7 +25,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducers);
 
-const store = createStore(persistedReducer, applyMiddleware(thunkMiddleware, logger));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(persistedReducer, composeEnhancers(applyMiddleware(thunkMiddleware, logger)));
 
 const persistor = persistStore(store);
 

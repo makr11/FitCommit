@@ -20,10 +20,14 @@ class CategoriesSerializer(drf_serializers.ModelSerializer):
 
     options = drf_serializers.SerializerMethodField()
 
+
     def get_options(self, obj):
-        qs = Options.objects.filter(deleted=0, categoryID=obj.id)
-        serializer = OptionsSerializer(instance=qs, many=True, read_only=True)
-        return serializer.data
+        try:
+            qs = Options.objects.filter(deleted=0, categoryID=obj.id)
+            serializer = OptionsSerializer(instance=qs, many=True, read_only=True)
+            return serializer.data
+        except AttributeError:
+            pass
 
     class Meta:
         model = Categories
@@ -34,9 +38,12 @@ class ServicesSerializer(drf_serializers.ModelSerializer):
     categories = drf_serializers.SerializerMethodField()
 
     def get_categories(self, obj):
-        qs = Categories.objects.filter(deleted=0, serviceID=obj.id)
-        serializer = CategoriesSerializer(instance=qs, many=True, read_only=True)
-        return serializer.data
+        try:
+            qs = Categories.objects.filter(deleted=0, serviceID=obj.id)
+            serializer = CategoriesSerializer(instance=qs, many=True, read_only=True)
+            return serializer.data
+        except AttributeError:
+            pass
 
     class Meta:
         model = Services

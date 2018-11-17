@@ -2,8 +2,8 @@ import {
 	GET_SERVICES_SUCCESS,
 	GET_SERVICES_FAILED,
 	POST_SERVICE_FAILED,
-	PUT_SERVICE_SUCCESS,
-	PUT_SERVICE_FAILED,
+	PATCH_SERVICE_SUCCESS,
+	PATCH_SERVICE_FAILED,
 } from '../constants/reduxConstants';
 
 import {
@@ -20,23 +20,23 @@ export const requestServices = () => (dispatch) => {
 };
   
 export const submitFormService = (lead) => (dispatch) => {
-	console.log(lead);
-	let url = undefined;
+	let url = '';
 
-	if (lead.name==="service"){
+	if (lead.name==="new"){
 		url = services;
-	} else if (lead.name==="category"){
+	} else if (lead.name==="service"){
 		url = categories;
-		lead["serviceID"] = lead.service.id;
+		lead["serviceID"] = lead.id;
 		delete lead.service;
-	} else if (lead.name==="option"){
+	} else if (lead.name==="category"){
 		url = options;
 		delete lead.service;
-		lead["categoryID"] = lead.category.id;
 		delete lead.category;
+		lead["categoryID"] = lead.id;
 	};
 
 	delete lead.name;
+	delete lead.id;
 
 	const conf = {
 		method: "POST",
@@ -56,21 +56,19 @@ export const submitFormService = (lead) => (dispatch) => {
 }
 
 export const updateFormService = (lead) => (dispatch) => {
-	console.log(lead.service);
-	let leadUpdate = {};
+	
+	let leadUpdate
 	let url = undefined;
 	let id = lead.id;
 
-	if (lead.name==="serviceUpdate"){
-		leadUpdate["service"]=lead.service;
+	if (lead.name==="service"){
+		leadUpdate={"service": lead.service}
 		url = services;
-	} else if (lead.name==="categoryUpdate"){
-		leadUpdate["category"]=lead.category;
+	} else if (lead.name==="category"){
+		leadUpdate={"category": lead.category};
 		url = categories;
-	} else if (lead.name==="optionUpdate"){
-		leadUpdate["arrivals"]=lead.arrivals;
-		leadUpdate["price"]=lead.price;
-		leadUpdate["duration"]=lead.duration;
+	} else if (lead.name==="option"){
+		leadUpdate={"arrivals": parseInt(lead.arrivals, 10), "price": parseInt(lead.price, 10), "duration": parseInt(lead.duration, 10)}
 		url = options;
 	};
 
@@ -80,16 +78,16 @@ export const updateFormService = (lead) => (dispatch) => {
 		'Accept': 'application/json',
 		'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(lead),
+		body: JSON.stringify(leadUpdate),
 	};
 
 	fetch(url + id, conf)
 	.then(response => {
 		console.log(response);
-		dispatch({type: PUT_SERVICE_SUCCESS, payload: response})
+		dispatch({type: PATCH_SERVICE_SUCCESS, payload: response})
 		dispatch(requestServices());
 	})
-	.catch(error => dispatch({ type: PUT_SERVICE_FAILED, payload: error}));
+	.catch(error => dispatch({ type: PATCH_SERVICE_FAILED, payload: error}));
 };
 
 export const removeServices = (id, name) => (dispatch) => {

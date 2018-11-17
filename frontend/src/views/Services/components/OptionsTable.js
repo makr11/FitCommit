@@ -1,4 +1,6 @@
 import React from 'react';
+// prop types check
+import PropTypes from "prop-types";
 // material ui core components
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,20 +15,22 @@ import TableRow from '@material-ui/core/TableRow';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const OptionMenu = (props) => {
-  const { anchorEl, id, closeMenu, openForm } = props;
+  const { anchorEl, id, closeMenu, update, del, sIndex, cIndex, oIndex } = props;
+  
   return(
     <Menu
       anchorEl={anchorEl}
       open={Boolean(anchorEl)}
       onClose={closeMenu}
+      onClick={closeMenu}
     >
-      <MenuItem>
-        <Button onClick={openForm} id={id} name="option">
+      <MenuItem >
+        <Button onClick={update.bind(this, sIndex, cIndex, oIndex)} id={id} name="option">
           Uredi
         </Button>
       </MenuItem>
       <MenuItem >
-        <Button id={id} name="option">
+        <Button onClick={del} id={id} name="option">
           Obriši
         </Button>
       </MenuItem>
@@ -38,62 +42,85 @@ class OptionsTable extends React.Component {
 
   state = {
     anchorEl: null,
+    oIndex: undefined,
+    id: null
   };
 
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleClick = e => {
+    
+    this.setState({ 
+      anchorEl: e.currentTarget, 
+      oIndex: parseInt(e.currentTarget.name, 10),
+      id: e.currentTarget.id,
+    });
   };
 
   closeMenu = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  openForm = (e) => {
-    this.setState({ anchorEl: null });
-    this.props.openUpdateFormDialog(e);
+    this.setState({ 
+      anchorEl: null,
+      oIndex: undefined, 
+      id: null
+    });
   };
 
   render(){
-    const { options } = this.props;
-    const { anchorEl } = this.state;
+    const { options, sIndex, cIndex, openUpdateFormDialog } = this.props;
+    const { anchorEl, oIndex, id } = this.state;
+    
     return(
       <Table >
         <TableHead>
           <TableRow>
-            <TableCell>Broj dolazaka</TableCell>
             <TableCell numeric>Cijena</TableCell>
+            <TableCell numeric>Broj dolazaka</TableCell>
             <TableCell numeric>Trajanje</TableCell>
             <TableCell >Uredi</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-        {options.map((option) => {
+        {options.map((option, oIndex) => {
+          
           return (
-            <TableRow key={option.id}>              
+            <TableRow key={option.id}>  
+              <TableCell numeric>{option.price}</TableCell>            
               <TableCell numeric>{option.arrivals}</TableCell>
-              <TableCell numeric>{option.price}</TableCell>
               <TableCell numeric>{option.duration}</TableCell>
               <TableCell>
                 <IconButton
+                  name={oIndex}
+                  id={option.id}
                   onClick={this.handleClick}
                   >
                     <MoreVertIcon />
                 </IconButton>
                 
-              </TableCell>  
-              <OptionMenu 
-                anchorEl={anchorEl} 
-                closeMenu={this.closeMenu}
-                openForm={this.openForm}
-                id={option.id}
-              />           
+              </TableCell>             
             </TableRow>
           );
         })}
         </TableBody>
+        {(oIndex!==undefined)?
+        <OptionMenu 
+          anchorEl={anchorEl} 
+          id={id}
+          closeMenu={this.closeMenu}
+          update={openUpdateFormDialog}
+          sIndex={sIndex}
+          cIndex={cIndex}
+          oIndex={oIndex}
+        />:undefined
+        }
       </Table>
     )
   }
 };
+
+OptionsTable.propTypes={
+  options: PropTypes.array.isRequired,
+  sIndex: PropTypes.number.isRequired,
+  cIndex: PropTypes.number.isRequired,
+  openUpdateFormDialog: PropTypes.func.isRequired,
+  del: PropTypes.func.isRequired
+}
 
 export default OptionsTable;

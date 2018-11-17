@@ -12,6 +12,7 @@ function CustomInput({ ...props }) {
     targetName,
     input,
     handleInput,
+    type
   } = props
 
   return(
@@ -19,7 +20,12 @@ function CustomInput({ ...props }) {
       <InputLabel>
         {labelText}
       </InputLabel>
-      <Input name={targetName} value={input} onChange={handleInput}/>
+      <Input 
+        name={targetName} 
+        type={type}
+        defaultValue={input} 
+        onChange={handleInput}
+        />
     </FormControl>
   )
 }
@@ -27,7 +33,7 @@ function CustomInput({ ...props }) {
 CustomInput.propTypes = {
   labelText: PropTypes.node.isRequired,
   targetName: PropTypes.string.isRequired,
-  input: PropTypes.string.isRequired,
+  input: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   handleInput: PropTypes.func.isRequired,
 }
 

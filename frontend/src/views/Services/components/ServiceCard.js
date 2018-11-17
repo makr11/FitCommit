@@ -11,20 +11,32 @@ import OptionsTable from './OptionsTable';
 import Editor from '../../../components/Editor';
 
 function ServiceCard(props){
-  const { service, openFormDialog, openUpdateFormDialog } = props;
+  const { service, sIndex, openFormDialog, openUpdateFormDialog, removeServices } = props;
 
   return (
     <Card >
-      <Editor name="service" id={service.id} open={openFormDialog} update={openUpdateFormDialog}>
+      <Editor 
+        name="service" 
+        id={service.id} 
+        open={openFormDialog} 
+        update={openUpdateFormDialog.bind(this, sIndex, null, null)}
+        del={removeServices}
+      >
         <CardHeader
           title={service.service}
         />
       </Editor>
-      {service.categories.map((category) => {
+      {service.categories.map((category, cIndex) => {
         return(
           <div key={category.id}>
             <CardContent>
-              <Editor name="category" id={category.id} open={openFormDialog} update={openUpdateFormDialog}>
+              <Editor 
+                name="category" 
+                id={category.id} 
+                open={openFormDialog} 
+                update={openUpdateFormDialog.bind(this, sIndex, cIndex, null)}
+                del={removeServices}
+              >
                 <Typography variant="title">
                   {category.category}
                 </Typography>
@@ -34,6 +46,9 @@ function ServiceCard(props){
               options={category.options} 
               openFormDialog={openFormDialog}
               openUpdateFormDialog={openUpdateFormDialog}
+              sIndex={sIndex}
+              cIndex={cIndex}
+              del={removeServices}
             />
           </div>
         )
@@ -44,7 +59,9 @@ function ServiceCard(props){
 
 ServiceCard.propTypes = {
   service: PropTypes.object.isRequired,
+  sIndex: PropTypes.number.isRequired,
   openFormDialog: PropTypes.func.isRequired,
+  openUpdateFormDialog: PropTypes.func.isRequired,
 }
 
 export default ServiceCard;

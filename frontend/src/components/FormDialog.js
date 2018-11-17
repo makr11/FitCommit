@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
 function FormDialog(props){
-  const { form, open, close } = props;
+  const { form, open, submit, close } = props;
 
   return (
     <Dialog
@@ -15,6 +15,9 @@ function FormDialog(props){
         {form}
       </DialogContent>
       <DialogActions>
+        <Button onClick={submit} color="primary">
+          Spremi
+        </Button>
         <Button onClick={close} color="primary">
           Zatvori
         </Button>

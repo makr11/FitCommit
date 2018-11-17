@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { requestServices, removeServices, submitFormService, updateFormService } from '../../actions/servicesActions';
 import PropTypes from 'prop-types';
-import ServicesList from './containers/ServicesList';
+import ServicesList from './components/ServicesList';
 import ServicesFormRouter from './containers/ServicesFormRouter';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
@@ -16,6 +16,7 @@ class Services extends React.Component{
     name: '',
     id: null,
     setStep: undefined,
+    update: undefined,
   };
 
   openFormDialog = (e) => {
@@ -46,14 +47,36 @@ class Services extends React.Component{
     })
   };
 
-  openUpdateFormDialog = (e) => {
+  openUpdateFormDialog = (sIndex, cIndex, oIndex, e) => {
+    const { services } = this.props;
+    
+    let update
     let id = e.currentTarget.id;
     let name = e.currentTarget.name;
+    let service = services[sIndex];
+    let category = (cIndex!==null)?service.categories[cIndex]:undefined;
+    let option = (oIndex!==null)?category.options[oIndex]:undefined;
+
+    switch(name){
+      case 'service':
+        update=service;
+        break;
+      case 'category':
+        update=category;
+        break;
+      case 'option':
+        update=option;
+        break;
+      default:
+        update=undefined;
+        break;
+    };
 
     this.setState({
       opened: true,
       name: name,
       id: id,
+      update: update
     })
   }
  
@@ -67,8 +90,8 @@ class Services extends React.Component{
   }
 
   render(){  
-    const { services } = this.props;
-    const { opened, name, id,  setStep } = this.state;
+    const { services, handleSubmit, handleUpdate, removeServices } = this.props;
+    const { opened, name, id,  setStep, update } = this.state;
  
     return (
       <div>
@@ -76,6 +99,7 @@ class Services extends React.Component{
           services={services}
           openFormDialog={this.openFormDialog}
           openUpdateFormDialog={this.openUpdateFormDialog}
+          removeServices={removeServices}
         />
         {(opened)?<ServicesFormRouter 
                     opened={opened}
@@ -83,6 +107,9 @@ class Services extends React.Component{
                     name={name} 
                     setStep={setStep}     
                     closeFormDialog={this.closeFormDialog} 
+                    update={update}
+                    handleSubmit={handleSubmit}
+                    handleUpdate={handleUpdate}
                   />:undefined}
         
         <Tooltip title="Nova usluga">
