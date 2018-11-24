@@ -4,7 +4,7 @@ import Arrivals from '../views/Arrivals';
 import Dashboard from '../views/Dashboard';
 import Services from '../views/Services';
 import Users from '../views/Users';
-import UserProfile from '../views/User';
+import User from '../views/User';
 // material ui icons
 import SettingsCellIcon from '@material-ui/icons/SettingsCell';
 import PersonIcon from '@material-ui/icons/Person';
@@ -40,7 +40,7 @@ export const sidebarRoutes = [
 
 export const mainRoutes = [
   {
-    path: "/profile",
-    component: UserProfile,
+    path: "/profile/:id",
+    component: User,
   },
 ]

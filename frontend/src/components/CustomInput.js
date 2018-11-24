@@ -12,6 +12,7 @@ function CustomInput({ ...props }) {
     targetName,
     input,
     handleInput,
+    adornments,
     type
   } = props
 
@@ -23,7 +24,8 @@ function CustomInput({ ...props }) {
       <Input 
         name={targetName} 
         type={type}
-        defaultValue={input} 
+        value={input} 
+        endAdornment={adornments}
         onChange={handleInput}
         />
     </FormControl>
@@ -34,7 +36,8 @@ CustomInput.propTypes = {
   labelText: PropTypes.node.isRequired,
   targetName: PropTypes.string.isRequired,
   input: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  handleInput: PropTypes.func.isRequired,
+  handleInput: PropTypes.func,
+
 }
 
 export default CustomInput;

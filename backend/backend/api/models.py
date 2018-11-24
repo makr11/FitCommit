@@ -6,12 +6,21 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=50, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     deleted = models.BooleanField(default=0, blank=True)
+    debt = models.CharField( max_length=20, default=0, blank=True)
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
-class Services(models.Model):
+    def have_debt(self):
+        not_paid = Records.objects.filter(userObj=self.id, paid=True)
+        sum = 0
+        for i in not_paid:
+            sum += not_paid.nett_price
+        self.debt = sum + " kn"
+        self.save()
 
+
+class Services(models.Model):
     service = models.CharField(max_length=50)
     deleted = models.BooleanField(default=0, blank=True)
 
@@ -29,7 +38,6 @@ class Categories(models.Model):
         return self.category
 
 class Options(models.Model):
-
     arrivals = models.IntegerField()
     price = models.IntegerField()
     duration = models.IntegerField()

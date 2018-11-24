@@ -1,10 +1,12 @@
 import {
   GET_USER_RECORDS_SUCCESS,
   GET_USER_RECORDS_FAILED,
+  POST_RECORD_SUCCESS,
   POST_RECORD_FAILED,
   PATCH_RECORD_SUCCESS,
   PATCH_RECORD_FAILED,
   REMOVE_USER_RECORD_SUCCESS,
+  REMOVE_USER_RECORD_FAILED,
   RESET_RECORDS,
 } from '../constants/reduxConstants';
 
@@ -16,8 +18,18 @@ import {
 export const requestUserRecords = (id) => (dispatch) => {
   fetch(userRecords + id)
   .then(response => response.json())
-  .then(data => dispatch({ type: GET_USER_RECORDS_SUCCESS, payload: data}))
-  .catch(error => dispatch({ type: GET_USER_RECORDS_FAILED, payload: error}))
+  .then(data => {
+    dispatch({ 
+      type: GET_USER_RECORDS_SUCCESS, 
+      payload: data
+    })
+  })
+  .catch(error => {
+    dispatch({ 
+      type: GET_USER_RECORDS_FAILED, 
+      payload: error
+    })
+  })
 };
 
 export const submitFormRecord = (lead) => (dispatch, getState) => {
@@ -35,12 +47,20 @@ export const submitFormRecord = (lead) => (dispatch, getState) => {
   .then(response => {
     console.log(response);
     const state = getState();
+    dispatch({ 
+      type: POST_RECORD_SUCCESS
+    })
     dispatch(requestUserRecords(state.userProfileReducer.profile.id));
   })
-  .catch(error => dispatch({ type: POST_RECORD_FAILED, payload: error}));
+  .catch(error => {
+    dispatch({ 
+      type: POST_RECORD_FAILED, 
+      payload: error
+    })
+  });
 }
 
-export const updateFormRecord = (id, index, lead) => (dispatch, getState) => {
+export const updateFormRecord = (id, lead) => (dispatch, getState) => {
   const state = getState()
   const conf = {
     method: "PATCH",
@@ -54,11 +74,16 @@ export const updateFormRecord = (id, index, lead) => (dispatch, getState) => {
   fetch(records + id, conf)
   .then(response => {
     console.log(response);
-    dispatch({type: PATCH_RECORD_SUCCESS, index, lead, state})
+    dispatch({
+      type: PATCH_RECORD_SUCCESS
+    })
+    dispatch(requestUserRecords(state.userProfileReducer.profile.id));
   })
   .catch(error => {
     console.log(error);
-    dispatch({type: PATCH_RECORD_FAILED})
+    dispatch({
+      type: PATCH_RECORD_FAILED
+    })
   })
 };
 
@@ -79,10 +104,16 @@ export const removeRecord = (id) => (dispatch, getState) => {
   fetch(userRecords + lead.id, conf)
   .then(response => {
     console.log(response);
-    dispatch({type: REMOVE_USER_RECORD_SUCCESS, lead, state})
+    dispatch({
+      type: REMOVE_USER_RECORD_SUCCESS
+    })
+    dispatch(requestUserRecords(state.userProfileReducer.profile.id));
     }
   )
-  .catch(error => console.log(error));
+  .catch(error => {
+    console.log(error);
+    dispatch({type: REMOVE_USER_RECORD_FAILED})
+  });
 }
 
 export const resetRecords = () => {

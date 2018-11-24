@@ -37,7 +37,7 @@ const formState = (update) => {
   }
 }
 
-class ServicesFormRouter extends React.Component {
+class ServicesFormMain extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -48,6 +48,7 @@ class ServicesFormRouter extends React.Component {
 
   getStepContent = (stepIndex) => {
     const { service, category, duration, arrivals, price } = this.state.form;
+    console.log(this.state.form);
     switch (stepIndex) {
       case 0:
         return (
@@ -121,39 +122,38 @@ class ServicesFormRouter extends React.Component {
         open={opened}
         submit={this.submit}
         close={closeFormDialog}
-        form={
-          (this.props.setStep !== undefined) ?
-            <ServicesStepperForm
-              activeStep={activeStep}
-              setStep={setStep}
-              getStepContent={this.getStepContent}
-              handleNext={this.handleNext}
-              handleBack={this.handleBack}
-            /> :
-            (name === "service") ?
-            <ServiceForm
-              service={service}
-              handleInput={this.handleFormInput}
-              submit={this.submit}
-            /> :
-            (name === "category") ?
-            <CategoryForm
-              category={category}
-              handleInput={this.handleFormInput}
-              submit={this.submit}
-            /> :
-            (name === "option") ?
-            <OptionForm
-              duration={duration}
-              arrivals={arrivals}
-              price={price}
-              handleInput={this.handleFormInput}
-              submit={this.submit}
-            /> : undefined}
       >
+        {(this.props.setStep !== undefined) ?
+        <ServicesStepperForm
+          activeStep={activeStep}
+          setStep={setStep}
+          getStepContent={this.getStepContent}
+          handleNext={this.handleNext}
+          handleBack={this.handleBack}
+        /> :
+        (name === "service") ?
+        <ServiceForm
+          service={service}
+          handleInput={this.handleFormInput}
+          submit={this.submit}
+        /> :
+        (name === "category") ?
+        <CategoryForm
+          category={category}
+          handleInput={this.handleFormInput}
+          submit={this.submit}
+        /> :
+        (name === "option") ?
+        <OptionForm
+          duration={duration}
+          arrivals={arrivals}
+          price={price}
+          handleInput={this.handleFormInput}
+          submit={this.submit}
+        /> : undefined}
       </FormDialog>
     )
   };
 };
 
-export default ServicesFormRouter;
+export default ServicesFormMain;

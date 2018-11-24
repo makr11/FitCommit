@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { requestServices, removeServices, submitFormService, updateFormService } from '../../actions/servicesActions';
 import PropTypes from 'prop-types';
 import ServicesList from './components/ServicesList';
-import ServicesFormRouter from './containers/ServicesFormRouter';
+import ServicesFormMain from './containers/ServicesFormMain';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -101,7 +101,7 @@ class Services extends React.Component{
           openUpdateFormDialog={this.openUpdateFormDialog}
           removeServices={removeServices}
         />
-        {(opened)?<ServicesFormRouter 
+        {(opened)?<ServicesFormMain 
                     opened={opened}
                     id={id}
                     name={name} 

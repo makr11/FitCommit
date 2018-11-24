@@ -1,3 +1,3 @@
-import UserProfile from './containers/UserProfile';
+import User from './User';
 
-export default UserProfile;
+export default User;

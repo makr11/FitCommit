@@ -5,14 +5,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
 function FormDialog(props){
-  const { form, open, submit, close } = props;
+  const { children, open, submit, close } = props;
 
   return (
     <Dialog
       open={open}
+      onClose={close}
     >
       <DialogContent>
-        {form}
+        {children}
       </DialogContent>
       <DialogActions>
         <Button onClick={submit} color="primary">

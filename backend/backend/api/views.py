@@ -75,7 +75,7 @@ class ListCategories(generics.ListCreateAPIView):
 
     def create(self, request):
         serializer = CategoriesSerializer(data=request.data)
-        
+
         if serializer.is_valid():
             service = Services.objects.get(pk=request.data['serviceID'])
             category = Categories(category=request.data['category'], serviceID=service)
@@ -146,7 +146,7 @@ class ListRecords(generics.ListCreateAPIView):
             arrivals_left=option.arrivals,
             price=option.price,
             discount=request.data['discount'],
-            nett_price=request.data['nettPrice'],
+            nett_price=request.data['nett_price'],
             paid=request.data['paid'],
             started=now,
             ends=ends,
