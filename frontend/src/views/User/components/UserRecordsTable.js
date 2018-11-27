@@ -24,11 +24,11 @@ function UserRecordsTable(props){
       <Table className={classes.tableCell}>
         <TableHead>
         <TableRow>
-          <TableCell>Usluga</TableCell>
-          <TableCell>Opcija</TableCell>
-          <TableCell>Započelo</TableCell>
-          <TableCell>Ističe</TableCell>
-          <TableCell padding="dense">Broj dolazaka</TableCell>
+          <TableCell padding="dense">Usluga</TableCell>
+          <TableCell padding="dense">Započelo</TableCell>
+          <TableCell padding="dense">Ističe</TableCell>
+          <TableCell padding="dense">Preostalo dana</TableCell>
+          <TableCell padding="dense">Preostalo dolazaka</TableCell>
           <TableCell padding="dense">Cijena</TableCell>
           <TableCell padding="dense">Plaćeno</TableCell>
           <TableCell padding="checkbox">Izmijeni</TableCell>
@@ -39,11 +39,11 @@ function UserRecordsTable(props){
           {records.map((record, index) => {
             return (
               <TableRow key={record.id}>
-                <TableCell>{record.service}</TableCell>
-                <TableCell>{record.category}</TableCell>
-                <TableCell>{record.started}</TableCell>
+                <TableCell padding="dense">{record.service + ' (' + record.category + ')'}</TableCell>
+                <TableCell padding="dense">{record.started}</TableCell>
                 <TableCell padding="dense">{record.ends}</TableCell>
-                <TableCell padding="dense" numeric>{(record.active)?record.arrivals_left:<WarningIcon/>}</TableCell>
+                <TableCell padding="dense">{record.days_left}</TableCell>
+                <TableCell padding="dense">{(record.active)?record.arrivals_left:<WarningIcon/>}</TableCell>
                 <TableCell padding="dense" numeric>{record.nett_price + " kn"}</TableCell>
                 <TableCell>{(!record.paid)?<WarningIcon/>:<DoneIcon/>}</TableCell>
                 <TableCell padding="checkbox">

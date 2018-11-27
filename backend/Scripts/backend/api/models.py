@@ -1,24 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class CustomUser(AbstractUser):
     IDUser = models.CharField(max_length=5, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     deleted = models.BooleanField(default=0, blank=True)
-    debt = models.CharField( max_length=20, default=0, blank=True)
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
-
-    def have_debt(self):
-        not_paid = Records.objects.filter(userObj=self.id, paid=True)
-        sum = 0
-        for i in not_paid:
-            sum += not_paid.nett_price
-        self.debt = sum + " kn"
-        self.save()
-
 
 class Services(models.Model):
     service = models.CharField(max_length=50)
@@ -60,7 +51,7 @@ class Records(models.Model):
     paid = models.BooleanField(default=0)
     started = models.DateField(auto_now_add=True)
     ends = models.DateField()
-    days_left = models.IntegerField()
+    days_left = models.IntegerField(default=0)
     deleted = models.BooleanField(default=0, blank=True)
     active = models.BooleanField(default=1, blank=True)
 
@@ -70,6 +61,13 @@ class Records(models.Model):
             self.save()
         else:
             self.active = 1
+            self.save()
+    
+    def get_days_left(self):
+        now = timezone.now().date()
+        if self.ends > now:
+            days_left = self.ends - now
+            self.days_left = days_left.days
             self.save()
 
     @property

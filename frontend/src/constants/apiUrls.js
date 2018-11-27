@@ -8,7 +8,9 @@ export const options = "http://localhost:8000/api/options/";
 
 export const records = "http://localhost:8000/api/records/";
 
-export const userRecords = "http://localhost:8000/api/user_records/";
+export const userRecordsAll = "http://localhost:8000/api/user_records/all/";
+
+export const userRecordsActive = "http://localhost:8000/api/user_records/active/";
 
 export const arrivals = "http://localhost:8000/api/arrivals/";
 

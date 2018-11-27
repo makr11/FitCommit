@@ -23,8 +23,10 @@ class ListUsers(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         last_user = CustomUser.objects.last()
-        ID = str(int(last_user.IDUser) + 1).zfill(5)
-        print(ID)
+        if last_user is None:
+            ID="00000"
+        else:
+            ID = str(int(last_user.IDUser) + 1).zfill(5)
         request.data["IDUser"] = ID
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -154,12 +156,28 @@ class ListRecords(generics.ListCreateAPIView):
         record.save()
         return Response()
 
-class ListUserRecords(generics.ListAPIView):
+class ListUserRecordsAll(generics.ListAPIView):
     serializer_class = RecordsSerializer
 
     def get_queryset(self):
         user=self.kwargs['pk']
-        return Records.objects.filter(userObj=user, deleted=0, active=1).order_by('-ends')
+        records = Records.objects.filter(userObj=user, deleted=0).order_by('-ends')
+        for record in records:
+            print(record)
+            record.get_days_left()
+        print(records)
+        return records
+
+class ListUserRecordsActive(generics.ListAPIView):
+    serializer_class = RecordsSerializer
+
+    def get_queryset(self):
+        user=self.kwargs['pk']
+        records = Records.objects.filter(userObj=user, deleted=0, active=1).order_by('-ends')
+        for record in records:
+            record.get_days_left()
+        print(records)
+        return records
 
 class RecordsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Records.objects.all()
@@ -183,7 +201,7 @@ class ListArrivals(generics.ListCreateAPIView):
             userObj=user,
             recordObj=record,
             arrival=arrival,
-            arrival_time=str(time.hour + 2) + ":" + str(time.minute)
+            arrival_time=str(time.hour + 1) + ":" + str(time.minute)
         )
         arrival.save()
         return Response()

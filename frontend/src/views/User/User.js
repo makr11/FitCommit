@@ -1,7 +1,7 @@
 import React from 'react';
 // redux
 import {connect} from 'react-redux';
-import { requestUserRecords, submitFormRecord, resetRecords, removeRecord, updateFormRecord } from '../../actions/userRecordsActions';
+import { requestUserRecordsAll, submitFormRecord, resetRecords, removeRecord, updateFormRecord } from '../../actions/userRecordsActions';
 import { resetProfile } from '../../actions/userProfileActions';
 // material ui components
 import Button from '@material-ui/core/Button'
@@ -92,7 +92,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRecords: (id) => dispatch(requestUserRecords(id)),
+    getRecords: (id) => dispatch(requestUserRecordsAll(id)),
     submitRecord : (lead) => dispatch(submitFormRecord(lead)),
     resetProfile: () => dispatch(resetProfile()),
     resetRecords: () => dispatch(resetRecords()),

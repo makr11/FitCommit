@@ -48,7 +48,7 @@ class ServicesFormMain extends React.Component {
 
   getStepContent = (stepIndex) => {
     const { service, category, duration, arrivals, price } = this.state.form;
-    console.log(this.state.form);
+  
     switch (stepIndex) {
       case 0:
         return (

@@ -13,8 +13,6 @@ import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 // react router
 import { BrowserRouter } from 'react-router-dom';
-// css
-import "./assets/css/spartacus-style.css";
 // app main components
 import App from './layout/App';
 

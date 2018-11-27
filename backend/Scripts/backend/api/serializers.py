@@ -63,6 +63,14 @@ class RecordsSerializer(drf_serializers.ModelSerializer):
         fields = '__all__'
 
 class UserSerializer(drf_serializers.ModelSerializer):
+    debt = drf_serializers.SerializerMethodField()
+
+    def get_debt(self, obj):
+        qs = Records.objects.filter(userObj=obj.id, paid=False)
+        sum = 0
+        for i in qs:
+            sum+=i.nett_price
+        return sum
 
     class Meta:
         model = CustomUser

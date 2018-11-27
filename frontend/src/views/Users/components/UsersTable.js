@@ -22,6 +22,7 @@ function UsersTable(props){
           <TableCell>Ime</TableCell>
           <TableCell>Prezime</TableCell>
           <TableCell>E-mail</TableCell>
+          <TableCell>Dug</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -39,6 +40,7 @@ function UsersTable(props){
             <TableCell>{user.first_name}</TableCell>
             <TableCell>{user.last_name}</TableCell>
             <TableCell>{user.email}</TableCell>
+            <TableCell>{user.debt}</TableCell>
           </TableRow>
         );
       })}

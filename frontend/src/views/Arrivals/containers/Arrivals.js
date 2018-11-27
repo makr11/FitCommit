@@ -2,7 +2,7 @@ import React from 'react';
 // redux
 import { connect } from 'react-redux';
 import { requestArrivalsByDate, deleteArrival, submitFormArrival } from '../../../actions/arrivalsActions';
-import { requestUserRecords, resetRecords } from '../../../actions/userRecordsActions';
+import { requestUserRecordsActive, resetRecords } from '../../../actions/userRecordsActions';
 // material ui core components
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
@@ -138,7 +138,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectRecords: (id) => dispatch(requestUserRecords(id)),
+    selectRecords: (id) => dispatch(requestUserRecordsActive(id)),
     resetRecords: () => dispatch(resetRecords()),
     selectArrivals: (date) => dispatch(requestArrivalsByDate(date)),
     deleteArrival: (e) => dispatch(deleteArrival(e.currentTarget.id)),

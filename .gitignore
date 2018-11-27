@@ -2,7 +2,7 @@ backend/backend/.vscode/*
 backend/include/*
 backend/lib/*
 backend/bin/*
-backend/pip-selfcheck.json
+backend/tcl/*
 
 __pycache__
 migrations
