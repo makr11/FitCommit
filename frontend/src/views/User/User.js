@@ -1,19 +1,20 @@
 import React from 'react';
 // redux
 import {connect} from 'react-redux';
-import { requestUserRecordsAll, submitFormRecord, resetRecords, removeRecord, updateFormRecord } from '../../actions/userRecordsActions';
-import { resetProfile } from '../../actions/userProfileActions';
+import { requestUserRecordsAll, submitFormRecord, resetRecords, removeRecord, updateFormRecord } from '../../store/actions/userRecordsA';
+import { resetProfile } from '../../store/actions/userProfileA';
 // material ui components
 import Button from '@material-ui/core/Button'
 // app components
-import UserRecordsFormMain from './containers/UserRecordsFormMain';
-import UserProfile from './containers/UserProfile';
-import UserRecordsTable from './components/UserRecordsTable';
+import UserRecordsFormMain from './UserRecordsFormMain/UserRecordsFormMain';
+import UserProfile from './UserProfile/UserProfile';
+import UserRecordsTable from './UserRecordsTable/UserRecordsTable';
 
 class User extends React.Component {
   constructor(props){
     super(props);
     this.state={
+      opened: false,
       openSubmitForm: false,
       openEditForm:false,
       record: {},
@@ -37,6 +38,7 @@ class User extends React.Component {
     let record = records[index];
     
     this.setState({
+      opened: true,
       openSubmitForm: (!index)?true:false,
       openEditForm: (index)?true:false,
       record: record,
@@ -45,15 +47,14 @@ class User extends React.Component {
 
   closeRecordDialog = () => {
     this.setState({
-      openSubmitForm: false,
-      openEditForm:false,
+      opened: false,
       record: {}
-    })
+    });
   };
 
   render() {
     const { user, records, services, submitRecord, updateRecord, removeRecord } = this.props;
-    const { openSubmitForm, openEditForm, record } = this.state;
+    const { opened, openSubmitForm, openEditForm, record } = this.state;
     
     return (
       (user!==undefined) ?
@@ -63,7 +64,7 @@ class User extends React.Component {
         />
         <Button onClick={this.openRecordDialog}>Otvori</Button>
         <UserRecordsFormMain 
-          open={openSubmitForm || openEditForm}
+          open={opened}
           openSubmitForm={openSubmitForm}
           openEditForm={openEditForm} 
           user={user.id} 

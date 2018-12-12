@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import (ListUsers,
+from .views import (ListSetup,
+                    ListUsers,
                     ListDeletedUsers,
                     UserDetail,
                     ListServices,
@@ -23,6 +24,7 @@ from django.contrib.auth import get_user_model
 CustomUser = get_user_model()
 
 urlpatterns = [
+    path('setup/', ListSetup.as_view(), name='setup'),
     path('users/', ListUsers.as_view(), name='users'),
     path('users-deleted/', ListDeletedUsers.as_view(), name='users_del'),
     path('users/<int:pk>', UserDetail.as_view(), name='user_detail'),

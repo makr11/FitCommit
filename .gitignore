@@ -3,6 +3,8 @@ backend/include/*
 backend/lib/*
 backend/bin/*
 backend/tcl/*
+backend/Scripts/*
+!backend/Scripts/backend
 
 __pycache__
 migrations

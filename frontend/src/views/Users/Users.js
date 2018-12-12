@@ -1,8 +1,8 @@
 import React from 'react';
 // redux
 import { connect } from 'react-redux';
-import { requestUserProfile } from '../../actions/userProfileActions';
-import { submitFormUser } from '../../actions/usersActions';
+import { requestUserProfile } from '../../store/actions/userProfileA';
+import { submitFormUser } from '../../store/actions/usersA';
 // material ui core
 import { withStyles } from '@material-ui/core/styles';
 // material ui core components
@@ -11,8 +11,8 @@ import Button from '@material-ui/core/Button';
 // material ui icons
 import AddIcon from '@material-ui/icons/Add';
 // app components
-import UsersTable from './components/UsersTable';
-import UserFormMain from './containers/UserFormMain';
+import UsersTable from './UsersTable/UsersTable';
+import UserFormMain from './UserFormMain/UserFormMain';
 // jss style
 import { usersStyle } from '../../assets/jss/users';
 

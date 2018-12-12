@@ -1,10 +1,10 @@
 import React from 'react';
 // services containers
 import { connect } from 'react-redux';
-import { requestServices, removeServices, submitFormService, updateFormService } from '../../actions/servicesActions';
+import { requestServices, removeServices, submitFormService, updateFormService } from '../../store/actions/servicesA';
 import PropTypes from 'prop-types';
-import ServicesList from './components/ServicesList';
-import ServicesFormMain from './containers/ServicesFormMain';
+import ServicesList from './ServicesList/ServicesList';
+import ServicesFormMain from './ServicesFormMain/ServicesFormMain';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';

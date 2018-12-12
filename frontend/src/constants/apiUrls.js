@@ -1,3 +1,5 @@
+export const setup = "http://localhost:8000/api/setup/";
+
 export const users = "http://localhost:8000/api/users/";
 
 export const services = "http://localhost:8000/api/services/";

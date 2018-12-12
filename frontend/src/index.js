@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { logger} from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
-import { rootReducers } from './reducers/reducers';
+import rootReducers from './store/reducers';
 // redux persist
 import storage from 'redux-persist/lib/storage';
 import { persistStore, persistReducer } from 'redux-persist';

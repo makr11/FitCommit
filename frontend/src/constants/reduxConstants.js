@@ -1,3 +1,8 @@
+// setup constants
+export const GET_SETUP_SUCCESS = 'GET_SETUP_SUCCESS';
+    
+export const GET_SETUP_FAILED = 'GET_SETUP_FAILED';
+
 // users constants
 export const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS';
 

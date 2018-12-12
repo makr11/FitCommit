@@ -13,12 +13,15 @@ function CustomInput({ ...props }) {
     input,
     handleInput,
     adornments,
-    type
+    type,
+    shrink
   } = props
 
   return(
     <FormControl>
-      <InputLabel>
+      <InputLabel
+        shrink={shrink}
+      >
         {labelText}
       </InputLabel>
       <Input 

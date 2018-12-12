@@ -6,8 +6,10 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from django.core import serializers
 from django.utils import timezone
-from .models import Services, Categories, Options, CustomUser, Records, Arrivals
-from .serializers import (UserSerializer,
+from .models import Setup, Services, Categories, Options, CustomUser, Records, Arrivals
+from .serializers import (
+                         SetupSerializer,
+                         UserSerializer,
                          ServicesSerializer,
                          CategoriesSerializer,
                          OptionsSerializer,
@@ -16,6 +18,10 @@ from .serializers import (UserSerializer,
                          )
 
 CustomUser = get_user_model()
+
+class ListSetup(generics.ListAPIView):
+    queryset = Setup.objects.all()
+    serializer_class = SetupSerializer
 
 class ListUsers(generics.ListCreateAPIView):
     queryset = CustomUser.objects.filter(deleted=0)
@@ -163,9 +169,8 @@ class ListUserRecordsAll(generics.ListAPIView):
         user=self.kwargs['pk']
         records = Records.objects.filter(userObj=user, deleted=0).order_by('-ends')
         for record in records:
-            print(record)
             record.get_days_left()
-        print(records)
+            record.is_frozen()
         return records
 
 class ListUserRecordsActive(generics.ListAPIView):
@@ -173,15 +178,30 @@ class ListUserRecordsActive(generics.ListAPIView):
 
     def get_queryset(self):
         user=self.kwargs['pk']
-        records = Records.objects.filter(userObj=user, deleted=0, active=1).order_by('-ends')
+        records = Records.objects.filter(userObj=user, deleted=0, active=1).exclude(freeze_ended__gt=timezone.now()).order_by('-ends')
         for record in records:
             record.get_days_left()
-        print(records)
+            record.is_frozen()
         return records
 
 class RecordsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Records.objects.all()
     serializer_class = RecordsSerializer
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.initial_data['frozen'] = instance.frozen + 1
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 class ListArrivals(generics.ListCreateAPIView):
     queryset = Arrivals.objects.all()
