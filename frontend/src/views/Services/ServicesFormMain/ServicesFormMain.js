@@ -1,7 +1,5 @@
 import React from 'react';
-import ServiceForm from '../ServiceForm/ServiceForm';
-import CategoryForm from '../CategoryForm/CategoryForm';
-import OptionForm from '../OptionForm/OptionForm';
+import { ServiceForm, CategoryForm, OptionForm } from '../ServiceForm/ServiceForm';
 import ServicesStepperForm from '../ServicesStepperForm/ServicesStepperForm';
 import FormDialog from '../../../components/FormDialog';
 

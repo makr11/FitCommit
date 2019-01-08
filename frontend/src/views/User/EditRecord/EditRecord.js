@@ -1,35 +1,39 @@
 import React from 'react';
 // material ui core
-
+import { withStyles} from '@material-ui/core';
+// styles
+import { editRecord } from '../userStyle';
 // material ui core components
 import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-//app components
-import CustomInput from '../../../components/CustomInput';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 // app functions
 import { dateFormatView } from '../../../assets/js/functions';
 
 function EditRecord(props){
   const { 
+    classes,
     started, 
     ends, 
     freeze, 
     freeze_started,
     freezeDays,
     freeze_ended,
-    arrivals_left, 
     nett_price, 
     discount, 
-    active,
     paid,
     handleInput,
     handleCheckBox } = props
 
+    console.log(classes)
+
   return (
     <div>
-      <FormGroup row>
+      <FormGroup>
         <FormControlLabel
           control={
             <Checkbox
@@ -43,18 +47,6 @@ function EditRecord(props){
         <FormControlLabel
           control={
             <Checkbox
-              id="active"
-              checked={active}
-              onChange={handleCheckBox}
-            />
-          }
-          label="Aktivna"
-        />
-      </FormGroup>
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Checkbox
               id="freeze"
               checked={freeze}
               onChange={handleCheckBox}
@@ -62,79 +54,96 @@ function EditRecord(props){
           }
           label={(freeze)?"Članarina zamrznuta":"Zamrznuti članarinu"}
         />
-        {(freeze)?
-
-        <FormGroup>
-          <p>Od: {dateFormatView(freeze_started)}</p>
-          <p>Do:</p>
-          <CustomInput
-            targetName="freezeDays"
-            labelText="Dani"
-            input={freezeDays}
-            handleInput={handleInput} 
-            shrink={true}
+      </FormGroup>
+      
+      {(freeze)?
+      <Grid container spacing={16}>
+        <Grid item xs={12}>
+          <Typography variant="body1" color="inherit">
+            Od: {dateFormatView(freeze_started)}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="body1" color="inherit">
+            Do: {dateFormatView(freeze_ended)}
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            name="freezeDays"
+            label="Dani"
+            className={classes.textField}
+            value={freezeDays}
+            onChange={handleInput} 
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
-          <CustomInput
-            targetName="freeze_ended"
-            labelText="Datum"
+          <TextField
+            name="freeze_ended"
+            label="Datum"
+            className={classes.textField}
             type="date"
-            input={freeze_ended}
-            handleInput={handleInput} 
-            shrink={true}
+            value={freeze_ended}
+            onChange={handleInput} 
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
-        </FormGroup>:undefined     
-        }
-      </FormGroup>
-      <FormGroup row>
-        <CustomInput
-          targetName="started"
-          labelText="Početak"
-          type="date"
-          input={started}         
-          handleInput={handleInput}
-        />
-        <CustomInput
-          targetName="ends"
-          labelText="Istek"
-          type="date"
-          input={ends}
-          handleInput={handleInput}
-        />
-      </FormGroup>
-      <FormGroup>
-        <CustomInput
-          targetName="arrivals_left"
-          labelText="Dolasci"
-          type="number"
-          input={arrivals_left}
-          handleInput={handleInput}
-        />
-      </FormGroup>     
-      <FormGroup row>
-        <CustomInput
-          targetName="discount"
-          labelText="Popust"
-          input={discount}
-          handleInput={handleInput}
-          adornments={
-              <InputAdornment variant="filled" position="end">
-                %
-              </InputAdornment>
-            }
-        />
-        <CustomInput
-          targetName="nett_price"
-          labelText="Cijena sa popustom"
-          input={nett_price}
-          adornments={
-              <InputAdornment variant="filled" position="end">
-                Kn
-              </InputAdornment>
-            }
-        />
-      </FormGroup>
+        </Grid>
+      </Grid>:undefined     
+      }
+      <Grid container spacing={16}>
+        <Grid item xs={12}>
+          <TextField
+            name="started"
+            label="Početak"
+            className={classes.textField}
+            type="date"
+            value={started}         
+            onChange={handleInput}
+          />
+          <TextField
+            name="ends"
+            label="Istek"
+            className={classes.textField}
+            type="date"
+            value={ends}
+            onChange={handleInput}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            name="discount"
+            label="Popust"
+            className={classes.textField}
+            value={discount}
+            onChange={handleInput}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment variant="filled" position="end">
+                  %
+                </InputAdornment>
+              ),
+            }}
+          />
+          <TextField
+            name="nett_price"
+            label="Cijena sa popustom"
+            className={classes.textField}
+            value={nett_price}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment variant="filled" position="end">
+                  Kn
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid> 
     </div> 
   );
 }
 
-export default EditRecord;
+export default withStyles(editRecord)(EditRecord);

@@ -1,12 +1,19 @@
 import React from 'react';
-// services containers
+// redux
 import { connect } from 'react-redux';
 import { requestServices, removeServices, submitFormService, updateFormService } from '../../store/actions/servicesA';
+// material ui core
+import { withStyles } from '@material-ui/core';
+// styles
+import { services } from './servicesStyle';
+// prop types
 import PropTypes from 'prop-types';
+// app components
 import ServicesList from './ServicesList/ServicesList';
 import ServicesFormMain from './ServicesFormMain/ServicesFormMain';
+// material ui components
 import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 class Services extends React.Component{
@@ -90,7 +97,7 @@ class Services extends React.Component{
   }
 
   render(){  
-    const { services, handleSubmit, handleUpdate, removeServices } = this.props;
+    const { classes, services, handleSubmit, handleUpdate, removeServices } = this.props;
     const { opened, name, id,  setStep, update } = this.state;
  
     return (
@@ -101,7 +108,7 @@ class Services extends React.Component{
           openUpdateFormDialog={this.openUpdateFormDialog}
           removeServices={removeServices}
         />
-        {(opened)?<ServicesFormMain 
+        {opened && <ServicesFormMain 
                     opened={opened}
                     id={id}
                     name={name} 
@@ -110,17 +117,17 @@ class Services extends React.Component{
                     update={update}
                     handleSubmit={handleSubmit}
                     handleUpdate={handleUpdate}
-                  />:undefined}
+                  />}
         
         <Tooltip title="Nova usluga">
-          <Button
+          <Fab
             name="new"
-            variant="fab"
             color="primary"
             onClick={this.openFormDialog}
+            className={classes.addIcon}
           >
             <AddIcon />
-          </Button>
+          </Fab>
         </Tooltip>
       </div>
     )
@@ -147,4 +154,4 @@ ServicesList.propTypes = {
   services: PropTypes.array.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Services);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(services)(Services));

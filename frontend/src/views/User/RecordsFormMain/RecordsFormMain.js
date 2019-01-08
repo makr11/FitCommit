@@ -6,7 +6,7 @@ import AddRecord from '../AddRecord/AddRecord';
 // app helper functions
 import { isEmpty, date, dateDiff, addToDate, dateFormat } from '../../../assets/js/functions';
 
-class UserRecordsFormMain extends React.Component{
+class RecordsFormMain extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -39,10 +39,8 @@ class UserRecordsFormMain extends React.Component{
           freeze_started: (record.freeze_started)?record.freeze_started:date(),
           freezeDays: record.freeze_min,
           freeze_ended: (record.freeze_ended)?record.freeze_ended:addToDate(date(), record.freeze_min),
-          arrivals_left: record.arrivals_left,
           discount: record.discount,
           nett_price: record.nett_price,
-          active: record.active,
           paid: record.paid 
         }, 
       });
@@ -225,11 +223,17 @@ class UserRecordsFormMain extends React.Component{
   patchRecordToUser = (e) => {
     e.preventDefault();
     const { record } = this.props;
-    let { started, ends, freeze, freezeDays, freeze_started, freeze_ended, arrivals_left, nett_price, discount, active, paid } = this.state.editRecord;
-
-    arrivals_left = parseInt(arrivals_left, 10);
+    let { started, 
+          ends, 
+          freeze, 
+          freezeDays, 
+          freeze_started, 
+          freeze_ended, 
+          nett_price, 
+          discount,  
+          paid } = this.state.editRecord;
     
-    let lead = { started, ends, arrivals_left, discount, nett_price, active, paid }
+    let lead = { started, ends, discount, nett_price, paid }
     
     if(freeze===true){
       ends = addToDate(dateFormat(record.started), freezeDays + record.duration)
@@ -247,7 +251,11 @@ class UserRecordsFormMain extends React.Component{
   }
 
   render(){
-    const { open, openSubmitForm, openEditForm, services, closeFormDialog } = this.props;
+    const { open, 
+            openSubmitForm, 
+            openEditForm, 
+            services, 
+            closeFormDialog } = this.props;
 
     return(
       <FormDialog
@@ -275,4 +283,4 @@ class UserRecordsFormMain extends React.Component{
   }
 }
 
-export default UserRecordsFormMain;
+export default RecordsFormMain;

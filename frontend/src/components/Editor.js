@@ -13,13 +13,12 @@ import AddIcon from '@material-ui/icons/Add';
 
 const styles = () => ({
   root: {
-    position: 'relative',
-    display: 'inline-block',
-    alignItems: 'center',
+    display: 'flex',
+    alignItems: "center",
+    height: "60px"
   },
-  element: {
-    display: "inline-block",
-    height: '64px'
+  editor: {
+    display: "inline-block"
   }
 })
 
@@ -47,20 +46,18 @@ class Editor extends React.PureComponent{
     const { children, classes, open, del, name, id, update } = this.props;
     const { hidden } = this.state;
     return(
-      <div onMouseEnter={this.hoverIn} onMouseLeave={this.hoverOut}>
-        <div className={classes.element}>
-          {children}
-        </div>
+      <div className={classes.root} onMouseEnter={this.hoverIn} onMouseLeave={this.hoverOut}>
+        {children}
         {!hidden?    
-        <Toolbar className={classes.root}>
+        <Toolbar className={classes.element}>
           <IconButton name={name} id={id} onClick={open}>
-            <AddIcon/>
+            <AddIcon style={{ fontSize: 20 }}/>
           </IconButton>
           <IconButton name={name} id={id} onClick={update}>
-            <CreateIcon/>
+            <CreateIcon style={{ fontSize: 20 }}/>
           </IconButton>
           <IconButton name={name} id={id} onClick={del}>
-            <DeleteIcon/>
+            <DeleteIcon style={{ fontSize: 20 }}/>
           </IconButton>
         </Toolbar>
         :undefined}

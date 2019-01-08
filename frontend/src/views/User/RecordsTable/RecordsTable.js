@@ -1,6 +1,8 @@
 import React from 'react';
 // mateiral ui core
 import {withStyles} from '@material-ui/core/styles';
+// jss style
+import { recordsTable } from '../userStyle';
 // material ui core components
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
@@ -13,14 +15,12 @@ import TableRow from '@material-ui/core/TableRow';
 // material ui icons
 import WarningIcon from '@material-ui/icons/Warning';
 import DoneIcon from '@material-ui/icons/Done';
-// jss style
-import { userRecordsTableStyle } from '../../../assets/jss/userProfile';
 
-function UserRecordsTable(props){
+function RecordsTable(props){
   const { classes, records, openRecordDialog } = props;
   
   return(
-    <Paper>
+    <Paper className={classes.tableWrapper}>
       <Table className={classes.tableCell}>
         <TableHead>
         <TableRow>
@@ -44,7 +44,7 @@ function UserRecordsTable(props){
                 <TableCell padding="dense">{record.ends}</TableCell>
                 <TableCell padding="dense">{record.days_left}</TableCell>
                 <TableCell padding="dense">{(record.active)?record.arrivals_left:<WarningIcon/>}</TableCell>
-                <TableCell padding="dense" numeric>{record.nett_price + " kn"}</TableCell>
+                <TableCell padding="dense">{record.nett_price + " kn"}</TableCell>
                 <TableCell>{(!record.paid)?<WarningIcon/>:<DoneIcon/>}</TableCell>
                 <TableCell padding="checkbox">
                   <IconButton name="record" id={index} onClick={openRecordDialog}>
@@ -60,4 +60,4 @@ function UserRecordsTable(props){
   ) 
 };
 
-export default withStyles(userRecordsTableStyle)(UserRecordsTable);
+export default withStyles(recordsTable)(RecordsTable);

@@ -1,44 +1,58 @@
 import React from 'react';
-import CustomInput from '../../../components/CustomInput';
+//material ui core
+import { withStyles } from '@material-ui/core';
+//styles
+import { addUserForm } from '../usersStyle';
+import TextField from '@material-ui/core/TextField';
 
 function NewUserForm(props){
-  const { first_name, last_name, username, password, email, handleInput } = props;
+  const { classes, first_name, last_name, username, password, email, handleInput } = props;
   return(
     <div>
-      <CustomInput
-        targetName="first_name"
-        labelText="Ime"
-        input={first_name}
-        handleInput={handleInput}
+      <TextField
+        name="first_name"
+        label="Ime"
+        value={first_name}
+        onChange={handleInput}
+        className={classes.textField}
+        margin="normal"
       />
-      <CustomInput
-        targetName="last_name"
-        labelText="Prezime"
-        input={last_name}
-        handleInput={handleInput}
+      <TextField
+        name="last_name"
+        label="Prezime"
+        value={last_name}
+        onChange={handleInput}
+        className={classes.textField}
+        margin="normal"
       />
-      <CustomInput
-        targetName="username"
-        labelText="Korisničko ime"
-        input={username}
-        handleInput={handleInput}
+      <TextField
+        name="username"
+        label="Korisničko ime"
+        value={username}
+        onChange={handleInput}
+        className={classes.textField}
+        margin="normal"
       />
-      <CustomInput
-        targetName="password"
-        labelText="Lozinka"
+      <TextField
+        name="password"
+        label="Lozinka"
         type="password"
         input={password}
-        handleInput={handleInput}
+        onChange={handleInput}
+        className={classes.textField}
+        margin="normal"
       />
-      <CustomInput
-        targetName="email"
-        labelText="E-mail"
+      <TextField
+        name="email"
+        label="E-mail"
         type="email"
         input={email}
-        handleInput={handleInput}
+        onChange={handleInput}
+        className={classes.emailField}
+        margin="normal"
       />
     </div>
   )
 }
 
-export default NewUserForm;
+export default withStyles(addUserForm)(NewUserForm);

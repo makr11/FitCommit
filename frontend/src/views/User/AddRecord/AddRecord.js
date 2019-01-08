@@ -1,6 +1,8 @@
 import React from 'react';
 // material ui core
 import { withStyles } from '@material-ui/core/styles';
+// jss styles
+import { addRecord } from '../userStyle'
 // material ui core components
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -12,8 +14,6 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Radio from '@material-ui/core/Radio';
 import Checkbox from '@material-ui/core/Checkbox';
-// jss styles
-import { addRecordStyle } from '../../../assets/jss/userProfile'
 
 function AddRecord (props) {
 
@@ -98,59 +98,72 @@ function AddRecord (props) {
       </Grid>
       
       <FormControl className={classes.form}>
-        <TextField
-          label="Cijena"
-          name="price"
-          className={classes.textField}
-          value={price}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment variant="filled" position="end">
-                Kn
-              </InputAdornment>
-            ),
-          }}
-        />
-        <TextField
-          label="Popust"
-          name="discount"
-          className={classes.textField}
-          value={discount}
-          onChange={handleInput}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment variant="filled" position="end">
-                %
-              </InputAdornment>
-            ),
-          }}
-          />
-        <TextField
-          label="Cijena sa %"
-          id="nett_price"
-          className={classes.textField}
-          value={nett_price}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment variant="filled" position="end">
-                Kn
-              </InputAdornment>
-            ),
-          }}
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-            name="paid"
-            checked={paid}
-            onChange={handleInput}
+        <Grid container spacing={8}>
+          <Grid item xs>
+            <TextField
+              label="Cijena"
+              name="price"
+              className={classes.textField}
+              margin="normal"
+              value={price}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment variant="filled" position="end">
+                    Kn
+                  </InputAdornment>
+                ),
+              }}
             />
-          }
-          label={(paid)?'Plaćeno':'Nije plaćeno'}
-        />
+          </Grid>
+          <Grid item xs>
+            <TextField
+              label="Popust"
+              name="discount"
+              className={classes.textField}
+              margin="normal"
+              value={discount}
+              onChange={handleInput}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment variant="filled" position="end">
+                    %
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs>
+            <TextField
+              label="Cijena sa %"
+              id="nett_price"
+              className={classes.textField}
+              margin="normal"
+              value={nett_price}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment variant="filled" position="end">
+                    Kn
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs> 
+            <FormControlLabel
+              control={
+                <Checkbox
+                name="paid"
+                checked={paid}
+                onChange={handleInput}
+                />
+              }
+              label={(paid)?'Plaćeno':'Nije plaćeno'}
+            />
+          </Grid>
+        </Grid>
       </FormControl>          
     </Grid>
   ) 
 }
 
-export default withStyles(addRecordStyle)(AddRecord);
+export default withStyles(addRecord)(AddRecord);

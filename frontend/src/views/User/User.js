@@ -3,12 +3,18 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { requestUserRecordsAll, submitFormRecord, resetRecords, removeRecord, updateFormRecord } from '../../store/actions/userRecordsA';
 import { resetProfile } from '../../store/actions/userProfileA';
+// material ui core
+import { withStyles } from '@material-ui/core';
+// styles
+import { user } from './userStyle';
 // material ui components
-import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 // app components
-import UserRecordsFormMain from './UserRecordsFormMain/UserRecordsFormMain';
-import UserProfile from './UserProfile/UserProfile';
-import UserRecordsTable from './UserRecordsTable/UserRecordsTable';
+import RecordsFormMain from './RecordsFormMain/RecordsFormMain';
+import Profile from './Profile/Profile';
+import RecordsTable from './RecordsTable/RecordsTable';
 
 class User extends React.Component {
   constructor(props){
@@ -28,7 +34,7 @@ class User extends React.Component {
   };
 
   componentWillUnmount(){
-    this.props.resetProfile();;
+    this.props.resetProfile();
     this.props.resetRecords();
   };
 
@@ -53,17 +59,16 @@ class User extends React.Component {
   };
 
   render() {
-    const { user, records, services, submitRecord, updateRecord, removeRecord } = this.props;
+    const { classes, user, records, services, submitRecord, updateRecord, removeRecord } = this.props;
     const { opened, openSubmitForm, openEditForm, record } = this.state;
     
     return (
       (user!==undefined) ?
       <div>
-        <UserProfile
+        <Profile
           user={user}
         />
-        <Button onClick={this.openRecordDialog}>Otvori</Button>
-        <UserRecordsFormMain 
+        <RecordsFormMain 
           open={opened}
           openSubmitForm={openSubmitForm}
           openEditForm={openEditForm} 
@@ -73,11 +78,16 @@ class User extends React.Component {
           submitRecord={submitRecord}
           updateRecord={updateRecord}
           closeFormDialog={this.closeRecordDialog}/>
-        <UserRecordsTable
+        <RecordsTable
           records={records}
           removeRecord={removeRecord}
           openRecordDialog={this.openRecordDialog}
         />
+        <Tooltip title="Nova usluga">
+          <Fab color="primary" className={classes.addIcon} onClick={this.openRecordDialog}>
+            <AddIcon />
+          </Fab>
+        </Tooltip>
       </div>:<span></span>
     );
   }
@@ -102,4 +112,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(User);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(user)(User));

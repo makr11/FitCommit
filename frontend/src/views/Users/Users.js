@@ -7,14 +7,14 @@ import { submitFormUser } from '../../store/actions/usersA';
 import { withStyles } from '@material-ui/core/styles';
 // material ui core components
 import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 // material ui icons
 import AddIcon from '@material-ui/icons/Add';
 // app components
 import UsersTable from './UsersTable/UsersTable';
 import UserFormMain from './UserFormMain/UserFormMain';
 // jss style
-import { usersStyle } from '../../assets/jss/users';
+import { users } from './usersStyle';
 
 class MembersRegistry extends React.Component {
   state = {
@@ -51,9 +51,9 @@ class MembersRegistry extends React.Component {
           removeUser={removeUser}
         />
         <Tooltip title="Novi član">
-          <Button variant="fab" color="primary" className={classes.addIcon} onClick={this.openFormDialog}>
+          <Fab color="primary" className={classes.addIcon} onClick={this.openFormDialog}>
             <AddIcon />
-          </Button>
+          </Fab>
         </Tooltip>
       </div>
     )
@@ -73,4 +73,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)((withStyles)(usersStyle)(MembersRegistry));
+export default connect(mapStateToProps, mapDispatchToProps)((withStyles)(users)(MembersRegistry));

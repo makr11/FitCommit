@@ -1,3 +1,11 @@
+export const services = {
+  addIcon: {
+    position: "fixed",
+		bottom: 20,
+		right: 10,
+  }
+}
+
 export const servicesListStyle = theme => ({
   root: {
     width: '100%',
@@ -22,9 +30,3 @@ export const servicesFormStyle = theme => ({
     width: 200,
   },
 });
-
-export const buttons = {
-  categoryButtons: {
-    float: 'right',
-  },
-}

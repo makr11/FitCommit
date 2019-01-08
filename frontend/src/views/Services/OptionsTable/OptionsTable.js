@@ -71,9 +71,9 @@ class OptionsTable extends React.Component {
       <Table >
         <TableHead>
           <TableRow>
-            <TableCell numeric>Cijena</TableCell>
-            <TableCell numeric>Broj dolazaka</TableCell>
-            <TableCell numeric>Trajanje</TableCell>
+            <TableCell>Cijena</TableCell>
+            <TableCell>Broj dolazaka</TableCell>
+            <TableCell>Trajanje</TableCell>
             <TableCell >Uredi</TableCell>
           </TableRow>
         </TableHead>
@@ -82,9 +82,9 @@ class OptionsTable extends React.Component {
           
           return (
             <TableRow key={option.id}>  
-              <TableCell numeric>{option.price}</TableCell>            
-              <TableCell numeric>{option.arrivals}</TableCell>
-              <TableCell numeric>{option.duration}</TableCell>
+              <TableCell>{option.price}</TableCell>            
+              <TableCell>{option.arrivals}</TableCell>
+              <TableCell>{option.duration}</TableCell>
               <TableCell>
                 <IconButton
                   name={oIndex}

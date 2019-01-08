@@ -20,7 +20,7 @@ export const sidebarRoutes = [
   },
   {
     path: "/arrivals",
-    sidebarName: "Evidencija dolazaka",
+    sidebarName: "Dolasci",
     sidebarIcon: <InputIcon/>,
     component: Arrivals,
   },
@@ -32,7 +32,7 @@ export const sidebarRoutes = [
   },
   {
     path: "/users",
-    sidebarName: "Evidencija članova",
+    sidebarName: "Članovi",
     sidebarIcon: <PersonIcon/>,
     component: Users,
   },
