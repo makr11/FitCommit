@@ -2,7 +2,7 @@ import React from 'react';
 // mateiral ui core
 import {withStyles} from '@material-ui/core/styles';
 // jss style
-import { recordsTable } from '../userStyle';
+import { recordsTable } from './userStyle';
 // material ui core components
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
@@ -16,8 +16,25 @@ import TableRow from '@material-ui/core/TableRow';
 import WarningIcon from '@material-ui/icons/Warning';
 import DoneIcon from '@material-ui/icons/Done';
 
+const Paid = (props) => {
+  const { paid, price} = props;
+  const sign = (paid) ? <DoneIcon/>:<WarningIcon/>
+  return(
+    <React.Fragment>
+      <div>
+        {price}
+      </div>
+      {sign}
+    </React.Fragment>
+  )
+}
+
 function RecordsTable(props){
-  const { classes, records, openRecordDialog } = props;
+  const { 
+    classes, 
+    records, 
+    openRecordForm
+  } = props;
   
   return(
     <Paper className={classes.tableWrapper}>
@@ -29,7 +46,6 @@ function RecordsTable(props){
           <TableCell padding="dense">Ističe</TableCell>
           <TableCell padding="dense">Preostalo dana</TableCell>
           <TableCell padding="dense">Preostalo dolazaka</TableCell>
-          <TableCell padding="dense">Cijena</TableCell>
           <TableCell padding="dense">Plaćeno</TableCell>
           <TableCell padding="checkbox">Izmijeni</TableCell>
         </TableRow>
@@ -43,11 +59,10 @@ function RecordsTable(props){
                 <TableCell padding="dense">{record.started}</TableCell>
                 <TableCell padding="dense">{record.ends}</TableCell>
                 <TableCell padding="dense">{record.days_left}</TableCell>
-                <TableCell padding="dense">{(record.active)?record.arrivals_left:<WarningIcon/>}</TableCell>
-                <TableCell padding="dense">{record.nett_price + " kn"}</TableCell>
-                <TableCell>{(!record.paid)?<WarningIcon/>:<DoneIcon/>}</TableCell>
+                <TableCell padding="dense">{(record.active)?record.arrivals_left:0}</TableCell>
+                <TableCell padding="dense"><Paid paid={record.paid} price={record.price} sign={<DoneIcon/>}/></TableCell>
                 <TableCell padding="checkbox">
-                  <IconButton name="record" id={index} onClick={openRecordDialog}>
+                  <IconButton name="record" id={index} onClick={openRecordForm}>
                     <SettingsIcon/>
                   </IconButton>
                 </TableCell>

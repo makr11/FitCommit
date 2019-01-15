@@ -4,10 +4,15 @@ import PropTypes from "prop-types";
 // material ui core
 import Grid from '@material-ui/core/Grid';
 // app services components
-import ServiceCard from '../ServiceCard/ServiceCard';
+import ServiceCard from './ServiceCard';
 
 function ServicesList(props){
-  const { services, openFormDialog, openUpdateFormDialog, removeServices } = props;
+  const { 
+    services, 
+    openNewServicesForm, 
+    openEditServicesForm, 
+    removeServices 
+  } = props;
 
   return(  
     <Grid container spacing={24}>
@@ -16,8 +21,8 @@ function ServicesList(props){
         <ServiceCard 
           service={service} 
           key={service.id}
-          openFormDialog={openFormDialog}
-          openUpdateFormDialog={openUpdateFormDialog}
+          openNewServicesForm={openNewServicesForm}
+          openEditServicesForm={openEditServicesForm}
           sIndex={sIndex}
           removeServices={removeServices}
         />
@@ -29,8 +34,8 @@ function ServicesList(props){
 
 ServicesList.propTypes = {
   services: PropTypes.array.isRequired,
-  openFormDialog: PropTypes.func.isRequired,
-  openUpdateFormDialog: PropTypes.func.isRequired,
+  openNewServicesForm: PropTypes.func.isRequired,
+  openEditServicesForm: PropTypes.func.isRequired,
 }
 
 export default ServicesList;

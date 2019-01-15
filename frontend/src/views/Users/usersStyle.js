@@ -30,3 +30,11 @@ export const usersTable = {
 		minWidth: "600px",
 	},
 };
+
+export const serviceForm = {
+	textField: {
+		marginLeft: "1.5%",
+		marginRight: "1.5%",
+		minWidth: 200,
+	},
+}

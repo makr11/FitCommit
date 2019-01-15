@@ -41,8 +41,8 @@ class App extends React.Component {
       <div>
         <Navbar handleDrawerToggle={this.handleDrawerToggle}/>
         <Sidebar
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={this.handleDrawerToggle}
+          mobileOpen={mobileOpen}
+          handleDrawerToggle={this.handleDrawerToggle}
         />
         <main className={classes.content}>
           <div className={classes.toolbar} />

@@ -1,10 +1,15 @@
 import React from 'react';
-//app components
-import FormDialog from '../../../components/FormDialog';
-import EditRecord from '../EditRecord/EditRecord';
-import AddRecord from '../AddRecord/AddRecord';
+// app components
+import EditRecord from './EditRecord';
+import AddRecord from './AddRecord';
 // app helper functions
-import { isEmpty, date, dateDiff, addToDate, dateFormat } from '../../../assets/js/functions';
+import { 
+  isEmpty, 
+  date, 
+  dateDiff, 
+  addToDate, 
+  dateFormat 
+} from '../../assets/js/functions';
 
 class RecordsFormMain extends React.Component{
   constructor(props){
@@ -205,7 +210,7 @@ class RecordsFormMain extends React.Component{
     }
   };
 
-  submitRecordToUser = (e) => {
+  submitRecord = (e) => {
     e.preventDefault();
     const { user } = this.props;
     const { price, discount, nett_price, paid } = this.state.addRecord;
@@ -217,10 +222,10 @@ class RecordsFormMain extends React.Component{
     const lead = {user, service, category, option, price, discount, nett_price, paid};
     
     this.props.submitRecord(lead);
-    this.props.closeFormDialog();
+    this.props.closeRecordForm();
   }
 
-  patchRecordToUser = (e) => {
+  editRecord = (e) => {
     e.preventDefault();
     const { record } = this.props;
     let { started, 
@@ -247,38 +252,37 @@ class RecordsFormMain extends React.Component{
     }
     
     this.props.updateRecord(record.id, lead);
-    this.props.closeFormDialog();
+    this.props.closeRecordForm();
   }
 
   render(){
-    const { open, 
-            openSubmitForm, 
-            openEditForm, 
-            services, 
-            closeFormDialog } = this.props;
+    const { 
+      openSubmitRecordForm, 
+      openEditRecordForm, 
+      services, 
+      closeRecordForm, 
+    } = this.props;
 
     return(
-      <FormDialog
-        open={open}
-        submit={(openSubmitForm)?this.submitRecordToUser:this.patchRecordToUser}
-        close={closeFormDialog}      
-      >
-        {(openSubmitForm)?
-          <AddRecord 
-            close={closeFormDialog}
-            services={services}
-            handleInput={this.handleAddRecordInput}
-            submitRecordToUser={this.submitRecordToUser}
-            handleSelectService={this.handleSelectService}
-            {...this.state.addRecord}
-          />:(openEditForm)?         
-          <EditRecord
-            handleInput={this.handleEditRecordInput}
-            handleCheckBox={this.handleCheckBox}
-            {...this.state.editRecord}
-          />:undefined
-        }   
-      </FormDialog>
+      <React.Fragment>
+        <AddRecord
+          open={openSubmitRecordForm}
+          close={closeRecordForm}
+          services={services}
+          handleInput={this.handleAddRecordInput}
+          handleSelectService={this.handleSelectService}
+          submit={this.submitRecord}
+          {...this.state.addRecord}
+        />        
+        <EditRecord
+          open={openEditRecordForm}
+          close={closeRecordForm}
+          handleInput={this.handleEditRecordInput}
+          handleCheckBox={this.handleCheckBox}
+          submit={this.editRecord}
+          {...this.state.editRecord}
+        /> 
+      </React.Fragment>
     )
   }
 }

@@ -5,12 +5,17 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
 function FormDialog(props){
-  const { children, open, submit, close } = props;
+  const { children, 
+          open, 
+          submit, 
+          close, 
+          fullWidth } = props;
 
   return (
     <Dialog
       open={open}
       onClose={close}
+      fullWidth={fullWidth}
     >
       <DialogContent>
         {children}

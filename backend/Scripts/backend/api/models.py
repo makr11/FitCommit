@@ -97,7 +97,3 @@ class Arrivals(models.Model):
     recordObj = models.ForeignKey(Records, related_name='record_arrivals', on_delete=models.CASCADE, null=True)
     arrival = models.DateTimeField()
     arrival_time = models.TimeField(max_length=10)
-
-class UserRecord(models.Model):
-    userObj = models.ManyToManyField(CustomUser)
-    recordObj = models.ManyToManyField(Records)

@@ -6,7 +6,7 @@ export const services = {
   }
 }
 
-export const servicesListStyle = theme => ({
+export const servicesList = theme => ({
   root: {
     width: '100%',
   },
@@ -23,10 +23,23 @@ export const servicesListStyle = theme => ({
   }
 });
 
-export const servicesFormStyle = theme => ({
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
-  },
-});
+export const stepperForm = {
+  formWrapper: {
+    alignItems:"center", 
+    display:"flex", 
+    justifyContent: "center",
+  }
+};
+
+export const optionsTable = {
+	table: {
+		minWidth: "600px",
+	},
+};
+
+export const serviceCard = {
+  card: {
+		overflowX: 'auto',
+		margin: "1.5%",
+ 	},
+}

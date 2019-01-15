@@ -1,8 +1,11 @@
 import React from 'react';
 // prop types check
 import PropTypes from "prop-types";
+// material ui core
+import { withStyles } from "@material-ui/core";
+// styles
+import { optionsTable } from "./servicesStyle";
 // material ui core components
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,7 +18,16 @@ import TableRow from '@material-ui/core/TableRow';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const OptionMenu = (props) => {
-  const { anchorEl, id, closeMenu, update, del, sIndex, cIndex, oIndex } = props;
+  const { 
+    anchorEl, 
+    id, 
+    closeMenu, 
+    update, 
+    del, 
+    sIndex, 
+    cIndex, 
+    oIndex 
+  } = props;
   
   return(
     <Menu
@@ -24,15 +36,12 @@ const OptionMenu = (props) => {
       onClose={closeMenu}
       onClick={closeMenu}
     >
-      <MenuItem >
-        <Button onClick={update.bind(this, sIndex, cIndex, oIndex)} id={id} name="option">
-          Uredi
-        </Button>
+      {/* Menu item sends name=undefined beacuse name isn't accessible*/}
+      <MenuItem onClick={update.bind(this, sIndex, cIndex, oIndex)} id={id} name="option">
+        Uredi
       </MenuItem>
-      <MenuItem >
-        <Button onClick={del} id={id} name="option">
-          Obriši
-        </Button>
+      <MenuItem onClick={del} id={id} name="option">
+        Obriši
       </MenuItem>
     </Menu>
   )
@@ -64,11 +73,21 @@ class OptionsTable extends React.Component {
   };
 
   render(){
-    const { options, sIndex, cIndex, openUpdateFormDialog } = this.props;
-    const { anchorEl, oIndex, id } = this.state;
+    const { 
+      classes, 
+      options, 
+      sIndex, 
+      cIndex, 
+      openEditServicesForm 
+    } = this.props;
+    const { 
+      anchorEl, 
+      oIndex, 
+      id 
+    } = this.state;
     
     return(
-      <Table >
+      <Table className={classes.table}>
         <TableHead>
           <TableRow>
             <TableCell>Cijena</TableCell>
@@ -104,7 +123,7 @@ class OptionsTable extends React.Component {
           anchorEl={anchorEl} 
           id={id}
           closeMenu={this.closeMenu}
-          update={openUpdateFormDialog}
+          update={openEditServicesForm}
           sIndex={sIndex}
           cIndex={cIndex}
           oIndex={oIndex}
@@ -119,8 +138,8 @@ OptionsTable.propTypes={
   options: PropTypes.array.isRequired,
   sIndex: PropTypes.number.isRequired,
   cIndex: PropTypes.number.isRequired,
-  openUpdateFormDialog: PropTypes.func.isRequired,
+  openEditServicesForm: PropTypes.func.isRequired,
   del: PropTypes.func.isRequired
 }
 
-export default OptionsTable;
+export default withStyles(optionsTable)(OptionsTable);

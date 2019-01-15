@@ -1,5 +1,13 @@
 import React from 'react';
+// material ui components
 import TextField from '@material-ui/core/TextField';
+
+const servicesForm = {
+  textField: {
+    margin: "3%",
+    minWidth: "100px",
+  }
+}
 
 export function ServiceForm({...props}){
   const { service, handleInput } = props;
@@ -9,9 +17,10 @@ export function ServiceForm({...props}){
       name="service"
       value={service}
       onChange={handleInput}
+      style={servicesForm.textField}
     />
   )
-}
+};
 
 export function CategoryForm({...props}){
   const { category, handleInput } = props;
@@ -21,6 +30,7 @@ export function CategoryForm({...props}){
       name="category"
       value={category}
       onChange={handleInput}
+      style={servicesForm.textField}
     />
   )
 }
@@ -28,13 +38,14 @@ export function CategoryForm({...props}){
 export function OptionForm({ ...props }) {
   const { price, arrivals, duration, handleInput } = props;
   return (
-    <div>
+    <React.Fragment>
       <TextField
         label="Cijena"
         name="price"
         type="number"
         value={price}
         onChange={handleInput}
+        style={servicesForm.textField}
       />
       <TextField
         label="Dolasci"
@@ -42,6 +53,7 @@ export function OptionForm({ ...props }) {
         type="number"
         value={arrivals}
         onChange={handleInput}
+        style={servicesForm.textField}
       />
       <TextField
         label="Trajanje"
@@ -49,7 +61,8 @@ export function OptionForm({ ...props }) {
         type="number"
         value={duration}
         onChange={handleInput}
+        style={servicesForm.textField}
       />
-    </div>
+    </React.Fragment>
   )
 }

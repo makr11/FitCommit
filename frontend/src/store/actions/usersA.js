@@ -15,7 +15,7 @@ export const requestUsers = () => (dispatch) => {
   .catch(error => dispatch({ type: GET_USERS_FAILED, payload: error}))
 }
 
-export const submitFormUser = (lead) => (dispatch) => {
+export const submitUserForm = (lead) => (dispatch) => {
 
   const conf = {
     method: "POST",

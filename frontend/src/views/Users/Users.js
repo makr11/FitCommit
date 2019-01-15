@@ -2,60 +2,54 @@ import React from 'react';
 // redux
 import { connect } from 'react-redux';
 import { requestUserProfile } from '../../store/actions/userProfileA';
-import { submitFormUser } from '../../store/actions/usersA';
-// material ui core
-import { withStyles } from '@material-ui/core/styles';
-// material ui core components
-import Tooltip from '@material-ui/core/Tooltip';
-import Fab from '@material-ui/core/Fab';
-// material ui icons
-import AddIcon from '@material-ui/icons/Add';
+import { requestUserRecordsAll } from '../../store/actions/userRecordsA';
+import { submitUserForm } from '../../store/actions/usersA';
 // app components
-import UsersTable from './UsersTable/UsersTable';
-import UserFormMain from './UserFormMain/UserFormMain';
-// jss style
-import { users } from './usersStyle';
+import UsersLayout from './UsersLayout';
+import UserFormMain from './UserFormMain';
 
 class MembersRegistry extends React.Component {
   state = {
     open: false,
   }
 
-  openFormDialog = () => {
+  openUserForm = () => {
     this.setState({
       open: true,
     })
   };
 
-  closeFormDialog = () => {
+  closeUserForm = () => {
     this.setState({
       open: false,
     })
   };
 
+  selectUser = (e) => {
+    const id = e.currentTarget.id;
+    this.props.getUser(id);
+    this.props.getRecords(id);
+  }
+
   render(){
 
-    const { classes, users, selectUser, removeUser, submitFormUser } = this.props;
+    const { users, removeUser, submitUserForm } = this.props;
     const { open } = this.state;
 
     return (
-      <div>
+      <React.Fragment>
+        <UsersLayout
+          users={users}
+          removeUser={removeUser}
+          openUserForm={this.openUserForm}
+          selectUser={this.selectUser}
+        />
         <UserFormMain
           open={open}
-          closeFormDialog={this.closeFormDialog}
-          submitFormUser={submitFormUser}
+          closeUserForm={this.closeUserForm}
+          submitUserForm={submitUserForm}
         />
-        <UsersTable
-          users={users}
-          selectUser={selectUser}
-          removeUser={removeUser}
-        />
-        <Tooltip title="Novi član">
-          <Fab color="primary" className={classes.addIcon} onClick={this.openFormDialog}>
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      </div>
+      </React.Fragment>
     )
   }
 }
@@ -68,9 +62,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectUser: (e) => dispatch(requestUserProfile(e.currentTarget.id)),
-    submitFormUser: (lead) => dispatch(submitFormUser(lead))
+    getUser: (id) => dispatch(requestUserProfile(id)),
+    getRecords: (id) => dispatch(requestUserRecordsAll(id)),
+    submitUserForm: (lead) => dispatch(submitUserForm(lead))
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)((withStyles)(users)(MembersRegistry));
+export default connect(mapStateToProps, mapDispatchToProps)(MembersRegistry);

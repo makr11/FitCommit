@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 // material ui core
 import { withStyles } from '@material-ui/core';
 // styles
-import { usersTable } from '../usersStyle';
+import { usersTable } from './usersStyle';
 // material ui core components
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';

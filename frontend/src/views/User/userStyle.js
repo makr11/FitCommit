@@ -39,6 +39,7 @@ export const editRecord = ({
 export const recordsTable = () => ({
   tableWrapper: {
     overflowX: "auto",
+    marginTop: "20px"
   },
   tableCell: {
     minWidth: "600px",

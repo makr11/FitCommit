@@ -43,8 +43,15 @@ class Editor extends React.PureComponent{
   }
 
   render(){
-    const { children, classes, open, del, name, id, update } = this.props;
+    const { children, 
+            classes, 
+            open, 
+            del, 
+            name, 
+            id, 
+            update } = this.props;
     const { hidden } = this.state;
+    
     return(
       <div className={classes.root} onMouseEnter={this.hoverIn} onMouseLeave={this.hoverOut}>
         {children}

@@ -2,31 +2,21 @@ import React from 'react';
 // redux
 import { connect } from 'react-redux';
 import { requestServices, removeServices, submitFormService, updateFormService } from '../../store/actions/servicesA';
-// material ui core
-import { withStyles } from '@material-ui/core';
-// styles
-import { services } from './servicesStyle';
-// prop types
-import PropTypes from 'prop-types';
 // app components
-import ServicesList from './ServicesList/ServicesList';
-import ServicesFormMain from './ServicesFormMain/ServicesFormMain';
-// material ui components
-import Tooltip from '@material-ui/core/Tooltip';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import ServicesLayout from './ServicesLayout';
+import ServicesFormMain from './ServicesFormMain';
 
 class Services extends React.Component{
 
   state={
-    opened: false,
+    open: false,
     name: '',
     id: null,
     setStep: undefined,
     update: undefined,
   };
 
-  openFormDialog = (e) => {
+  openNewServicesForm = (e) => {
     let setStep 
     let id = e.currentTarget.id;
     let name = e.currentTarget.name;
@@ -47,32 +37,37 @@ class Services extends React.Component{
     };
 
     this.setState({
-      opened: true,
+      open: true,
       name: name,
       id: id,
       setStep: setStep,
     })
   };
 
-  openUpdateFormDialog = (sIndex, cIndex, oIndex, e) => {
+  /*Options sends name=undefined beacuse name isn't accessible in lists*/
+  openEditServicesForm = (sIndex, cIndex, oIndex, e) => {
     const { services } = this.props;
-    
-    let update
+    let setStep
+    let update 
     let id = e.currentTarget.id;
     let name = e.currentTarget.name;
     let service = services[sIndex];
     let category = (cIndex!==null)?service.categories[cIndex]:undefined;
     let option = (oIndex!==null)?category.options[oIndex]:undefined;
-
+  
     switch(name){
       case 'service':
         update=service;
+        setStep=0;
         break;
       case 'category':
         update=category;
-        break;
-      case 'option':
+        setStep=1;
+        break;     
+      case undefined:
         update=option;
+        name="option";
+        setStep=2;
         break;
       default:
         update=undefined;
@@ -80,56 +75,58 @@ class Services extends React.Component{
     };
 
     this.setState({
-      opened: true,
+      open: true,
       name: name,
       id: id,
-      update: update
+      update: update,
+      setStep: setStep
     })
   }
  
-  closeFormDialog = () => {
+  closeServicesForm = () => {
     this.setState({
-      opened: false,
+      open: false,
       name: '',
       id: null,
       setStep: undefined,
+      update: undefined,
     })
   }
 
   render(){  
-    const { classes, services, handleSubmit, handleUpdate, removeServices } = this.props;
-    const { opened, name, id,  setStep, update } = this.state;
+    const {  
+      services, 
+      handleSubmit, 
+      handleUpdate, 
+      removeServices 
+    } = this.props;
+    const { 
+      open, 
+      name, 
+      id,  
+      setStep, 
+      update 
+    } = this.state;
  
     return (
-      <div>
-        <ServicesList 
+      <React.Fragment>
+        <ServicesLayout
           services={services}
-          openFormDialog={this.openFormDialog}
-          openUpdateFormDialog={this.openUpdateFormDialog}
+          openNewServicesForm={this.openNewServicesForm}
+          openEditServicesForm={this.openEditServicesForm}
           removeServices={removeServices}
         />
-        {opened && <ServicesFormMain 
-                    opened={opened}
+        {open && <ServicesFormMain 
+                    open={open}
                     id={id}
                     name={name} 
                     setStep={setStep}     
-                    closeFormDialog={this.closeFormDialog} 
+                    closeServicesForm={this.closeServicesForm} 
                     update={update}
                     handleSubmit={handleSubmit}
                     handleUpdate={handleUpdate}
-                  />}
-        
-        <Tooltip title="Nova usluga">
-          <Fab
-            name="new"
-            color="primary"
-            onClick={this.openFormDialog}
-            className={classes.addIcon}
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      </div>
+                  />} 
+      </React.Fragment>
     )
   }
 };
@@ -149,9 +146,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-
-ServicesList.propTypes = {
-  services: PropTypes.array.isRequired,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(services)(Services));
+export default connect(mapStateToProps, mapDispatchToProps)(Services);

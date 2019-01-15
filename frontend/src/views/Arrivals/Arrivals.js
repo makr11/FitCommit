@@ -4,13 +4,16 @@ import { connect } from 'react-redux';
 import { requestArrivalsByDate, deleteArrival, submitFormArrival } from '../../store/actions/arrivalsA';
 import { requestUserRecordsActive, resetRecords } from '../../store/actions/userRecordsA';
 // material ui core components
+import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
+import Snackbar from '@material-ui/core/Snackbar';
 // arrivals components
 import ArrivalsTable from './ArrivalsTable/ArrivalsTable';
 import ArrivalsSelect from './ArrivalsSelect/ArrivalsSelect';
+// material ui icons
+import CloseIcon from '@material-ui/icons/Close';
 // helper functions
 import { date, isEmpty } from '../../assets/js/functions.js'
-
 
 class Arrivals extends React.Component {
   constructor(props){
@@ -21,6 +24,8 @@ class Arrivals extends React.Component {
       selectedRecord: "",
       usersOpt: [],
       recordsOpt: [],
+      warning: false,
+      message: ""
     };
   };
 
@@ -81,25 +86,60 @@ class Arrivals extends React.Component {
     () => this.props.selectArrivals(date))
   };
 
+  checkSubmit = (e) => {
+    e.preventDefault();
+    const selectedUser = this.state.selectedUser;
+    const selectedRecord = this.state.selectedRecord;
+    const arrivals = this.props.arrivals;
+
+    if(!isEmpty(selectedUser) && !isEmpty(selectedRecord)){
+      for(let index in arrivals){
+        if(arrivals[index].userObj===selectedUser.value.id){
+          this.setState({
+            ...this.state,
+            warning: true,
+            message: arrivals[index].user + " je već upisan/a",
+          })
+        }
+      }
+      this.submitForm(e);
+    }
+  } 
+
   submitForm = (e) => {
     e.preventDefault();
-    if(this.state.selectedUser.length!==0){
-      const user = this.state.selectedUser.value.id;
-      const record = this.state.selectedRecord.value.id;
-      const date = this.state.selectedDate;
-      const lead = {user, record, date};
-      this.props.handleSubmitForm(lead);
-      this.setState({
-        selectedUser: {},
-        selectedRecord: {},
-        recordsOpt: [],
+    const selectedUser = this.state.selectedUser;
+    const selectedRecord = this.state.selectedRecord;
+
+    const user = selectedUser.value.id;
+    const record = selectedRecord.value.id;
+    const date = this.state.selectedDate;
+    const lead = {user, record, date};
+    this.props.handleSubmitForm(lead);
+    this.setState({
+      selectedUser: "",
+      selectedRecord: "",
+      recordsOpt: [],
+  
     })
-    }
   };
+
+  closeWarning = () => {
+    this.setState({
+      warning: false,
+      message: ""
+    })
+  }
 
   render() {
     const { arrivals } = this.props;
-    const { selectedDate, selectedUser, selectedRecord, usersOpt, recordsOpt } = this.state;
+    const { selectedDate, 
+            selectedUser, 
+            selectedRecord, 
+            usersOpt, 
+            recordsOpt,
+            warning, 
+            message } = this.state;
     return(
       <Grid container spacing={24}>
         <ArrivalsSelect
@@ -111,7 +151,7 @@ class Arrivals extends React.Component {
           recordsOpt={recordsOpt}
           selectUser={this.selectUser}
           selectRecord={this.selectRecord}
-          submitForm={this.submitForm}
+          submitForm={this.checkSubmit}
         />
         <Grid item xs={12}>
           <ArrivalsTable
@@ -119,6 +159,25 @@ class Arrivals extends React.Component {
             handleDelete={this.handleDelete}
           />
         </Grid>
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={warning}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{message}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.closeWarning}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </Grid>
     )
   }

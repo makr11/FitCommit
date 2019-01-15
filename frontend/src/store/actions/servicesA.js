@@ -27,11 +27,8 @@ export const submitFormService = (lead) => (dispatch) => {
 	} else if (lead.name==="service"){
 		url = categories;
 		lead["serviceID"] = lead.id;
-		delete lead.service;
 	} else if (lead.name==="category"){
 		url = options;
-		delete lead.service;
-		delete lead.category;
 		lead["categoryID"] = lead.id;
 	};
 

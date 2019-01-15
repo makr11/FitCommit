@@ -1,94 +1,71 @@
 import React from 'react';
 // redux
 import {connect} from 'react-redux';
-import { requestUserRecordsAll, submitFormRecord, resetRecords, removeRecord, updateFormRecord } from '../../store/actions/userRecordsA';
+import { submitFormRecord, removeRecord, updateFormRecord } from '../../store/actions/userRecordsA';
 import { resetProfile } from '../../store/actions/userProfileA';
-// material ui core
-import { withStyles } from '@material-ui/core';
-// styles
-import { user } from './userStyle';
-// material ui components
-import Tooltip from '@material-ui/core/Tooltip';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-// app components
-import RecordsFormMain from './RecordsFormMain/RecordsFormMain';
-import Profile from './Profile/Profile';
-import RecordsTable from './RecordsTable/RecordsTable';
+import RecordsFormMain from './RecordsFormMain';
+import UserLayout from './UserLayout';
 
 class User extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      opened: false,
-      openSubmitForm: false,
-      openEditForm:false,
+      openSubmitRecordForm: false,
+      openEditRecordForm: false,
       record: {},
     }
   }
 
-  componentDidUpdate(prevProps){
-    if(prevProps.user!==this.props.user){
-      this.props.getRecords(this.props.user.id);
-    }
-  };
-
   componentWillUnmount(){
     this.props.resetProfile();
-    this.props.resetRecords();
   };
 
-  openRecordDialog = (e) => {
+  openRecordForm = (e) => {
     const { records } = this.props;
     let index = e.currentTarget.id;
     let record = records[index];
     
     this.setState({
-      opened: true,
-      openSubmitForm: (!index)?true:false,
-      openEditForm: (index)?true:false,
+      openSubmitRecordForm: (!index)?true:false,
+      openEditRecordForm: (index)?true:false,
       record: record,
     })
   };
 
-  closeRecordDialog = () => {
+  closeRecordForm = () => {
     this.setState({
-      opened: false,
+      openSubmitRecordForm: false,
+      openEditRecordForm: false,
       record: {}
     });
   };
 
   render() {
-    const { classes, user, records, services, submitRecord, updateRecord, removeRecord } = this.props;
-    const { opened, openSubmitForm, openEditForm, record } = this.state;
+    const { 
+      user, 
+      records,
+      services,
+      submitRecord,
+      updateRecord,
+    } = this.props
     
     return (
-      (user!==undefined) ?
-      <div>
-        <Profile
-          user={user}
+      (user!==undefined && records !==undefined) ?
+      <React.Fragment>
+        <UserLayout
+          {...this.props}
+          openRecordForm={this.openRecordForm}
+          closeRecordForm={this.closeRecordForm}
         />
         <RecordsFormMain 
-          open={opened}
-          openSubmitForm={openSubmitForm}
-          openEditForm={openEditForm} 
+          {...this.state}
           user={user.id} 
           services={services}
-          record={record}
           submitRecord={submitRecord}
           updateRecord={updateRecord}
-          closeFormDialog={this.closeRecordDialog}/>
-        <RecordsTable
-          records={records}
-          removeRecord={removeRecord}
-          openRecordDialog={this.openRecordDialog}
+          closeRecordForm={this.closeRecordForm}
         />
-        <Tooltip title="Nova usluga">
-          <Fab color="primary" className={classes.addIcon} onClick={this.openRecordDialog}>
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      </div>:<span></span>
+      </React.Fragment>:<span></span>
     );
   }
 }
@@ -103,13 +80,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRecords: (id) => dispatch(requestUserRecordsAll(id)),
     submitRecord : (lead) => dispatch(submitFormRecord(lead)),
     resetProfile: () => dispatch(resetProfile()),
-    resetRecords: () => dispatch(resetRecords()),
     removeRecord: (e) => dispatch(removeRecord(e.currentTarget.id)),
     updateRecord: (id, lead) => dispatch(updateFormRecord(id, lead))
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(user)(User));
+export default connect(mapStateToProps, mapDispatchToProps)(User);
