@@ -4,7 +4,10 @@ import { usersReducer } from './usersR';
 import { servicesReducer } from './servicesR';
 import { userProfileReducer } from './userProfileR';
 import { userRecordsReducer } from './userRecordsR';
-import { arrivalsByDateReducer } from './arrivalsR';
+import { 
+  arrivalsByDateReducer,
+  arrivalsByRecordReducer
+} from './arrivalsR';
 import { setupReducer } from './setupR';
 
 const rootReducers = combineReducers({
@@ -14,6 +17,7 @@ const rootReducers = combineReducers({
   userRecordsReducer,
   userProfileReducer,
   arrivalsByDateReducer,
+  arrivalsByRecordReducer
 });
 
 export default rootReducers;

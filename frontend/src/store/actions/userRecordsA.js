@@ -7,9 +7,7 @@ import {
   POST_RECORD_FAILED,
   PATCH_RECORD_SUCCESS,
   PATCH_RECORD_FAILED,
-  REMOVE_USER_RECORD_SUCCESS,
-  REMOVE_USER_RECORD_FAILED,
-  RESET_RECORDS,
+  CLEAR_USER_RECORDS,
 } from '../../constants/reduxConstants';
 
 import { requestUsers } from './usersA';
@@ -21,37 +19,25 @@ import {
 } from '../../constants/apiUrls';
 
 export const requestUserRecordsAll = (id) => (dispatch) => {
-  fetch(userRecordsAll + id)
-  .then(response => response.json())
-  .then(data => {
-    dispatch({ 
-      type: GET_USER_RECORDS_ALL_SUCCESS, 
-      payload: data
-    })
-  })
-  .catch(error => {
-    dispatch({ 
-      type: GET_USER_RECORDS_ALL_FAILED, 
-      payload: error
-    })
-  })
+  if(id){
+    fetch(userRecordsAll + id)
+    .then(response => response.json())
+    .then(data => dispatch({ type: GET_USER_RECORDS_ALL_SUCCESS, payload: data}))
+    .catch(error => dispatch({ type: GET_USER_RECORDS_ALL_FAILED, payload: error}))
+  }else{
+    dispatch({ type: CLEAR_USER_RECORDS })
+  }
 };
 
 export const requestUserRecordsActive = (id) => (dispatch) => {
-  fetch(userRecordsActive + id)
-  .then(response => response.json())
-  .then(data => {
-    dispatch({ 
-      type: GET_USER_RECORDS_ACTIVE_SUCCESS, 
-      payload: data
-    })
-  })
-  .catch(error => {
-    dispatch({ 
-      type: GET_USER_RECORDS_ACTIVE_FAILED, 
-      payload: error
-    })
-  })
+  if(id){
+    fetch(userRecordsActive + id)
+    .then(response => response.json())
+    .then(data => dispatch({ type: GET_USER_RECORDS_ACTIVE_SUCCESS, payload: data}))
+    .catch(error => dispatch({ type: GET_USER_RECORDS_ACTIVE_FAILED, payload: error}))
+  }else{
+    dispatch({ type: CLEAR_USER_RECORDS })
+  }
 };
 
 export const submitFormRecord = (lead) => (dispatch, getState) => {
@@ -112,12 +98,11 @@ export const updateFormRecord = (id, lead) => (dispatch, getState) => {
 };
 
 export const removeRecord = (id) => (dispatch, getState) => {
-  let deleted = true;
-  const lead = { id, deleted };
+  const lead = { id };
   let state = getState();
 
   const conf = {
-    method: "PATCH",
+    method: "DELETE",
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -128,18 +113,10 @@ export const removeRecord = (id) => (dispatch, getState) => {
   fetch(userRecordsAll + lead.id, conf)
   .then(response => {
     console.log(response);
-    dispatch({
-      type: REMOVE_USER_RECORD_SUCCESS
-    })
     dispatch(requestUserRecordsAll(state.userProfileReducer.profile.id));
     }
   )
   .catch(error => {
     console.log(error);
-    dispatch({type: REMOVE_USER_RECORD_FAILED})
   });
 }
-
-export const resetRecords = () => {
-  return {type: RESET_RECORDS}
-};

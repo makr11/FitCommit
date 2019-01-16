@@ -1,21 +1,37 @@
 import {
 	GET_ARRIVALS_BY_DATE_SUCCESS,
 	GET_ARRIVALS_BY_DATE_FAILED,
+	GET_ARRIVALS_BY_RECORD_SUCCESS,
+	GET_ARRIVALS_BY_RECORD_FAILED,
+	CLEAR_ARRIVALS_BY_RECORD,
 	DELETE_ARRIVAL_SUCCESS,
 } from '../../constants/reduxConstants';
 
 import {
 	arrivals,
+	arrivalsDate,
+	arrivalsRecord,
 	arrival,
 } from '../../constants/apiUrls';
 
 export const requestArrivalsByDate = (date) => (dispatch) => {
 	
-	fetch(arrivals + date)
+	fetch(arrivalsDate + date)
 	.then(response => response.json())
 	.then(data => dispatch({ type: GET_ARRIVALS_BY_DATE_SUCCESS, payload: data}))
 	.catch(error => dispatch({ type: GET_ARRIVALS_BY_DATE_FAILED, payload: error}))
 };
+
+export const requestArrivalsByRecord = (record) => (dispatch) => {
+	if(record){
+		fetch(arrivalsRecord + record)
+		.then(response => response.json())
+		.then(data => dispatch({ type: GET_ARRIVALS_BY_RECORD_SUCCESS, payload: data}))
+		.catch(error => dispatch({ type: GET_ARRIVALS_BY_RECORD_FAILED, payload: error}))
+	}else{
+		dispatch({type: CLEAR_ARRIVALS_BY_RECORD})
+	}
+}
 
 export const submitFormArrival = (lead) => (dispatch) => {
 	

@@ -12,7 +12,7 @@ const styles = {
     textAlign: "center"
   }
 }
-
+console.log("Profile")
 function Profile(props){
   const { classes, user, records } = props;
   return(

@@ -2,7 +2,7 @@ import React from 'react';
 // redux
 import { connect } from 'react-redux';
 import { requestArrivalsByDate, deleteArrival, submitFormArrival } from '../../store/actions/arrivalsA';
-import { requestUserRecordsActive, resetRecords } from '../../store/actions/userRecordsA';
+import { requestUserRecordsActive } from '../../store/actions/userRecordsA';
 // material ui core components
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
@@ -30,7 +30,7 @@ class Arrivals extends React.Component {
   };
 
   componentDidMount(){
-    this.props.selectArrivals(this.state.selectedDate);
+    this.props.requestArrivalsByDate(this.state.selectedDate);
     let usersOpt = this.props.users.map(user => {
       return {value: user, label: user.first_name + " " + user.last_name}
     })
@@ -38,17 +38,18 @@ class Arrivals extends React.Component {
   };
 
   componentDidUpdate(){
-    if(!isEmpty(this.props.userRecords)){
-      let records = this.props.userRecords.records.map(record => {
+    const userRecords = this.props.userRecords;
+    if(userRecords.length!==0){
+      let records = userRecords.map(record => {
         return {value: record, label: record.service + " (" + record.category + ") (" + record.arrivals_left + ")"}
       })
       this.setState({recordsOpt: records});
-      this.props.resetRecords();
+      this.props.requestUserRecordsActive();
     }
   };
 
   componentWillUnmount(){
-    this.props.resetRecords();
+    this.props.requestUserRecordsActive();
   };
 
   selectUser = (selectedUser) => {
@@ -58,7 +59,7 @@ class Arrivals extends React.Component {
       selectedRecord: {},
       recordsOpt: [],
       },
-    () => this.props.selectRecords(this.state.selectedUser.value.id)
+    () => this.props.requestUserRecordsActive(this.state.selectedUser.value.id)
     )
   };
 
@@ -83,7 +84,7 @@ class Arrivals extends React.Component {
     this.setState({
       selectedDate: date
     },
-    () => this.props.selectArrivals(date))
+    () => this.props.requestArrivalsByDate(date))
   };
 
   checkSubmit = (e) => {
@@ -115,7 +116,7 @@ class Arrivals extends React.Component {
     const record = selectedRecord.value.id;
     const date = this.state.selectedDate;
     const lead = {user, record, date};
-    this.props.handleSubmitForm(lead);
+    this.props.submitFormArrival(lead);
     this.setState({
       selectedUser: "",
       selectedRecord: "",
@@ -186,18 +187,17 @@ class Arrivals extends React.Component {
 const mapStateToProps = state => {
   return {
     users: state.usersReducer.users,
-    userRecords: state.userRecordsReducer,
+    userRecords: state.userRecordsReducer.records,
     arrivals: state.arrivalsByDateReducer.arrivals,
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectRecords: (id) => dispatch(requestUserRecordsActive(id)),
-    resetRecords: () => dispatch(resetRecords()),
-    selectArrivals: (date) => dispatch(requestArrivalsByDate(date)),
+    requestUserRecordsActive: (id) => dispatch(requestUserRecordsActive(id)),
+    requestArrivalsByDate: (date) => dispatch(requestArrivalsByDate(date)),
     deleteArrival: (e) => dispatch(deleteArrival(e.currentTarget.id)),
-    handleSubmitForm: (lead) => dispatch(submitFormArrival(lead)),
+    submitFormArrival: (lead) => dispatch(submitFormArrival(lead)),
   }
 };
 

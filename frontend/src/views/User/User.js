@@ -1,10 +1,17 @@
 import React from 'react';
 // redux
 import {connect} from 'react-redux';
-import { submitFormRecord, removeRecord, updateFormRecord } from '../../store/actions/userRecordsA';
+import { 
+  submitFormRecord, 
+  removeRecord, 
+  updateFormRecord, 
+} from '../../store/actions/userRecordsA';
+import { requestArrivalsByRecord } from '../../store/actions/arrivalsA';
 import { resetProfile } from '../../store/actions/userProfileA';
+// app components
 import RecordsFormMain from './RecordsFormMain';
 import UserLayout from './UserLayout';
+import ArrivalsList from './ArrivalsList';
 
 class User extends React.Component {
   constructor(props){
@@ -12,7 +19,9 @@ class User extends React.Component {
     this.state={
       openSubmitRecordForm: false,
       openEditRecordForm: false,
-      record: {},
+      recordForm: {},
+      openArrivalsList: false,
+      recordArrivals: null,
     }
   }
 
@@ -28,7 +37,7 @@ class User extends React.Component {
     this.setState({
       openSubmitRecordForm: (!index)?true:false,
       openEditRecordForm: (index)?true:false,
-      record: record,
+      recordForm: record,
     })
   };
 
@@ -36,9 +45,25 @@ class User extends React.Component {
     this.setState({
       openSubmitRecordForm: false,
       openEditRecordForm: false,
-      record: {}
+      recordForm: {}
     });
   };
+
+  openArrivalsList = (e) => {
+    this.setState({
+      openArrivalsList: true,
+      recordArrivals: e.currentTarget.id,
+    });
+    this.props.requestArrivalsByRecord(e.currentTarget.id);
+  }
+
+  closeArrivalsList = () => {
+    this.setState({
+      openArrivalsList: false,
+      recordArrivals: null,
+    });
+    this.props.requestArrivalsByRecord();
+  }
 
   render() {
     const { 
@@ -47,8 +72,16 @@ class User extends React.Component {
       services,
       submitRecord,
       updateRecord,
-    } = this.props
-    
+      arrivals,
+    } = this.props;
+    const {
+      openSubmitRecordForm,
+      openEditRecordForm,
+      openArrivalsList,
+      recordForm,
+      recordArrivals,
+    } = this.state;
+    console.log("User")
     return (
       (user!==undefined && records !==undefined) ?
       <React.Fragment>
@@ -56,14 +89,23 @@ class User extends React.Component {
           {...this.props}
           openRecordForm={this.openRecordForm}
           closeRecordForm={this.closeRecordForm}
+          openArrivalsList={this.openArrivalsList}
         />
         <RecordsFormMain 
-          {...this.state}
+          openSubmitRecordForm={openSubmitRecordForm}
+          openEditRecordForm={openEditRecordForm}
+          record={recordForm}
           user={user.id} 
           services={services}
           submitRecord={submitRecord}
           updateRecord={updateRecord}
           closeRecordForm={this.closeRecordForm}
+        />
+        <ArrivalsList
+          open={openArrivalsList}
+          close={this.closeArrivalsList}
+          record={recordArrivals}
+          arrivals={arrivals}
         />
       </React.Fragment>:<span></span>
     );
@@ -75,6 +117,7 @@ const mapStateToProps = state => {
     user: state.userProfileReducer.profile,
     services: state.servicesReducer.services,
     records: state.userRecordsReducer.records,
+    arrivals: state.arrivalsByRecordReducer.arrivals
   }
 }
 
@@ -83,7 +126,8 @@ const mapDispatchToProps = (dispatch) => {
     submitRecord : (lead) => dispatch(submitFormRecord(lead)),
     resetProfile: () => dispatch(resetProfile()),
     removeRecord: (e) => dispatch(removeRecord(e.currentTarget.id)),
-    updateRecord: (id, lead) => dispatch(updateFormRecord(id, lead))
+    updateRecord: (id, lead) => dispatch(updateFormRecord(id, lead)),
+    requestArrivalsByRecord: (id) => dispatch(requestArrivalsByRecord(id))
   }
 };
 

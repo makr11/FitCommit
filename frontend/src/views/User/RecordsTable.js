@@ -15,6 +15,7 @@ import TableRow from '@material-ui/core/TableRow';
 // material ui icons
 import WarningIcon from '@material-ui/icons/Warning';
 import DoneIcon from '@material-ui/icons/Done';
+import ListIcon from '@material-ui/icons/List'
 
 const Paid = (props) => {
   const { paid, price} = props;
@@ -33,9 +34,10 @@ function RecordsTable(props){
   const { 
     classes, 
     records, 
-    openRecordForm
+    openRecordForm,
+    openArrivalsList,
   } = props;
-  
+  console.log("RecordsTable")
   return(
     <Paper className={classes.tableWrapper}>
       <Table className={classes.tableCell}>
@@ -47,6 +49,7 @@ function RecordsTable(props){
           <TableCell padding="dense">Preostalo dana</TableCell>
           <TableCell padding="dense">Preostalo dolazaka</TableCell>
           <TableCell padding="dense">Plaćeno</TableCell>
+          <TableCell padding="dense">Dolasci</TableCell>
           <TableCell padding="checkbox">Izmijeni</TableCell>
         </TableRow>
         </TableHead>
@@ -61,6 +64,11 @@ function RecordsTable(props){
                 <TableCell padding="dense">{record.days_left}</TableCell>
                 <TableCell padding="dense">{(record.active)?record.arrivals_left:0}</TableCell>
                 <TableCell padding="dense"><Paid paid={record.paid} price={record.price} sign={<DoneIcon/>}/></TableCell>
+                <TableCell padding="dense">
+                  <IconButton name="record" id={record.id} onClick={openArrivalsList}>
+                    <ListIcon/>
+                  </IconButton>
+                </TableCell>
                 <TableCell padding="checkbox">
                   <IconButton name="record" id={index} onClick={openRecordForm}>
                     <SettingsIcon/>

@@ -36,7 +36,7 @@ function EditRecord(props){
     open,
     close
   } = props
-
+  console.log("EditRecord")
   return (
     <Dialog
       open={open}     

@@ -1,11 +1,7 @@
 import datetime
-
 from django.contrib.auth import get_user_model
-
 from rest_framework import serializers as drf_serializers
-
 from .models import Setup, CustomUser, Services, Categories, Options, Records, Arrivals
-
 
 CustomUser = get_user_model()
 
@@ -29,7 +25,7 @@ class CategoriesSerializer(drf_serializers.ModelSerializer):
 
     def get_options(self, obj):
         try:
-            qs = Options.objects.filter(deleted=0, categoryID=obj.id)
+            qs = Options.objects.filter(categoryID=obj.id)
             serializer = OptionsSerializer(instance=qs, many=True, read_only=True)
             return serializer.data
         except AttributeError:
@@ -45,7 +41,7 @@ class ServicesSerializer(drf_serializers.ModelSerializer):
 
     def get_categories(self, obj):
         try:
-            qs = Categories.objects.filter(deleted=0, serviceID=obj.id)
+            qs = Categories.objects.filter(serviceID=obj.id)
             serializer = CategoriesSerializer(instance=qs, many=True, read_only=True)
             return serializer.data
         except AttributeError:

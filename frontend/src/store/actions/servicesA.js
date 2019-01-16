@@ -88,12 +88,11 @@ export const updateFormService = (lead) => (dispatch) => {
 };
 
 export const removeServices = (id, name) => (dispatch) => {
-	let deleted = true;
 	let url;
-	const lead = { id, deleted };
+	const lead = { id };
 
 	const conf = {
-		method: "PATCH",
+		method: "DELETE",
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'

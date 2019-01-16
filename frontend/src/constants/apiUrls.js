@@ -16,4 +16,8 @@ export const userRecordsActive = "http://localhost:8000/api/user_records/active/
 
 export const arrivals = "http://localhost:8000/api/arrivals/";
 
+export const arrivalsDate = "http://localhost:8000/api/arrivalsDate/";
+
+export const arrivalsRecord = "http://localhost:8000/api/arrivalsRecord/"
+
 export const arrival = "http://localhost:8000/api/arrival/";

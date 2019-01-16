@@ -10,14 +10,12 @@ class CustomUser(AbstractUser):
     IDUser = models.CharField(max_length=5, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    deleted = models.BooleanField(default=0, blank=True)
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
 class Services(models.Model):
     service = models.CharField(max_length=50)
-    deleted = models.BooleanField(default=0, blank=True)
 
     def __str__(self):
 
@@ -26,7 +24,6 @@ class Services(models.Model):
 class Categories(models.Model):
     category = models.CharField(max_length=50)
     serviceID = models.ForeignKey(Services, related_name='categories', on_delete=models.CASCADE)
-    deleted = models.BooleanField(default=0, blank=True)
 
     def __str__(self):
 
@@ -37,7 +34,6 @@ class Options(models.Model):
     price = models.IntegerField()
     duration = models.IntegerField()
     categoryID = models.ForeignKey(Categories, related_name='options', on_delete=models.CASCADE)
-    deleted = models.BooleanField(default=0, blank=True)
 
     def __str__(self):
 
@@ -50,7 +46,6 @@ class Records(models.Model):
     optionObj = models.ForeignKey(Options, related_name='options_records', on_delete=models.CASCADE, null=True)
     arrivals_left = models.IntegerField()
     days_left = models.IntegerField(default=0)
-    deleted = models.BooleanField(default=0, blank=True)
     active = models.BooleanField(default=1, blank=True)
     price = models.IntegerField()
     discount = models.IntegerField()
