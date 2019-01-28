@@ -19,6 +19,7 @@ function ArrivalsList(props){
 	} = props
 	console.log("ArrivalsList")
 	return(
+		(arrivals)?
 		<Dialog
 		open={open}
 		>
@@ -27,23 +28,24 @@ function ArrivalsList(props){
 					<Table>
 						<TableHead>
 							<TableRow>
+								<TableCell>Br.</TableCell>
 								<TableCell>Usluga</TableCell>
 								<TableCell>Datum</TableCell>
 								<TableCell>Vrijeme</TableCell>
 							</TableRow>	
 						</TableHead>
-						{(arrivals)?
 						<TableBody>
-						{arrivals.map((arrival) => {
+						{arrivals.map((arrival, index, array) => {
 							return(
 							<TableRow key={arrival.id}>
+								<TableCell>{array.length-index}</TableCell>
 								<TableCell>{arrival.service + ' (' + arrival.category + ')'}</TableCell>
 								<TableCell>{new Date(arrival.arrival).toLocaleDateString()}</TableCell>
 								<TableCell>{arrival.arrival_time}</TableCell>
 							</TableRow>
 							)
 						})}
-						</TableBody>:undefined}
+						</TableBody>
 					</Table>
 				</Paper>
 			</DialogContent>
@@ -52,7 +54,7 @@ function ArrivalsList(props){
           Zatvori
         </Button>
       </DialogActions>
-		</Dialog>		
+		</Dialog>:undefined	
 	)
 }
 

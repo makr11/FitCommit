@@ -11,7 +11,7 @@ import {
   dateFormat 
 } from '../../assets/js/functions';
 
-class RecordsFormMain extends React.Component{
+class RecordsFormMain extends React.PureComponent{
   constructor(props){
     super(props);
     this.state = {

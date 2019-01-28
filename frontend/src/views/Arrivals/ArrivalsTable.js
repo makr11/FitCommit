@@ -2,7 +2,7 @@ import React from 'react';
 // material ui core
 import { withStyles } from '@material-ui/core';
 // styles
-import { tableStyle } from '../arrivalsStyle';
+import { tableStyle } from './arrivalsStyle';
 // material ui core components
 import Paper from '@material-ui/core/Paper';
 import TableRow from '@material-ui/core/TableRow';

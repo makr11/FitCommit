@@ -16,8 +16,20 @@ function ServicesLayout(props){
 		services,
 		openNewServicesForm,
 		openEditServicesForm,
-		removeServices
+		removeServices,
 	} = props;
+	
+	const ServicesTooltip = 
+		<Tooltip title="Nova usluga">
+			<Fab
+				name="new"
+				color="primary"
+				onClick={openNewServicesForm}
+				className={classes.addIcon}
+			>
+				<AddIcon />
+			</Fab>
+		</Tooltip>
 
 	return(
 		<React.Fragment>
@@ -27,16 +39,7 @@ function ServicesLayout(props){
 				openEditServicesForm={openEditServicesForm}
 				removeServices={removeServices}
 			/>
-			<Tooltip title="Nova usluga">
-				<Fab
-					name="new"
-					color="primary"
-					onClick={openNewServicesForm}
-					className={classes.addIcon}
-				>
-					<AddIcon />
-				</Fab>
-			</Tooltip>
+			{ServicesTooltip}
 		</React.Fragment>
 	)
 }

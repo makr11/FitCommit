@@ -41,8 +41,4 @@ export const recordsTable = () => ({
     overflowX: "auto",
     marginTop: "20px"
   },
-  tableCell: {
-    minWidth: "600px",
-    padding: "4px 40px 4px 24px",
-  }
 });

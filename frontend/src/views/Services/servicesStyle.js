@@ -39,6 +39,7 @@ export const optionsTable = {
 
 export const serviceCard = {
   card: {
+    flexGrow: 1,
 		overflowX: 'auto',
 		margin: "1.5%",
  	},

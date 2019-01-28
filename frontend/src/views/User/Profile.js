@@ -19,43 +19,31 @@ function Profile(props){
     <React.Fragment>
       <Grid item xs={3}>
         <Paper className={classes.paper}>
-          <Typography variant="body2">
-            {user.first_name + " " + user.last_name}
+          <Typography variant="body1">
+            Datum rođenja:
+            <br/>11.09.1989
           </Typography>
           <Divider/>
-          <Typography variant="caption">
-            11.09.1989
+          <Typography variant="body1">
+            Član od:
+            <br/>25.12.2018
+          </Typography>         
+          <Divider/>
+          <Typography variant="body1">
+            Mobitel:
+            <br/>0915322520
           </Typography>
-          <Typography variant="caption">
-            0915322520
+          <Divider/>
+          <Typography variant="body1">
+            E-mail:
+            <br/>{user.email}
           </Typography>
-          <Typography variant="caption">
-            {user.email}
-          </Typography>
-          <Typography variant="caption">
-            25.12.2018
+          <Divider/>
+          <Typography variant="body1">
+            Br. usluga:
+            <br/>{records}
           </Typography>
         </Paper>
-      </Grid>
-      <Grid item xs={9}>
-        <div >
-          <div style={{display: "inline-block", margin: "4px"}}> 
-            <Typography variant="body2">
-              Član od
-            </Typography>
-            <Typography variant="body2">
-              25.12.2018
-            </Typography>
-          </div>
-          <div style={{display: "inline-block", margin: "4px"}}>
-          <Typography variant="body2">
-              Usluge
-            </Typography>
-            <Typography variant="body2">
-              {records}
-            </Typography>
-          </div>
-        </div>
       </Grid>
     </React.Fragment>
   )

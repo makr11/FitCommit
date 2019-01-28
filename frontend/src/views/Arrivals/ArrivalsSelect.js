@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 // jss
 import { withStyles } from '@material-ui/core'
-import { arrivalsSelect } from '../arrivalsStyle.js'
+import { arrivalsSelect } from './arrivalsStyle.js'
  
 function ArrivalsSelect(props){
 

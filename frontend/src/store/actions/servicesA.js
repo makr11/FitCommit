@@ -107,7 +107,7 @@ export const removeServices = (id, name) => (dispatch) => {
     case ('category'):
       url = categories;
       break;
-    case ('option'):
+    case (undefined):
       url = options;
 			break;
 		default:

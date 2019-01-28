@@ -15,6 +15,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
 // app main components
 import App from './layout/App';
+// styles css
+import './assets/css/main.css';
 
 const persistConfig = {
   key: 'root',

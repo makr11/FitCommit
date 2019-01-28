@@ -7,11 +7,14 @@ import {
   updateFormRecord, 
 } from '../../store/actions/userRecordsA';
 import { requestArrivalsByRecord } from '../../store/actions/arrivalsA';
-import { resetProfile } from '../../store/actions/userProfileA';
+import { requestUserRecordsAll } from '../../store/actions/userRecordsA';
+import { requestUserProfile } from '../../store/actions/userProfileA';
 // app components
 import RecordsFormMain from './RecordsFormMain';
 import UserLayout from './UserLayout';
 import ArrivalsList from './ArrivalsList';
+// helper functions
+import { isEmpty } from '../../assets/js/functions';
 
 class User extends React.Component {
   constructor(props){
@@ -26,7 +29,8 @@ class User extends React.Component {
   }
 
   componentWillUnmount(){
-    this.props.resetProfile();
+    this.props.requestUserProfile();
+    this.props.requestUserRecordsAll();
   };
 
   openRecordForm = (e) => {
@@ -61,8 +65,7 @@ class User extends React.Component {
     this.setState({
       openArrivalsList: false,
       recordArrivals: null,
-    });
-    this.props.requestArrivalsByRecord();
+    });  
   }
 
   render() {
@@ -70,8 +73,8 @@ class User extends React.Component {
       user, 
       records,
       services,
-      submitRecord,
-      updateRecord,
+      submitFormRecord,
+      updateFormRecord,
       arrivals,
     } = this.props;
     const {
@@ -82,23 +85,25 @@ class User extends React.Component {
       recordArrivals,
     } = this.state;
     console.log("User")
+    
     return (
       (user!==undefined && records !==undefined) ?
       <React.Fragment>
+        {(!isEmpty(user))?
         <UserLayout
-          {...this.props}
+          user={user}
+          records={records}
           openRecordForm={this.openRecordForm}
-          closeRecordForm={this.closeRecordForm}
           openArrivalsList={this.openArrivalsList}
-        />
+        />:undefined}
         <RecordsFormMain 
           openSubmitRecordForm={openSubmitRecordForm}
           openEditRecordForm={openEditRecordForm}
           record={recordForm}
           user={user.id} 
           services={services}
-          submitRecord={submitRecord}
-          updateRecord={updateRecord}
+          submitRecord={submitFormRecord}
+          updateRecord={updateFormRecord}
           closeRecordForm={this.closeRecordForm}
         />
         <ArrivalsList
@@ -123,11 +128,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    submitRecord : (lead) => dispatch(submitFormRecord(lead)),
-    resetProfile: () => dispatch(resetProfile()),
+    submitFormRecord : (lead) => dispatch(submitFormRecord(lead)),
+    requestUserProfile: () => dispatch(requestUserProfile()),
     removeRecord: (e) => dispatch(removeRecord(e.currentTarget.id)),
-    updateRecord: (id, lead) => dispatch(updateFormRecord(id, lead)),
-    requestArrivalsByRecord: (id) => dispatch(requestArrivalsByRecord(id))
+    updateFormRecord: (id, lead) => dispatch(updateFormRecord(id, lead)),
+    requestArrivalsByRecord: (id) => dispatch(requestArrivalsByRecord(id)),
+    requestUserRecordsAll: (id) => dispatch(requestUserRecordsAll(id))
   }
 };
 

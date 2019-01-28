@@ -24,15 +24,15 @@ function UserLayout(props){
 	console.log("UserLayout")
 	return(
 		<Grid container spacing={24}>
-			<Profile
-				user={user}
-				records={records.length}
-			/>
 			<RecordsTable
 				records={records}
 				removeRecord={removeRecord}
 				openRecordForm={openRecordForm}
 				openArrivalsList={openArrivalsList}
+			/>
+			<Profile
+				user={user}
+				records={records.length}
 			/>
 			<Tooltip title="Nova usluga">
 				<Fab color="primary" className={classes.addIcon} onClick={openRecordForm}>

@@ -1,7 +1,7 @@
 import {
   GET_USER_PROFILE_SUCCESS,
   GET_USER_PROFILE_FAILED,
-  RESET_PROFILE,    
+  CLEAR_USER_PROFILE,    
 } from '../../constants/reduxConstants';
 
 import {
@@ -9,12 +9,12 @@ import {
 } from '../../constants/apiUrls';
 
 export const requestUserProfile = (id) => (dispatch) => {
-  fetch(users + id)
-  .then(response => response.json())
-  .then(data => dispatch({ type: GET_USER_PROFILE_SUCCESS, payload: data}))
-  .catch(error => dispatch({ type: GET_USER_PROFILE_FAILED, payload: error}))
-};
-
-export const resetProfile = () => {
-  return {type: RESET_PROFILE}
+  if(id){
+    fetch(users + id)
+    .then(response => response.json())
+    .then(data => dispatch({ type: GET_USER_PROFILE_SUCCESS, payload: data}))
+    .catch(error => dispatch({ type: GET_USER_PROFILE_FAILED, payload: error}))
+  }else{
+    dispatch({ type: CLEAR_USER_PROFILE });
+  } 
 };

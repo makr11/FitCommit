@@ -45,27 +45,27 @@ class Services extends React.Component{
   };
 
   /*Options sends name=undefined beacuse name isn't accessible in lists*/
-  openEditServicesForm = (sIndex, cIndex, oIndex, e) => {
-    const { services } = this.props;
+  openEditServicesForm = (e) => {
+    const {
+      service,
+      category,
+      option 
+    } = this.props;
     let setStep
     let update 
     let id = e.currentTarget.id;
     let name = e.currentTarget.name;
-    let service = services[sIndex];
-    let category = (cIndex!==null)?service.categories[cIndex]:undefined;
-    let option = (oIndex!==null)?category.options[oIndex]:undefined;
-  
     switch(name){
       case 'service':
-        update=service;
+        update=service[id];
         setStep=0;
         break;
       case 'category':
-        update=category;
+        update=category[id];
         setStep=1;
         break;     
       case undefined:
-        update=option;
+        update=option[id];
         name="option";
         setStep=2;
         break;
@@ -81,7 +81,7 @@ class Services extends React.Component{
       update: update,
       setStep: setStep
     })
-  }
+  };
  
   closeServicesForm = () => {
     this.setState({
@@ -91,7 +91,7 @@ class Services extends React.Component{
       setStep: undefined,
       update: undefined,
     })
-  }
+  };
 
   render(){  
     const {  
@@ -105,9 +105,9 @@ class Services extends React.Component{
       name, 
       id,  
       setStep, 
-      update 
+      update,
     } = this.state;
- 
+    
     return (
       <React.Fragment>
         <ServicesLayout
@@ -115,6 +115,7 @@ class Services extends React.Component{
           openNewServicesForm={this.openNewServicesForm}
           openEditServicesForm={this.openEditServicesForm}
           removeServices={removeServices}
+          closeMenu={this.closeMenu}
         />
         {open && <ServicesFormMain 
                     open={open}
@@ -134,6 +135,9 @@ class Services extends React.Component{
 const mapStateToProps = state => {
   return {
     services: state.servicesReducer.services,
+    service: state.servicesReducer.service,
+    category: state.servicesReducer.category,
+    option: state.servicesReducer.option,
   }
 };
 

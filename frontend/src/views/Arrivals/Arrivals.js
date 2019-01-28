@@ -1,15 +1,19 @@
 import React from 'react';
 // redux
 import { connect } from 'react-redux';
-import { requestArrivalsByDate, deleteArrival, submitFormArrival } from '../../store/actions/arrivalsA';
+import { 
+  requestArrivalsByDate, 
+  deleteArrival, 
+  submitFormArrival 
+} from '../../store/actions/arrivalsA';
 import { requestUserRecordsActive } from '../../store/actions/userRecordsA';
 // material ui core components
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Snackbar from '@material-ui/core/Snackbar';
 // arrivals components
-import ArrivalsTable from './ArrivalsTable/ArrivalsTable';
-import ArrivalsSelect from './ArrivalsSelect/ArrivalsSelect';
+import ArrivalsTable from './ArrivalsTable';
+import ArrivalsSelect from './ArrivalsSelect';
 // material ui icons
 import CloseIcon from '@material-ui/icons/Close';
 // helper functions
@@ -41,7 +45,9 @@ class Arrivals extends React.Component {
     const userRecords = this.props.userRecords;
     if(userRecords.length!==0){
       let records = userRecords.map(record => {
-        return {value: record, label: record.service + " (" + record.category + ") (" + record.arrivals_left + ")"}
+        return {
+          value: record, 
+          label: record.service + " (" + record.category + ") (" + record.arrivals_left + ")"}
       })
       this.setState({recordsOpt: records});
       this.props.requestUserRecordsActive();
@@ -49,6 +55,7 @@ class Arrivals extends React.Component {
   };
 
   componentWillUnmount(){
+    this.props.requestArrivalsByDate();
     this.props.requestUserRecordsActive();
   };
 

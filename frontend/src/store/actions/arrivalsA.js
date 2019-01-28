@@ -1,6 +1,7 @@
 import {
 	GET_ARRIVALS_BY_DATE_SUCCESS,
 	GET_ARRIVALS_BY_DATE_FAILED,
+	CLEAR_ARRIVALS_BY_DATE,
 	GET_ARRIVALS_BY_RECORD_SUCCESS,
 	GET_ARRIVALS_BY_RECORD_FAILED,
 	CLEAR_ARRIVALS_BY_RECORD,
@@ -15,11 +16,14 @@ import {
 } from '../../constants/apiUrls';
 
 export const requestArrivalsByDate = (date) => (dispatch) => {
-	
-	fetch(arrivalsDate + date)
-	.then(response => response.json())
-	.then(data => dispatch({ type: GET_ARRIVALS_BY_DATE_SUCCESS, payload: data}))
-	.catch(error => dispatch({ type: GET_ARRIVALS_BY_DATE_FAILED, payload: error}))
+	if(date){
+		fetch(arrivalsDate + date)
+		.then(response => response.json())
+		.then(data => dispatch({ type: GET_ARRIVALS_BY_DATE_SUCCESS, payload: data}))
+		.catch(error => dispatch({ type: GET_ARRIVALS_BY_DATE_FAILED, payload: error}))
+	}else{
+		dispatch({type: CLEAR_ARRIVALS_BY_DATE})
+	}
 };
 
 export const requestArrivalsByRecord = (record) => (dispatch) => {

@@ -18,7 +18,12 @@ export const app = theme => ({
 export const navbar = theme => ({
   appBar: {
     position: 'fixed',
-    zIndex: theme.zIndex.drawer + 1,
+  },
+  appBarToolbar: {
+    marginLeft: "0px",
+    [theme.breakpoints.up('md')]: {
+      marginLeft: drawerWidth,
+    },
   },
   menuButton: {
     marginRight: 20,

@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 // material ui core 
 import { withStyles } from '@material-ui/core';
-import { sidebar } from '../appStyle';
+import { sidebar } from './appStyle';
 // material ui core components
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
@@ -13,7 +13,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 // routes
-import { sidebarRoutes } from '../../constants/routes';
+import { sidebarRoutes } from '../constants/routes';
 
 const navigation = (
   <React.Fragment>

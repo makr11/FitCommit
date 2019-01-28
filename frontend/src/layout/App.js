@@ -9,14 +9,16 @@ import { requestServices } from '../store/actions/servicesA';
 import { requestSetup} from '../store/actions/setupA';
 // react router
 import { withRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 // material ui core
 import { withStyles } from '@material-ui/core/styles';
 // jss styles
 import { app } from './appStyle';
 // app components
-import Navbar from './Navbar/Navbar';
-import Sidebar from './Sidebar/Sidebar';
-import Main from './Main/Main';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
+import Dashboard from '../views/Dashboard/Dashboard';
+import { sidebarRoutes, mainRoutes } from '../constants/routes';
 
 class App extends React.Component {
   state = {
@@ -34,22 +36,47 @@ class App extends React.Component {
   };
 
   render(){
-    const { classes } = this.props;
-    const { mobileOpen } = this.state;
-    
+    const { 
+      classes,
+      location,
+      user
+    } = this.props;
+    const { 
+      mobileOpen
+    } = this.state;
+    const routes = sidebarRoutes.concat(mainRoutes);
+
     return (
       <div>
-        <Navbar handleDrawerToggle={this.handleDrawerToggle}/>
+        <Navbar 
+          handleDrawerToggle={this.handleDrawerToggle}
+          routes={routes}
+          location={location}
+          user={user}
+        />
         <Sidebar
           mobileOpen={mobileOpen}
           handleDrawerToggle={this.handleDrawerToggle}
         />
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Main/>
+          <Switch>
+            <Route exact path="/" component={Dashboard}/>
+            {routes.map((route, key) => {
+              return(
+                <Route path={route.path} component={route.component} key={key}/>
+              )
+            })}
+          </Switch>
         </main>
       </div>
     );
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    user: state.userProfileReducer.profile,
   }
 }
 
@@ -65,4 +92,4 @@ App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(withStyles(app)(App)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(app)(App)));
