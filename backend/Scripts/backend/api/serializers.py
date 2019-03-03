@@ -96,7 +96,6 @@ class ArrivalsSerializer(drf_serializers.ModelSerializer):
     category = drf_serializers.CharField(source='recordObj.categoryObj')
     arrivals_left = drf_serializers.IntegerField(source='recordObj.arrivals_left')
     paid = drf_serializers.BooleanField(source='recordObj.paid')
-    arrival_time = drf_serializers.TimeField(format="%H:%M")
 
     class Meta:
         model = Arrivals

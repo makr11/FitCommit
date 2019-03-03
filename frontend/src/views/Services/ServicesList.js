@@ -3,8 +3,6 @@ import React from 'react';
 import PropTypes from "prop-types";
 // material ui core
 import { withStyles } from "@material-ui/core";
-// styles
-import { serviceCard } from "./servicesStyle";
 // material ui core
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -13,6 +11,21 @@ import Typography from '@material-ui/core/Typography';
 import CategoryTabs from './CategoryTabs';
 import Editor from '../../components/Editor';
 
+const styles = (theme) => ({
+  headingContainer: {
+    backgroundColor: "#3f51b5",
+    marginTop: theme.spacing.unit * 3,
+  },
+  heading: {
+    marginLeft: theme.spacing.unit * 3,
+    color: "#ffff"
+  },
+  card: {
+    flexGrow: 1,
+		overflowX: 'auto',
+ 	},
+})
+
 function ServicesList (props){
   const { 
     classes,
@@ -20,9 +33,7 @@ function ServicesList (props){
     openNewServicesForm, 
     openEditServicesForm, 
     removeServices,
-  } = props;
-
-  
+  } = props; 
   
   return(  
     <React.Fragment>
@@ -30,18 +41,27 @@ function ServicesList (props){
       {services.map((service) => {
         return(
         <Grid item xs={12} key={service.id}> 
-          <Paper className={classes.card}>
+          <Paper
+          className={classes.headingContainer}
+          >
             <Editor 
-              name="service" 
-              id={service.id} 
-              open={openNewServicesForm} 
-              update={openEditServicesForm}
-              del={removeServices}
-            >
-              <Typography variant="h5" style={{display: "inline-block"}}>
-                {service.service}
-              </Typography>
+            name="service" 
+            id={service.id} 
+            open={openNewServicesForm} 
+            update={openEditServicesForm}
+            del={removeServices}
+            > 
+             <Typography
+             variant="h6" 
+             align="left" 
+             color="inherit" 
+             className={classes.heading}
+             >
+              {service.service}
+             </Typography>
             </Editor>
+          </Paper>
+          <Paper className={classes.card}>
             <CategoryTabs
               service={service}
               openNewServicesForm={openNewServicesForm} 
@@ -63,4 +83,4 @@ ServicesList.propTypes = {
   openEditServicesForm: PropTypes.func.isRequired,
 }
 
-export default withStyles(serviceCard)(ServicesList);
+export default withStyles(styles)(ServicesList);

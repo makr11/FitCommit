@@ -262,7 +262,7 @@ class RecordsFormMain extends React.PureComponent{
       services, 
       closeRecordForm, 
     } = this.props;
-    console.log("RecordsFormMain")
+    
     return(
       <React.Fragment>
         <AddRecord

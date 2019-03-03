@@ -6,18 +6,24 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+// app components
+import ViewElementsHeading from '../../components/ViewElementsHeading';
 
 const styles = {
   paper: {
     textAlign: "center"
   }
 }
-console.log("Profile")
+
 function Profile(props){
   const { classes, user, records } = props;
   return(
     <React.Fragment>
       <Grid item xs={3}>
+        <ViewElementsHeading
+        title="Osnovni podaci"
+        style={{marginTop: "0px"}}
+        />
         <Paper className={classes.paper}>
           <Typography variant="body1">
             Datum rođenja:

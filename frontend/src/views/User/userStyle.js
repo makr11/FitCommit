@@ -42,3 +42,14 @@ export const recordsTable = () => ({
     marginTop: "20px"
   },
 });
+
+export const titles = (theme) => ({
+  headingContainer: {
+    backgroundColor: "#3f51b5",
+    marginTop: theme.spacing.unit * 3,
+  },
+  heading: {
+    marginLeft: theme.spacing.unit * 3,
+    color: "#ffff"
+  },
+})

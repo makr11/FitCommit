@@ -44,8 +44,9 @@ function CustomTable({ ...props }) {
             return (
               <TableRow key={key}>
                 {prop.map((prop, key) => {
+                  const isObject=typeof prop==="object"
                   return (
-                    <TableCell key={key}>
+                    <TableCell key={key} padding={(isObject)?"checkbox": "dense"}>
                       {prop}
                     </TableCell>
                   );

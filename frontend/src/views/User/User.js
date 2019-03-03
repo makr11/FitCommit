@@ -25,6 +25,7 @@ class User extends React.Component {
       recordForm: {},
       openArrivalsList: false,
       recordArrivals: null,
+      record: {}
     }
   }
 
@@ -54,9 +55,11 @@ class User extends React.Component {
   };
 
   openArrivalsList = (e) => {
+    console.log(e.currentTarget.name)
     this.setState({
       openArrivalsList: true,
       recordArrivals: e.currentTarget.id,
+      record: this.props.records[parseInt(e.currentTarget.name, 10)]
     });
     this.props.requestArrivalsByRecord(e.currentTarget.id);
   }
@@ -65,6 +68,7 @@ class User extends React.Component {
     this.setState({
       openArrivalsList: false,
       recordArrivals: null,
+      record: {}
     });  
   }
 
@@ -82,9 +86,8 @@ class User extends React.Component {
       openEditRecordForm,
       openArrivalsList,
       recordForm,
-      recordArrivals,
+      record
     } = this.state;
-    console.log("User")
     
     return (
       (user!==undefined && records !==undefined) ?
@@ -109,7 +112,7 @@ class User extends React.Component {
         <ArrivalsList
           open={openArrivalsList}
           close={this.closeArrivalsList}
-          record={recordArrivals}
+          record={record}
           arrivals={arrivals}
         />
       </React.Fragment>:<span></span>

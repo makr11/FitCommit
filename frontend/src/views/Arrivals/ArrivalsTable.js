@@ -39,7 +39,7 @@ function ArrivalsTable(props){
               <TableCell>{array.length-index}</TableCell>
               <TableCell>{arrival.user}</TableCell>
               <TableCell>{arrival.service + ' (' + arrival.category + ')'}</TableCell>
-              <TableCell>{arrival.arrival_time}</TableCell>
+              <TableCell>{new Date(arrival.arrival).toLocaleTimeString()}</TableCell>
               <TableCell>{(!arrival.paid)?<WarningIcon/>:<DoneIcon/>}</TableCell>
               <TableCell>
                 <IconButton name="arrival" id={arrival.id} onClick={handleDelete}>

@@ -193,19 +193,15 @@ class ListArrivals(generics.ListCreateAPIView):
 
     def create(self, request):
         now = timezone.now()
-        time = now.timetz()
         user = CustomUser.objects.get(pk=request.data['user'])
         record = Records.objects.get(pk=request.data['record'])
-        dt = datetime.datetime.strptime(request.data['date'], '%Y-%m-%d')
-        arrival = datetime.datetime.combine(dt, time)
         record.arrivals_left -= 1
         record.save()
         record.is_active()
         arrival = Arrivals(
             userObj=user,
             recordObj=record,
-            arrival=arrival,
-            arrival_time=str(time.hour + 1) + ":" + str(time.minute)
+            arrival=now
         )
         arrival.save()
         return Response()
@@ -215,7 +211,7 @@ class ListArrivalsByDate(generics.ListAPIView):
 
     def get_queryset(self):
         selected_date=self.kwargs['date']
-        return Arrivals.objects.filter(arrival__date=selected_date).order_by('-arrival_time')
+        return Arrivals.objects.filter(arrival__date=selected_date).order_by('-arrival')
 
 class ListArrivalsByRecord(generics.ListAPIView):
     serializer_class = ArrivalsSerializer

@@ -38,7 +38,7 @@ function AddRecord (props) {
     close,
     submit,
   } = props;
-  console.log("AddRecord")
+  
   return(
     <Dialog
         open={open}   
