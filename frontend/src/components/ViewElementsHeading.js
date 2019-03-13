@@ -25,7 +25,7 @@ function ViewElementsHeading(props){
   return(
     <Paper className={classes.headingContainer} style={style}>
       <Typography 
-      variant="h6" 
+      variant="subtitle1" 
       align="left" 
       color="inherit" 
       className={classes.heading}

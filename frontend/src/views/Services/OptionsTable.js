@@ -21,13 +21,26 @@ function OptionsTable(props){
   let data = [];
   options.forEach((option) => {
     data.push([
-      option.price,
-      option.arrivals,
-      option.duration,
-      <IconButton id={option.id} onClick={openMenu}
-      >
-        <MoreVertIcon />
-      </IconButton>  
+      {
+        'data': option.price,
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': option.arrivals,
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': option.duration,
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': <IconButton id={option.id} onClick={openMenu}><MoreVertIcon /></IconButton>,
+        'padding': 'checkbox',
+        'align': 'center'
+      }    
     ])
   })
 
@@ -35,10 +48,26 @@ function OptionsTable(props){
     <React.Fragment>
       <Table 
         tableHead={[
-          "Cijena",
-          "Broj dolazaka",
-          "Trajanje",
-          "Uredi",
+          {
+            'title': "Cijena",
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': "Broj dolazaka",
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': "Trajanje",
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': "Uredi",
+            'padding': 'checkbox',
+            'align': 'center'
+          },
         ]}
         tableData={data}
       />

@@ -5,52 +5,90 @@ import { withStyles } from '@material-ui/core';
 import { tableStyle } from './arrivalsStyle';
 // material ui core components
 import Paper from '@material-ui/core/Paper';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
 // material ui icons
 import DeleteIcon from '@material-ui/icons/Delete';
 import WarningIcon from '@material-ui/icons/Warning';
 import DoneIcon from '@material-ui/icons/Done';
+// app components
+import Table from '../../components/Table';
 
 function ArrivalsTable(props){
   const { classes, arrivals, handleDelete } = props;
-    
+  
+  let data = [];
+  arrivals.forEach((arrival, index, array) => {
+    data.push([
+      {
+        'data': array.length-index,
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': arrival.user,
+        'padding': 'dense',
+        'align': 'left'
+      },
+      {
+        'data': arrival.service + ' (' + arrival.category + ')',
+        'padding': 'dense',
+        'align': 'left'
+      },
+      {
+        'data': new Date(arrival.arrival).toLocaleTimeString(),
+        'padding': 'dense',
+        'align': 'center'
+      },
+      {
+        'data': (!arrival.paid)?<WarningIcon/>:<DoneIcon/>,
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': <IconButton name="arrival" id={arrival.id} onClick={handleDelete}><DeleteIcon/></IconButton>,
+        'padding': 'checkbox',
+        'align': 'center'
+      }
+    ])
+  });
+
   return(
     <Paper className={classes.tableWrapper}>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Br.</TableCell>
-            <TableCell>Korisnik</TableCell>
-            <TableCell>Usluga</TableCell>
-            <TableCell>Dolazak</TableCell>
-            <TableCell>Plaćeno</TableCell>
-            <TableCell>Obriši</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        {arrivals.map((arrival, index, array) => {
-          return(
-            <TableRow key={arrival.id}>
-              <TableCell>{array.length-index}</TableCell>
-              <TableCell>{arrival.user}</TableCell>
-              <TableCell>{arrival.service + ' (' + arrival.category + ')'}</TableCell>
-              <TableCell>{new Date(arrival.arrival).toLocaleTimeString()}</TableCell>
-              <TableCell>{(!arrival.paid)?<WarningIcon/>:<DoneIcon/>}</TableCell>
-              <TableCell>
-                <IconButton name="arrival" id={arrival.id} onClick={handleDelete}>
-                  <DeleteIcon/>
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-        </TableBody>
-      </Table>
+      <Table 
+        tableHead={[
+          {
+            'title': 'Br.',
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Korisnik',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Usluga',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Dolazak',
+            'padding': 'dense',
+            'align': 'center'
+          },
+          {
+            'title': 'Plaćeno',
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Obriši', 
+            'padding': 'checkbox',
+            'align': 'center'
+          }
+        ]}
+        tableData={data}
+      />
     </Paper>
   )
 }

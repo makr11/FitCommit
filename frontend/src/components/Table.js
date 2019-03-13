@@ -19,7 +19,7 @@ const style = () => ({
 });
 
 function CustomTable({ ...props }) {
-  const { classes, tableHead, tableData, padding } = props;
+  const { classes, tableHead, tableData } = props;
   return (
     <Paper className={classes.root}>
       <Table className={classes.table}>
@@ -30,9 +30,10 @@ function CustomTable({ ...props }) {
                 return (
                   <TableCell
                     key={key}
-                    padding={padding}
+                    padding={prop.padding}
+                    align={prop.align}
                   >
-                    {prop}
+                    {prop.title}
                   </TableCell>
                 );
               })}
@@ -44,10 +45,13 @@ function CustomTable({ ...props }) {
             return (
               <TableRow key={key}>
                 {prop.map((prop, key) => {
-                  const isObject=typeof prop==="object"
                   return (
-                    <TableCell key={key} padding={(isObject)?"checkbox": "dense"}>
-                      {prop}
+                    <TableCell 
+                    key={key} 
+                    padding={prop.padding}
+                    align={prop.align}
+                    >
+                      {prop.data}
                     </TableCell>
                   );
                 })}
@@ -59,9 +63,5 @@ function CustomTable({ ...props }) {
     </Paper>
   );
 }
-
-CustomTable.propTypes = {
-  tableHead: PropTypes.arrayOf(PropTypes.string),
-};
 
 export default withStyles(style)(CustomTable);

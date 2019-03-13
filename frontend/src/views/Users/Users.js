@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { requestUserProfile } from '../../store/actions/userProfileA';
 import { requestUserRecordsAll } from '../../store/actions/userRecordsA';
-import { submitUserForm } from '../../store/actions/usersA';
+import { submitUserForm, removeUser } from '../../store/actions/usersA';
 // app components
 import UsersLayout from './UsersLayout';
 import UserFormMain from './UserFormMain';
@@ -64,7 +64,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getUser: (id) => dispatch(requestUserProfile(id)),
     getRecords: (id) => dispatch(requestUserRecordsAll(id)),
-    submitUserForm: (lead) => dispatch(submitUserForm(lead))
+    submitUserForm: (lead) => dispatch(submitUserForm(lead)),
+    removeUser: (id) => dispatch(removeUser(id))
   }
 };
 

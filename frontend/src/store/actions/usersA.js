@@ -1,7 +1,6 @@
 import {
   GET_USERS_SUCCESS,
   GET_USERS_FAILED,
-  REMOVE_USER_SUCCESS,
 } from '../../constants/reduxConstants';
 
 import {
@@ -34,12 +33,11 @@ export const submitUserForm = (lead) => (dispatch) => {
 };
 
 export const removeUser = (id) => (dispatch, getState) => {
-  let deleted = true;
-  const lead = { id, deleted };
-  let state = getState();
+  const lead = { id };
+  // let state = getState();
 
   const conf = {
-    method: "PATCH",
+    method: "DELETE",
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -50,7 +48,7 @@ export const removeUser = (id) => (dispatch, getState) => {
   fetch(users + lead.id, conf)
   .then(response => {
     console.log(response);
-    dispatch({type: REMOVE_USER_SUCCESS, lead, state})
+    dispatch(requestUsers())
     }
   )
   .catch(error => console.log(error));

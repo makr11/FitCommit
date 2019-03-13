@@ -18,10 +18,26 @@ function ArrivalsList(props){
 	const data = []
 	arrivals.forEach((arrival, index, array) => {
 		data.push([
-			array.length-index,
-			arrival.service + ' (' + arrival.category + ')',
-			new Date(arrival.arrival).toLocaleDateString(),
-			new Date(arrival.arrival).toLocaleTimeString()
+			{
+				'data': array.length-index,
+				'padding': 'checkbox',
+				'align': 'center'
+			},
+			{
+				'data': arrival.service + ' (' + arrival.category + ')',
+				'padding': 'dense',
+				'align': 'left'
+			},
+			{
+				'data': new Date(arrival.arrival).toLocaleDateString(),
+				'padding': 'dense',
+				'align': 'left'
+			},
+			{
+				'data': new Date(arrival.arrival).toLocaleTimeString(),
+				'padding': 'dense',
+				'align': 'left'
+			},
 		]);
 	});
 
@@ -35,10 +51,26 @@ function ArrivalsList(props){
 				<Chip label={"Preostalo dana: " + record.days_left}/>
 				<Table
 					tableHead={[
-						"Br.",
-						"Usluga",
-						"Datum",
-						"Vrijeme"
+						{
+							'title': "Br.",
+							'padding': 'checkbox',
+							'align': 'center'
+						},
+						{
+							'title': "Usluga",
+							'padding': 'dense',
+							'align': 'left'
+						},
+						{
+							'title': "Datum",
+							'padding': 'dense',
+							'align': 'left'
+						},
+						{
+							'title': "Vrijeme",
+							'padding': 'dense',
+							'align': 'left'
+						},
 					]}
 					tableData={data}
 				/>

@@ -170,7 +170,7 @@ class Arrivals extends React.Component {
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={warning}
-          onClose={this.handleClose}
+          onClose={this.closeWarning}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}

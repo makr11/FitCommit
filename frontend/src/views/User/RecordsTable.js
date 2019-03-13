@@ -79,13 +79,41 @@ function RecordsTable(props){
   let notActive = [];
   records.forEach((record, index) => {
     let data = [
-      record.service + ' (' + record.category + ')',
-      record.started,
-      record.ends,
-      <Paid paid={record.paid} price={record.nett_price}/>,
-      <Freeze freeze_ended={record.freeze_ended}/>,
-      <ArrivalsList id={record.id} name={index} openArrivalsList={openArrivalsList}/>,
-      <Settings index={index} openRecordForm={openRecordForm}/>
+      {
+        'data': record.service + ' (' + record.category + ')',
+        'padding': 'dense',
+        'align': 'left'
+      },
+      {
+        'data': record.started,
+        'padding': 'dense',
+        'align': 'left'
+      },
+      {
+        'data': record.ends,
+        'padding': 'dense',
+        'align': 'left'
+      },
+      {
+        'data': <Paid paid={record.paid} price={record.nett_price}/>,
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': <Freeze freeze_ended={record.freeze_ended}/>,
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': <ArrivalsList id={record.id} name={index} openArrivalsList={openArrivalsList}/>, 
+        'padding': 'checkbox',
+        'align': 'center'
+      },
+      {
+        'data': <Settings index={index} openRecordForm={openRecordForm}/>,
+        'padding': 'checkbox',
+        'align': 'center'
+      }
     ]
     if(record.active){
       active.push(data)
@@ -102,13 +130,41 @@ function RecordsTable(props){
       />
       <Table
         tableHead={[
-          'Usluga', 
-          'Započelo',
-          'Ističe',
-          'Plaćeno',
-          'Zamrznuto',
-          'Dolasci', 
-          'Izmijeni'
+          {
+            'title': 'Usluga',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Započelo',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Ističe',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Plaćeno',
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Zamrznuto',
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Dolasci', 
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Izmijeni',
+            'padding': 'checkbox',
+            'align': 'center'
+          }
         ]}
         tableData={active}
       />
@@ -117,13 +173,41 @@ function RecordsTable(props){
       />
       <Table
         tableHead={[
-          'Usluga', 
-          'Započelo',
-          'Ističe',
-          'Plaćeno',
-          'Zamrznuto',
-          'Dolasci', 
-          'Izmijeni'
+          {
+            'title': 'Usluga',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Započelo',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Ističe',
+            'padding': 'dense',
+            'align': 'left'
+          },
+          {
+            'title': 'Plaćeno',
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Zamrznuto',
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Dolasci', 
+            'padding': 'checkbox',
+            'align': 'center'
+          },
+          {
+            'title': 'Izmijeni',
+            'padding': 'checkbox',
+            'align': 'center'
+          }
         ]}
         tableData={notActive}
       />

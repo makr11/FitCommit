@@ -13,62 +13,64 @@ import TextField from '@material-ui/core/TextField';
 function AddUserForm(props){
   const { 
     classes, 
-    first_name, 
-    last_name,
-    username, 
-    password, 
-    email, 
     handleInput,
     submit,
     open,
     close 
   } = props;
+
   return(
     <Dialog
       open={open}
     >
       <DialogContent>
         <TextField
+          error={props.addUserFormError.first_name}
           name="first_name"
           label="Ime"
-          value={first_name}
+          value={props.addUserForm.first_name}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
+          error={props.addUserFormError.last_name}
           name="last_name"
           label="Prezime"
-          value={last_name}
+          value={props.addUserForm.last_name}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
+          error={props.addUserFormError.username}
           name="username"
           label="Korisničko ime"
-          value={username}
+          value={props.addUserForm.username}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
+          error={props.addUserFormError.password}
           name="password"
           label="Lozinka"
           type="password"
-          input={password}
+          input={props.addUserForm.password}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
+          error={props.addUserFormError.email}
           name="email"
           label="E-mail"
           type="email"
-          input={email}
+          input={props.addUserForm.email}
           onChange={handleInput}
           className={classes.emailField}
           margin="normal"
+          helperText={props.addUserFormErrorText.email}
         />
       </DialogContent>
       <DialogActions>
