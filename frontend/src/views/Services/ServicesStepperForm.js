@@ -28,7 +28,7 @@ function ServicesStepperForm(props){
     handleNext, 
     handleBack,
     submit,
-    close 
+    close
   } = props
   
   return (

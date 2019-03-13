@@ -1,4 +1,8 @@
 import React from 'react';
+// material ui components
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 // app components
 import EditRecord from './EditRecord';
 import AddRecord from './AddRecord';
@@ -26,7 +30,17 @@ class RecordsFormMain extends React.PureComponent{
         nett_price: '',
         paid: false,
       },
-      editRecord: {}
+      addRecordError: {
+        service: false,
+        category: false,
+        option: false,
+        price: false,
+        discount: false,
+        nett_price: false,
+      },
+      editRecord: {},
+      warning: false,
+      message: "",
     };
   };
   
@@ -210,8 +224,49 @@ class RecordsFormMain extends React.PureComponent{
     }
   };
 
-  submitRecord = (e) => {
-    e.preventDefault();
+  checkSubmit = (e) => {
+    e.preventDefault()
+    let addRecord = this.state.addRecord;
+    let service = (isEmpty(addRecord.service));
+    let category = (isEmpty(addRecord.category));
+    let option = (isEmpty(addRecord.option));
+    let price = (addRecord.price === "")?true:false;
+    let discount = (addRecord.discount === "")?true:false;
+    let nett_price = (addRecord.nett_price === "")?true:false;
+    let snackbar = false;
+    let snackbar_message = "";
+
+    let arr = [service, category, option, price, discount, nett_price]
+
+    for(let index in arr){
+      if(arr[index] === true){
+        snackbar = true;
+        snackbar_message = "Potrebno je popuniti sva polja";
+        break
+      }
+    };
+
+    if(snackbar){
+      this.setState({
+        ...this.state,
+        addRecordError: {
+          service: service,
+          category: category,
+          option: option,
+          price: price,
+          discount: discount,
+          nett_price: nett_price
+        },
+        warning: snackbar,
+        message: snackbar_message
+      })
+      return undefined
+    }else{
+      this.submitRecord()
+    }
+  }
+
+  submitRecord = () => {
     const { user } = this.props;
     const { price, discount, nett_price, paid } = this.state.addRecord;
     
@@ -223,6 +278,30 @@ class RecordsFormMain extends React.PureComponent{
     
     this.props.submitRecord(lead);
     this.props.closeRecordForm();
+    this.setState({
+      addRecord: {
+        service: {},
+        categories: [],
+        category: {},
+        options:[],
+        option: {},
+        price: '',
+        discount: '',
+        nett_price: '',
+        paid: false,
+      },
+      addRecordError: {
+        service: false,
+        category: false,
+        option: false,
+        price: false,
+        discount: false,
+        nett_price: false,
+      },
+      editRecord: {},
+      warning: false,
+      message: "",
+    })
   }
 
   editRecord = (e) => {
@@ -253,7 +332,15 @@ class RecordsFormMain extends React.PureComponent{
     
     this.props.updateRecord(record.id, lead);
     this.props.closeRecordForm();
-  }
+  };
+
+  closeWarning = () => {
+    this.setState({
+      ...this.state,
+      warning: false,
+      message: ""
+    })
+  };
 
   render(){
     const { 
@@ -262,6 +349,10 @@ class RecordsFormMain extends React.PureComponent{
       services, 
       closeRecordForm, 
     } = this.props;
+    const {
+      warning,
+      message
+    } = this.state;
     
     return(
       <React.Fragment>
@@ -271,8 +362,9 @@ class RecordsFormMain extends React.PureComponent{
           services={services}
           handleInput={this.handleAddRecordInput}
           handleSelectService={this.handleSelectService}
-          submit={this.submitRecord}
+          submit={this.checkSubmit}
           {...this.state.addRecord}
+          addRecordError={this.state.addRecordError}
         />        
         <EditRecord
           open={openEditRecordForm}
@@ -282,6 +374,25 @@ class RecordsFormMain extends React.PureComponent{
           submit={this.editRecord}
           {...this.state.editRecord}
         /> 
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          open={warning}
+          onClose={this.closeWarning}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{message}</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.closeWarning}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </React.Fragment>
     )
   }

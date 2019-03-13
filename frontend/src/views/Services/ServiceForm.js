@@ -10,7 +10,7 @@ const servicesForm = {
 }
 
 export function ServiceForm({...props}){
-  const { service, handleInput } = props;
+  const { service, handleInput, error } = props;
   return(
     <TextField
       label="Usluga"
@@ -18,12 +18,13 @@ export function ServiceForm({...props}){
       value={service}
       onChange={handleInput}
       style={servicesForm.textField}
+      error={error}
     />
   )
 };
 
 export function CategoryForm({...props}){
-  const { category, handleInput } = props;
+  const { category, handleInput, error } = props;
   return(
     <TextField
       label="Kategorija"
@@ -31,12 +32,19 @@ export function CategoryForm({...props}){
       value={category}
       onChange={handleInput}
       style={servicesForm.textField}
+      error={error}
     />
   )
 }
 
 export function OptionForm({ ...props }) {
-  const { price, arrivals, duration, handleInput } = props;
+  const { 
+    price, 
+    arrivals, 
+    duration, 
+    handleInput, 
+    formError 
+  } = props;
   return (
     <React.Fragment>
       <TextField
@@ -46,6 +54,7 @@ export function OptionForm({ ...props }) {
         value={price}
         onChange={handleInput}
         style={servicesForm.textField}
+        error={formError.price}
       />
       <TextField
         label="Dolasci"
@@ -54,6 +63,7 @@ export function OptionForm({ ...props }) {
         value={arrivals}
         onChange={handleInput}
         style={servicesForm.textField}
+        error={formError.arrivals}
       />
       <TextField
         label="Trajanje"
@@ -62,6 +72,7 @@ export function OptionForm({ ...props }) {
         value={duration}
         onChange={handleInput}
         style={servicesForm.textField}
+        error={formError.duration}
       />
     </React.Fragment>
   )

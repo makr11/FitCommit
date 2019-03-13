@@ -50,6 +50,7 @@ class AddUserFormMain extends React.Component {
   checkSubmit = (e) => {
     e.preventDefault()
     const addUserForm = this.state.addUserForm;
+
     let first_name = (addUserForm.first_name==="")?true:false;
     let last_name = (addUserForm.last_name==="")?true:false;
     let username = (addUserForm.username==="")?true:false;
@@ -136,6 +137,7 @@ class AddUserFormMain extends React.Component {
 
   closeWarning = () => {
     this.setState({
+      ...this.state,
       warning: false,
       message: ""
     })
@@ -163,7 +165,7 @@ class AddUserFormMain extends React.Component {
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={warning}
-          onClose={this.handleClose}
+          onClose={this.closeWarning}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}

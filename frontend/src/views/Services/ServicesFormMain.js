@@ -61,8 +61,15 @@ class ServicesFormMain extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      activeStep: props.setStep,
       form: formState(props.update, props.name),
+      formError: {
+        service: false,
+        category: false,
+        duration: false,
+        arrivals: false,
+        price: false,
+      },
+      activeStep: props.setStep,
       warning: false,
       message: "",
     }
@@ -74,7 +81,7 @@ class ServicesFormMain extends React.Component {
       category, 
       duration, 
       arrivals, 
-      price 
+      price,
     } = this.state.form;
   
     switch (stepIndex) {
@@ -83,6 +90,7 @@ class ServicesFormMain extends React.Component {
           <ServiceForm
             service={service}
             handleInput={this.handleFormInput}
+            error={this.state.formError.service}
           />
         );
       case 1:
@@ -90,6 +98,7 @@ class ServicesFormMain extends React.Component {
           <CategoryForm
             category={category}
             handleInput={this.handleFormInput}
+            error={this.state.formError.category}
           />
         );
       case 2:
@@ -99,6 +108,7 @@ class ServicesFormMain extends React.Component {
             arrivals={arrivals}
             price={price}
             handleInput={this.handleFormInput}
+            formError={this.state.formError}
           />
         );
       default:
@@ -128,18 +138,41 @@ class ServicesFormMain extends React.Component {
   };
 
   checkSubmit = (e) => {
-    e.preventDefault()
-    const form = this.state.form
+    e.preventDefault();
+    const form = this.state.form;
+
+    let service = (form.service==="")?true:false;
+    let category = (form.category==="")?true:false;
+    let duration = (form.duration==="")?true:false;
+    let arrivals = (form.arrivals==="")?true:false;
+    let price = (form.price==="")?true:false;
+    let snackbar = false;
+    let snackbar_message = "";
+
     for(let data in form){
       if(form[data]===""){
-        this.setState({
-          warning: true,
-          message: "Potrebno je popuniti sva polja"
-        })
-        return undefined
+        snackbar = true;
+        snackbar_message = "Potrebno je popuniti sva polja";
+        break
       }
-    }
-    this.submit(e)
+    };
+
+    if(snackbar){
+      this.setState({
+        ...this.state,
+        formError: {
+          service: service,
+          category: category,
+          duration: duration,
+          arrivals: arrivals,
+          price: price
+        },
+        warning: snackbar,
+        message: snackbar_message
+      })
+    }else{
+      this.submit(e)
+    };
   }
 
   submit = (e) => {
@@ -157,6 +190,7 @@ class ServicesFormMain extends React.Component {
 
   closeWarning = () => {
     this.setState({
+      ...this.state,
       warning: false,
       message: ""
     })
@@ -191,7 +225,7 @@ class ServicesFormMain extends React.Component {
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={warning}
-          onClose={this.handleClose}
+          onClose={this.closeWarning}
           ContentProps={{
             'aria-describedby': 'message-id',
           }}

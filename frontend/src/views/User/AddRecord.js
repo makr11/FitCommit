@@ -37,6 +37,7 @@ function AddRecord (props) {
     open, 
     close,
     submit,
+    addRecordError
   } = props;
   
   return(
@@ -47,64 +48,70 @@ function AddRecord (props) {
         <Grid container spacing={24}>
           <Grid item xs>
             <Paper className={classes.paper}>
-              <FormLabel>Usluga</FormLabel>
-              <RadioGroup
-                name="service"
-                value={service.service}
-                onChange={handleSelectService}
-              >
-              {services.map(service => {
-                return(
-                  <FormControlLabel
-                  key={service.id}
+              <FormControl error={addRecordError.service}>
+                <FormLabel>Usluga</FormLabel>
+                <RadioGroup
+                  name="service"
                   value={service.service}
-                  control={<Radio />}
-                  label={service.service} />
-                )
-              })}
-              </RadioGroup>
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper className={classes.paper}>
-            <FormLabel>Kategorija</FormLabel>
-              <RadioGroup
-                name="category"
-                value={category.category}
-                onChange={handleSelectService}
-              >
-              {categories.map(category => {
-                return(
-                  <FormControlLabel
-                  key={category.id}
-                  value={category.category}
-                  control={<Radio />}
-                  label={category.category} />
-                )
-              })}
-              </RadioGroup>
-            </Paper>
-          </Grid>
-          <Grid item xs>
-            <Paper className={classes.paper}>
-              <FormLabel>Cijena</FormLabel>
-              <RadioGroup
-                name="option"
-                aria-label="option"
-                value={(option.id)?option.id.toString():""}
-                onChange={handleSelectService}
-              >
-              {options.map(option => {
-                return(
-                  <FormControlLabel
-                    key={option.id}
-                    value={option.id.toString()}
+                  onChange={handleSelectService}
+                >
+                {services.map(service => {
+                  return(
+                    <FormControlLabel
+                    key={service.id}
+                    value={service.service}
                     control={<Radio />}
-                    label={option.price + " kn (" + option.arrivals + " dolazaka/" + option.duration + " dana)"}
-                  />
-                )
-              })}
-              </RadioGroup>
+                    label={service.service} />
+                  )
+                })}
+                </RadioGroup>
+              </FormControl>
+            </Paper>
+          </Grid>
+          <Grid item xs>
+            <Paper className={classes.paper}>
+            <FormControl error={addRecordError.category}>
+              <FormLabel>Kategorija</FormLabel>
+                <RadioGroup
+                  name="category"
+                  value={category.category}
+                  onChange={handleSelectService}
+                >
+                {categories.map(category => {
+                  return(
+                    <FormControlLabel
+                    key={category.id}
+                    value={category.category}
+                    control={<Radio />}
+                    label={category.category} />
+                  )
+                })}
+                </RadioGroup>
+              </FormControl>
+            </Paper>
+          </Grid>
+          <Grid item xs>
+            <Paper className={classes.paper}>
+              <FormControl error={addRecordError.option}>
+                <FormLabel>Cijena</FormLabel>
+                <RadioGroup
+                  name="option"
+                  aria-label="option"
+                  value={(option.id)?option.id.toString():""}
+                  onChange={handleSelectService}
+                >
+                {options.map(option => {
+                  return(
+                    <FormControlLabel
+                      key={option.id}
+                      value={option.id.toString()}
+                      control={<Radio />}
+                      label={option.price + " kn (" + option.arrivals + " dolazaka/" + option.duration + " dana)"}
+                    />
+                  )
+                })}
+                </RadioGroup>
+              </FormControl>
             </Paper>
           </Grid>
           
@@ -112,6 +119,7 @@ function AddRecord (props) {
             <Grid container spacing={8}>
               <Grid item xs>
                 <TextField
+                  error={addRecordError.price}
                   label="Cijena"
                   name="price"
                   className={classes.textField}
@@ -128,6 +136,7 @@ function AddRecord (props) {
               </Grid>
               <Grid item xs>
                 <TextField
+                  error={addRecordError.discount}
                   label="Popust"
                   name="discount"
                   className={classes.textField}
@@ -145,6 +154,7 @@ function AddRecord (props) {
               </Grid>
               <Grid item xs>
                 <TextField
+                  error={addRecordError.nett_price}
                   label="Cijena sa %"
                   id="nett_price"
                   className={classes.textField}
