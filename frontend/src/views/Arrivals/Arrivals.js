@@ -77,15 +77,6 @@ class Arrivals extends React.Component {
     })
   };
 
-  handleDelete = (e) => {
-    this.setState({
-      selectedUser: {},
-      selectedRecord: {},
-      recordsOpt: [],
-    })
-    this.props.deleteArrival(e);
-  };
-
   setDate = (e) => {
     const date = e.currentTarget.value;
     this.setState({
@@ -100,7 +91,21 @@ class Arrivals extends React.Component {
     const selectedRecord = this.state.selectedRecord;
     const arrivals = this.props.arrivals;
 
-    if(!isEmpty(selectedUser) && !isEmpty(selectedRecord)){
+    if(isEmpty(selectedUser)){
+      this.setState({
+        ...this.state,
+        warning: true,
+        message: "Izaberite člana i dostupnu uslugu",
+      })
+      return undefined
+    }else if(isEmpty(selectedRecord)){
+      this.setState({
+        ...this.state,
+        warning: true,
+        message: "Izaberite dostupnu uslugu",
+      })
+      return undefined
+    }else if(!isEmpty(selectedUser) && !isEmpty(selectedRecord)){
       for(let index in arrivals){
         if(arrivals[index].userObj===selectedUser.value.id){
           this.setState({
@@ -109,9 +114,9 @@ class Arrivals extends React.Component {
             message: arrivals[index].user + " je već upisan/a",
           })
         }
-      }
+      };
       this.submitForm(e);
-    }
+    };
   } 
 
   submitForm = (e) => {
@@ -131,6 +136,21 @@ class Arrivals extends React.Component {
   
     })
   };
+
+  deleteArrival = (id) => {
+    this.setState({
+      selectedUser: {},
+      selectedRecord: {},
+      recordsOpt: [],
+    })
+    let counter = 1;
+    let req = false;
+    for(let i in id){
+      req = (counter===id.length)?true:false; 
+      counter += 1;
+      this.props.deleteArrival(id[i], this.state.selectedDate, req);
+    }
+  }
 
   closeWarning = () => {
     this.setState({
@@ -164,7 +184,7 @@ class Arrivals extends React.Component {
         <Grid item xs={12}>
           <ArrivalsTable
             arrivals={arrivals}
-            handleDelete={this.handleDelete}
+            handleDelete={this.deleteArrival}
           />
         </Grid>
         <Snackbar
@@ -203,7 +223,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     requestUserRecordsActive: (id) => dispatch(requestUserRecordsActive(id)),
     requestArrivalsByDate: (date) => dispatch(requestArrivalsByDate(date)),
-    deleteArrival: (e) => dispatch(deleteArrival(e.currentTarget.id)),
+    deleteArrival: (id, date, req) => dispatch(deleteArrival(id, date, req)),
     submitFormArrival: (lead) => dispatch(submitFormArrival(lead)),
   }
 };

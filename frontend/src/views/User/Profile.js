@@ -13,7 +13,17 @@ const styles = {
   paper: {
     textAlign: "center"
   }
-}
+};
+
+const div = {
+  padding: "10px 20px 10px 20px",
+};
+
+const divWNum = {
+  display: "flex",
+  padding: "10px 20px 10px 20px",
+  justifyContent: "space-between"
+};
 
 function Profile(props){
   const { classes, user, records } = props;
@@ -25,31 +35,88 @@ function Profile(props){
         style={{marginTop: "0px"}}
         />
         <Paper className={classes.paper}>
-          <Typography variant="body1">
-            Datum rođenja:
-            <br/>11.09.1989
-          </Typography>
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              Broj iskaznice:
+            </Typography>
+            <Typography variant="body1">
+              {user.IDUser}
+            </Typography> 
+          </div>
           <Divider/>
-          <Typography variant="body1">
-            Član od:
-            <br/>25.12.2018
-          </Typography>         
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              Datum rođenja:
+            </Typography>
+            <Typography variant="body1">
+              {user.birth_date}
+            </Typography> 
+          </div>
           <Divider/>
-          <Typography variant="body1">
-            Mobitel:
-            <br/>0915322520
-          </Typography>
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              Datum upisa:
+            </Typography>
+            <Typography variant="body1">
+              {user.date_joined}
+            </Typography> 
+          </div>   
+        </Paper> 
+
+        <ViewElementsHeading
+          title="Kontakt"
+        />
+        <Paper className={classes.paper}>
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              Broj telefona:
+            </Typography>
+            <Typography variant="body1">
+              {user.fix_phone}
+            </Typography> 
+          </div>
           <Divider/>
-          <Typography variant="body1">
-            E-mail:
-            <br/>{user.email}
-          </Typography>
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              Broj mobitela:
+            </Typography>
+            <Typography variant="body1">
+              {user.phone}
+            </Typography> 
+          </div>
           <Divider/>
-          <Typography variant="body1">
-            Br. usluga:
-            <br/>{records}
-          </Typography>
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              E-mail:
+            </Typography>
+            <Typography variant="body1">
+              {user.email}
+            </Typography> 
+          </div>
         </Paper>
+
+        <ViewElementsHeading
+          title="Usluge"
+        />
+        <Paper className={classes.paper}>
+          <div style={divWNum}>
+            <Typography variant="body2" align="left">
+              Ukupni dug:
+            </Typography>
+            <Typography variant="body1" align="right">
+              {user.debt} kn
+            </Typography>
+          </div>
+          <Divider/>
+          <div style={divWNum}>
+            <Typography variant="body2" align="left">
+              Broj kupljenih usluga:
+            </Typography>
+            <Typography variant="body1" align="right">
+              {records}
+            </Typography>
+          </div>
+        </Paper>  
       </Grid>
     </React.Fragment>
   )

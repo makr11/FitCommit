@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 // material ui core
 import { withStyles } from '@material-ui/core'; 
 // material ui core components
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 // material ui icons
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -15,7 +14,8 @@ const styles = () => ({
   root: {
     display: 'flex',
     alignItems: "center",
-    height: "60px"
+    height: "45px",
+    justifyContent: "space-between"
   },
   editor: {
     display: "inline-block"
@@ -50,13 +50,13 @@ class Editor extends React.PureComponent{
             name, 
             id, 
             update } = this.props;
-    const { hidden } = this.state;
+    /*const { hidden } = this.state;*/
     
     return(
-      <div className={classes.root} onMouseEnter={this.hoverIn} onMouseLeave={this.hoverOut}>
+      <div className={classes.root} /*onMouseEnter={this.hoverIn} onMouseLeave={this.hoverOut}*/>
         {children}
-        {!hidden?    
-        <Toolbar className={classes.element}>
+        {/*{!hidden?*/}
+        <div style={{marginRight: "0px"}}>
           <IconButton name={name} id={id} onClick={open}>
             <AddIcon style={{ fontSize: 20 }}/>
           </IconButton>
@@ -66,8 +66,8 @@ class Editor extends React.PureComponent{
           <IconButton name={name} id={id} onClick={del}>
             <DeleteIcon style={{ fontSize: 20 }}/>
           </IconButton>
-        </Toolbar>
-        :undefined}
+        </div>
+        {/*}:undefined}*/}
       </div>
     )
   }

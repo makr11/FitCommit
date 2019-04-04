@@ -6,6 +6,7 @@ import ServicesStepperForm from './ServicesStepperForm';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { emptyFields } from '../../assets/js/formDataValidation';
 
 
 const formState = (update, name) => {
@@ -139,36 +140,18 @@ class ServicesFormMain extends React.Component {
 
   checkSubmit = (e) => {
     e.preventDefault();
-    const form = this.state.form;
+    
+    let snackbar_message = "Potrebno je popuniti sva polja";
+    let validate = emptyFields(this.state.form)
 
-    let service = (form.service==="")?true:false;
-    let category = (form.category==="")?true:false;
-    let duration = (form.duration==="")?true:false;
-    let arrivals = (form.arrivals==="")?true:false;
-    let price = (form.price==="")?true:false;
-    let snackbar = false;
-    let snackbar_message = "";
-
-    for(let data in form){
-      if(form[data]===""){
-        snackbar = true;
-        snackbar_message = "Potrebno je popuniti sva polja";
-        break
-      }
-    };
-
-    if(snackbar){
+    if(validate['hasEmptyFields']){
       this.setState({
         ...this.state,
         formError: {
-          service: service,
-          category: category,
-          duration: duration,
-          arrivals: arrivals,
-          price: price
+          ...validate['objEmptyFields']
         },
-        warning: snackbar,
-        message: snackbar_message
+        warning: validate['hasEmptyFields'],
+        message: (validate['hasEmptyFields'])?snackbar_message:""
       })
     }else{
       this.submit(e)

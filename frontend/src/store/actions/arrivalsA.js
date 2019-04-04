@@ -5,7 +5,7 @@ import {
 	GET_ARRIVALS_BY_RECORD_SUCCESS,
 	GET_ARRIVALS_BY_RECORD_FAILED,
 	CLEAR_ARRIVALS_BY_RECORD,
-	DELETE_ARRIVAL_SUCCESS,
+	// DELETE_ARRIVAL_SUCCESS,
 } from '../../constants/reduxConstants';
 
 import {
@@ -58,9 +58,9 @@ export const submitFormArrival = (lead) => (dispatch) => {
 	});
 };
 
-export const deleteArrival = (id) => (dispatch, getState) => {
-  let state = getState();
-
+export const deleteArrival = (id, date, req) => (dispatch/*, getState*/) => {
+  // let state = getState();
+  
   const conf = {
     method: "DELETE",
     headers: {
@@ -71,8 +71,11 @@ export const deleteArrival = (id) => (dispatch, getState) => {
 
   fetch(arrival + id, conf)
   .then(response => {
-    console.log(response);
-    dispatch({type: DELETE_ARRIVAL_SUCCESS, id, state})
+	console.log(response);
+	if(req){
+		dispatch(requestArrivalsByDate(date))
+	}
+    // dispatch({type: DELETE_ARRIVAL_SUCCESS, id, state})
     }
   )
   .catch(error => console.log(error));

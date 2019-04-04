@@ -78,6 +78,7 @@ class RecordsSerializer(drf_serializers.ModelSerializer):
 
 class UserSerializer(drf_serializers.ModelSerializer):
     debt = drf_serializers.SerializerMethodField()
+    date_joined = drf_serializers.DateTimeField(format="%d.%m.%Y", required=False)
 
     def get_debt(self, obj):
         qs = Records.objects.filter(userObj=obj.id, paid=False)

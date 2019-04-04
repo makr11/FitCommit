@@ -5,26 +5,36 @@ import CloseIcon from '@material-ui/icons/Close';
 // app components
 import AddUserForm from './AddUserForm';
 import { EMAIL } from '../../assets/regex';
+import { emptyFields } from '../../assets/js/formDataValidation';
+import { isEmpty } from '../../assets/js/functions';
 
-class AddUserFormMain extends React.Component {
+class UserFormMain extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      addUserForm: {
-        first_name: '',
-        last_name: '',
-        username: '',
-        password: '',
-        email: '',
-      },
-      addUserFormError: {
+      userForm: 
+        (this.props.user)?{
+          first_name: this.props.user.first_name,
+          last_name: this.props.user.last_name,
+          username: this.props.user.username,
+          password: this.props.user.password,
+          email: this.props.user.email
+        }:{
+          first_name: '',
+          last_name: '',
+          username: '',
+          password: '',
+          email: '',
+        }
+      ,
+      userFormError: {
         first_name: false,
         last_name: false,
         username: false,
         password: false,
         email: false,
       },
-      addUserFormErrorText: {
+      userFormErrorText: {
         first_name: "",
         last_name: "",
         username: "",
@@ -34,14 +44,30 @@ class AddUserFormMain extends React.Component {
       warning: false,
       message: "",
     }
-  }
+  };
 
-  handleInput = (e) => {
+  componentDidUpdate(prevProps){
+    if(isEmpty(prevProps.user)&&!isEmpty(this.props.user)){
+      const { user } = this.props;
+      this.setState({
+        ...this.state,
+        userForm: {
+          first_name: user.first_name,
+          last_name: user.last_name,
+          username: user.username,
+          password: user.password,
+          email: user.email
+        }, 
+      });
+    }
+  };
+  
+  handleUserInput = (e) => {
     e.preventDefault()
     this.setState({
       ...this.state,
-      addUserForm: {
-        ...this.state.addUserForm,
+      userForm: {
+        ...this.state.userForm,
         [e.target.name]: e.target.value,
       },
     });
@@ -49,51 +75,33 @@ class AddUserFormMain extends React.Component {
 
   checkSubmit = (e) => {
     e.preventDefault()
-    const addUserForm = this.state.addUserForm;
+    
+    let snackbar_message = "Potrebno je popuniti sva polja";
+    let emailErrorText = "Neispravna e-mail adresa";
+    let validate = emptyFields(this.state.userForm);
 
-    let first_name = (addUserForm.first_name==="")?true:false;
-    let last_name = (addUserForm.last_name==="")?true:false;
-    let username = (addUserForm.username==="")?true:false;
-    let password = (addUserForm.password==="")?true:false;
-    let email = (addUserForm.email==="")?true:false;
-    let snackbar = false;
-    let snackbar_message = "";
-    let emailErrorText = "";
-
-    if(!email){
-      let rm = addUserForm.email.match(EMAIL)
-      if(rm === null || rm.length>1 || addUserForm.email.length>rm[0].length){
-        email = true;
-        emailErrorText = "Neispravna e-mail adresa";
+    if(!validate['objEmptyFields']['email']){
+      let rm = this.state.userForm.email.match(EMAIL)
+      if(rm === null || rm.length>1 || this.state.userForm.email.length>rm[0].length){
+        validate['objEmptyFields']['email'] = true;
       }
     }; 
     
-    for(let key in addUserForm){
-      if(addUserForm[key] === ""){
-        snackbar = true
-        snackbar_message = "Potrebno je popuniti sva polja"
-        break
-      };
-    }
-    if(snackbar || email){
+    if(validate['hasEmptyFields'] || validate['objEmptyFields']['email']){
       this.setState({
         ...this.state,
-        addUserFormError: {
-          first_name: first_name,
-          last_name: last_name,
-          username: username,
-          password: password,
-          email: email,
+        userFormError: {
+          ...validate['objEmptyFields']
         },
-        addUserFormErrorText: {
+        userFormErrorText: {
           first_name: "",
           last_name: "",
           username: "",
           password: "",
-          email: emailErrorText,
+          email: (validate['objEmptyFields']['email'])?emailErrorText:""
         },
-        warning: snackbar,
-        message: snackbar_message
+        warning: validate['hasEmptyFields'],
+        message: (validate['hasEmptyFields'])?snackbar_message:""
       });
     }else{
       this.submit()
@@ -101,28 +109,40 @@ class AddUserFormMain extends React.Component {
   };
 
   submit = () => {
-    const lead = { ...this.state.addUserForm };
-    this.props.submitUserForm(lead);
+    const lead = { ...this.state.userForm };
+    if(this.props.user!==undefined){
+      this.props.editUserForm(lead, this.props.user.id)
+    }else{
+      this.props.submitUserForm(lead);
+    }
     this.props.closeUserForm();
   };
 
   closeUserForm = () => {
     this.setState({
-      addUserForm: {
-        first_name: '',
-        last_name: '',
-        username: '',
-        password: '',
-        email: '',
-      },
-      addUserFormError: {
+      userForm: 
+        (this.props.user)?{
+          first_name: this.props.user.first_name,
+          last_name: this.props.user.last_name,
+          username: this.props.user.username,
+          password: this.props.user.password,
+          email: this.props.user.email
+        }:{
+          first_name: '',
+          last_name: '',
+          username: '',
+          password: '',
+          email: '',
+        }
+      ,
+      userFormError: {
         first_name: false,
         last_name: false,
         username: false,
         password: false,
         email: false,
       },
-      addUserFormErrorText: {
+      userFormErrorText: {
         first_name: "",
         last_name: "",
         username: "",
@@ -145,23 +165,25 @@ class AddUserFormMain extends React.Component {
 
   render() {
     const { 
-      open
+      openAddUser,
+      openEditUser
     } = this.props;
     const { 
       warning,
       message
     } = this.state;
+    
     return (
       <React.Fragment>
         <AddUserForm
-          addUserForm={this.state.addUserForm}
-          addUserFormError={this.state.addUserFormError}
-          addUserFormErrorText={this.state.addUserFormErrorText}
-          open={open}
-          handleInput={this.handleInput}
+          userForm={this.state.userForm}
+          userFormError={this.state.userFormError}
+          userFormErrorText={this.state.userFormErrorText}
+          open={(openAddUser!==undefined)?openAddUser:(openEditUser!==undefined)?openEditUser:false}
+          handleInput={this.handleUserInput}
           submit={this.checkSubmit}
           close={this.closeUserForm}
-        />  
+        />
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={warning}
@@ -186,4 +208,4 @@ class AddUserFormMain extends React.Component {
   }
 }
 
-export default AddUserFormMain;
+export default UserFormMain;

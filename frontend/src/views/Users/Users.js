@@ -31,21 +31,31 @@ class MembersRegistry extends React.Component {
     this.props.getRecords(id);
   }
 
+  removeUser = (id) => {
+    let counter = 1;
+    let req = false;
+    for(let i in id){
+      req = (counter===id.length)?true:false;
+      counter += 1
+      this.props.removeUser(id[i], req)
+    }
+  }
+
   render(){
 
-    const { users, removeUser, submitUserForm } = this.props;
+    const { users, submitUserForm } = this.props;
     const { open } = this.state;
 
     return (
       <React.Fragment>
         <UsersLayout
           users={users}
-          removeUser={removeUser}
+          removeUser={this.removeUser}
           openUserForm={this.openUserForm}
           selectUser={this.selectUser}
         />
         <UserFormMain
-          open={open}
+          openAddUser={open}
           closeUserForm={this.closeUserForm}
           submitUserForm={submitUserForm}
         />
@@ -65,7 +75,7 @@ const mapDispatchToProps = (dispatch) => {
     getUser: (id) => dispatch(requestUserProfile(id)),
     getRecords: (id) => dispatch(requestUserRecordsAll(id)),
     submitUserForm: (lead) => dispatch(submitUserForm(lead)),
-    removeUser: (id) => dispatch(removeUser(id))
+    removeUser: (id, req) => dispatch(removeUser(id, req))
   }
 };
 

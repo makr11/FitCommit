@@ -10,7 +10,7 @@ import {
   CLEAR_USER_RECORDS,
 } from '../../constants/reduxConstants';
 
-import { requestUsers } from './usersA';
+import { requestUserProfile } from './userProfileA';
 
 import {
   records,
@@ -87,7 +87,7 @@ export const updateFormRecord = (id, lead) => (dispatch, getState) => {
       type: PATCH_RECORD_SUCCESS
     })
     dispatch(requestUserRecordsAll(state.userProfileReducer.profile.id));
-    dispatch(requestUsers())
+    dispatch(requestUserProfile(state.userProfileReducer.profile.id))
   })
   .catch(error => {
     console.log(error);

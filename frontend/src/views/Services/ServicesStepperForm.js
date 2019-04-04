@@ -34,6 +34,7 @@ function ServicesStepperForm(props){
   return (
     <Dialog
       open={open}
+      onClose={close}
       fullWidth={true}
     >
       <DialogContent>

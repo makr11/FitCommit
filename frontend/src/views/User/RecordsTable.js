@@ -14,6 +14,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import FreezeIcon from '@material-ui/icons/AcUnit';
 // app components
 import Table from '../../components/Table';
+import SimpleTable from '../../components/SimpleTable';
 import ViewElementsHeading from '../../components/ViewElementsHeading';
 // helper functions
 import { dateFormatView } from '../../assets/js/functions';
@@ -128,7 +129,7 @@ function RecordsTable(props){
       title="Aktivne usluge"
       style={{marginTop: "0px"}}
       />
-      <Table
+      <SimpleTable
         tableHead={[
           {
             'title': 'Usluga',

@@ -14,6 +14,10 @@ import {
   addToDate, 
   dateFormat 
 } from '../../assets/js/functions';
+import { 
+  emptyFields,
+  handleDiscount 
+} from '../../assets/js/formDataValidation';
 
 class RecordsFormMain extends React.PureComponent{
   constructor(props){
@@ -133,27 +137,36 @@ class RecordsFormMain extends React.PureComponent{
   };
 
   handleAddRecordInput = (e) => {
-    let value = (e.target.name==="paid") ? e.target.checked : e.target.value;
-    this.setState(
-      {
+    let name = e.target.name;
+    let value = e.target.value;
+    if(value.charAt(0)!=='-'){
+      if(name==="discount"){
+        let d = handleDiscount(value)
+        let nett_price = this.state.addRecord.price * (1 - d / 100);
+        this.setState({
+          ...this.state,
+          addRecord: {
+            ...this.state.addRecord,
+            discount: d,
+            nett_price: nett_price,
+          }, 
+        });
+      }else if(name==="paid"){
+        this.setState({
+          ...this.state,
+          addRecord: {
+            ...this.state.addRecord,
+            paid: e.target.checked},
+        })
+      }else{
+      this.setState({
         ...this.state,
         addRecord: {
           ...this.state.addRecord,
-          [e.target.name]: value},
-        },
-      () => {
-        
-        const discount = 1 - (this.state.addRecord.discount / 100);
-        this.setState(
-          {
-            ...this.state,
-            addRecord: {
-              ...this.state.addRecord,
-              nett_price: this.state.addRecord.price * discount
-            }
-          })
+          [name]: value},
+        })
       }
-    );
+    }
   };
 
   handleCheckBox = (e) => {
@@ -174,16 +187,13 @@ class RecordsFormMain extends React.PureComponent{
     let value = e.target.value;
     if(value.charAt(0)!=='-'){
       if(name==="discount"){
-        value = parseInt(value, 10) 
-        let percentage = (isNaN(value))?0:(value>100)?100:value;
-        let discount = 1 - (percentage / 100);
-        let nett_price = this.props.record.price * discount;
-        
+        let d = handleDiscount(value)
+        let nett_price = this.props.record.price * (1 - d / 100);
         this.setState({
           ...this.state,
           editRecord: {
             ...this.state.editRecord,
-            discount: e.target.value,
+            discount: d,
             nett_price: nett_price,
           }, 
         });
@@ -226,39 +236,18 @@ class RecordsFormMain extends React.PureComponent{
 
   checkSubmit = (e) => {
     e.preventDefault()
-    let addRecord = this.state.addRecord;
-    let service = (isEmpty(addRecord.service));
-    let category = (isEmpty(addRecord.category));
-    let option = (isEmpty(addRecord.option));
-    let price = (addRecord.price === "")?true:false;
-    let discount = (addRecord.discount === "")?true:false;
-    let nett_price = (addRecord.nett_price === "")?true:false;
-    let snackbar = false;
-    let snackbar_message = "";
+    
+    let snackbar_message = "Potrebno je popuniti sva polja";
+    let validate = emptyFields(this.state.addRecord);
 
-    let arr = [service, category, option, price, discount, nett_price]
-
-    for(let index in arr){
-      if(arr[index] === true){
-        snackbar = true;
-        snackbar_message = "Potrebno je popuniti sva polja";
-        break
-      }
-    };
-
-    if(snackbar){
+    if(validate['hasEmptyFields']){
       this.setState({
         ...this.state,
         addRecordError: {
-          service: service,
-          category: category,
-          option: option,
-          price: price,
-          discount: discount,
-          nett_price: nett_price
+          ...validate['objEmptyFields']
         },
-        warning: snackbar,
-        message: snackbar_message
+        warning: validate['hasEmptyFields'],
+        message: (validate['hasEmptyFields'])?snackbar_message:""
       })
       return undefined
     }else{
@@ -334,6 +323,34 @@ class RecordsFormMain extends React.PureComponent{
     this.props.closeRecordForm();
   };
 
+  closeRecordForm = () => {
+    this.setState({
+      addRecord: {
+        service: {},
+        categories: [],
+        category: {},
+        options:[],
+        option: {},
+        price: '',
+        discount: '',
+        nett_price: '',
+        paid: false,
+      },
+      addRecordError: {
+        service: false,
+        category: false,
+        option: false,
+        price: false,
+        discount: false,
+        nett_price: false,
+      },
+      editRecord: {},
+      warning: false,
+      message: "",
+    });
+    this.props.closeRecordForm();
+  }
+
   closeWarning = () => {
     this.setState({
       ...this.state,
@@ -346,8 +363,7 @@ class RecordsFormMain extends React.PureComponent{
     const { 
       openSubmitRecordForm, 
       openEditRecordForm, 
-      services, 
-      closeRecordForm, 
+      services
     } = this.props;
     const {
       warning,
@@ -358,7 +374,7 @@ class RecordsFormMain extends React.PureComponent{
       <React.Fragment>
         <AddRecord
           open={openSubmitRecordForm}
-          close={closeRecordForm}
+          close={this.closeRecordForm}
           services={services}
           handleInput={this.handleAddRecordInput}
           handleSelectService={this.handleSelectService}
@@ -368,7 +384,7 @@ class RecordsFormMain extends React.PureComponent{
         />        
         <EditRecord
           open={openEditRecordForm}
-          close={closeRecordForm}
+          close={this.closeRecordForm}
           handleInput={this.handleEditRecordInput}
           handleCheckBox={this.handleCheckBox}
           submit={this.editRecord}

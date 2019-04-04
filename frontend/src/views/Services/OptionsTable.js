@@ -7,7 +7,7 @@ import { withStyles } from "@material-ui/core";
 import { optionsTable } from "./servicesStyle";
 // material ui core components
 import IconButton from '@material-ui/core/IconButton';
-import Table from '../../components/Table';
+import SimpleTable from '../../components/SimpleTable';
 // material ui icons
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
@@ -46,7 +46,7 @@ function OptionsTable(props){
 
   return(
     <React.Fragment>
-      <Table 
+      <SimpleTable 
         tableHead={[
           {
             'title': "Cijena",

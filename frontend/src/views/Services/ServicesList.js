@@ -38,7 +38,7 @@ function ServicesList (props){
   return(  
     <React.Fragment>
       <Grid container spacing={24}>
-      {services.map((service) => {
+      {services.map((service, index) => {
         return(
         <Grid item xs={12} key={service.id}> 
           <Paper
@@ -64,6 +64,7 @@ function ServicesList (props){
           <Paper className={classes.card}>
             <CategoryTabs
               service={service}
+              serviceIndex={index}
               openNewServicesForm={openNewServicesForm} 
               openEditServicesForm={openEditServicesForm} 
               removeServices={removeServices}

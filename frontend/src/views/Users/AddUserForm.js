@@ -16,61 +16,62 @@ function AddUserForm(props){
     handleInput,
     submit,
     open,
-    close 
+    close
   } = props;
 
   return(
     <Dialog
       open={open}
+      onClose={close}
     >
       <DialogContent>
         <TextField
-          error={props.addUserFormError.first_name}
+          error={props.userFormError.first_name}
           name="first_name"
           label="Ime"
-          value={props.addUserForm.first_name}
+          value={props.userForm.first_name}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
-          error={props.addUserFormError.last_name}
+          error={props.userFormError.last_name}
           name="last_name"
           label="Prezime"
-          value={props.addUserForm.last_name}
+          value={props.userForm.last_name}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
-          error={props.addUserFormError.username}
+          error={props.userFormError.username}
           name="username"
           label="Korisničko ime"
-          value={props.addUserForm.username}
+          value={props.userForm.username}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
-          error={props.addUserFormError.password}
+          error={props.userFormError.password}
           name="password"
           label="Lozinka"
           type="password"
-          input={props.addUserForm.password}
+          value={props.userForm.password}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
-          error={props.addUserFormError.email}
+          error={props.userFormError.email}
           name="email"
           label="E-mail"
           type="email"
-          input={props.addUserForm.email}
+          value={props.userForm.email}
           onChange={handleInput}
           className={classes.emailField}
           margin="normal"
-          helperText={props.addUserFormErrorText.email}
+          helperText={props.userFormErrorText.email}
         />
       </DialogContent>
       <DialogActions>

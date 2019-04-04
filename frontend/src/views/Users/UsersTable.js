@@ -11,7 +11,6 @@ import Table from '../../components/Table';
 import IconButton from '@material-ui/core/IconButton';
 // material ui icons
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 const ProfileLink = (props) => {
   const { id, selectUser } = props;
@@ -24,21 +23,13 @@ const ProfileLink = (props) => {
   )
 };
 
-const Delete = (props) => {
-  const { id, removeUser } = props;
-  return(
-    <IconButton id={id} onClick={removeUser}>
-      <DeleteIcon/>
-    </IconButton>
-  )
-};
-
 function UsersTable(props){
   const { classes, users, selectUser, removeUser } = props;
 
   let data = [];
   users.forEach((user) => {
     data.push([
+      {'identifier': user.id},
       {
         'data': <ProfileLink id={user.id} selectUser={selectUser}/>,
         'padding': 'checkbox',
@@ -60,19 +51,9 @@ function UsersTable(props){
         'align': 'left'
       },
       {
-        'data': user.email,
-        'padding': 'dense',
-        'align': 'left',
-      },
-      {
         'data': user.debt,
         'padding': 'dense',
         'align': 'right'
-      },
-      {
-        'data': <Delete id={user.id} removeUser={removeUser}/>,
-        'padding': 'checkbox',
-        'align': 'center'
       }
     ])
   });
@@ -101,22 +82,13 @@ function UsersTable(props){
             'align': 'left'
           },
           {
-            'title': 'E-mail',
-            'padding': 'dense',
-            'align': 'left'
-          },
-          {
             'title': 'Dug', 
             'padding': 'dense',
             'align': 'right'
-          },
-          {
-            'title': 'Obriši', 
-            'padding': 'checkbox',
-            'align': 'center'
           }
         ]}
         tableData={data}
+        remove={removeUser}
       />
     </Paper>
   ) 

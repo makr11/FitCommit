@@ -5,9 +5,7 @@ import { withStyles } from '@material-ui/core';
 import { tableStyle } from './arrivalsStyle';
 // material ui core components
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
 // material ui icons
-import DeleteIcon from '@material-ui/icons/Delete';
 import WarningIcon from '@material-ui/icons/Warning';
 import DoneIcon from '@material-ui/icons/Done';
 // app components
@@ -19,6 +17,7 @@ function ArrivalsTable(props){
   let data = [];
   arrivals.forEach((arrival, index, array) => {
     data.push([
+      {'identifier': arrival.id},
       {
         'data': array.length-index,
         'padding': 'checkbox',
@@ -41,11 +40,6 @@ function ArrivalsTable(props){
       },
       {
         'data': (!arrival.paid)?<WarningIcon/>:<DoneIcon/>,
-        'padding': 'checkbox',
-        'align': 'center'
-      },
-      {
-        'data': <IconButton name="arrival" id={arrival.id} onClick={handleDelete}><DeleteIcon/></IconButton>,
         'padding': 'checkbox',
         'align': 'center'
       }
@@ -80,14 +74,10 @@ function ArrivalsTable(props){
             'title': 'Plaćeno',
             'padding': 'checkbox',
             'align': 'center'
-          },
-          {
-            'title': 'Obriši', 
-            'padding': 'checkbox',
-            'align': 'center'
           }
         ]}
         tableData={data}
+        remove={handleDelete}
       />
     </Paper>
   )

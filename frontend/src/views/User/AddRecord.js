@@ -43,6 +43,7 @@ function AddRecord (props) {
   return(
     <Dialog
         open={open}   
+        onClose={close}
     >
       <DialogContent>
         <Grid container spacing={24}>

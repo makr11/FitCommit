@@ -5,12 +5,13 @@ import { withStyles } from '@material-ui/core';
 import { user } from './userStyle';
 // material ui components
 import Grid from '@material-ui/core/Grid';
-import Tooltip from '@material-ui/core/Tooltip';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 // app components
 import Profile from './Profile';
-import RecordsTable from './RecordsTable';   
+import RecordsTable from './RecordsTable';  
 
 function UserLayout(props){
 	const {
@@ -18,9 +19,29 @@ function UserLayout(props){
 		user,
 		records,
 		removeRecord,
+		openUserForm,
 		openRecordForm,
-		openArrivalsList
-	} = props
+		openArrivalsList,
+		openMenu,
+		closeMenu,
+		anchor,
+		id
+	} = props;
+
+	const OptionMenu = 
+		<Menu
+			anchorEl={anchor}
+			open={Boolean(anchor)}
+			onClose={closeMenu}
+			onClick={closeMenu}
+		>
+			<MenuItem onClick={openUserForm} id={id}>
+				Uredi podatke člana
+			</MenuItem>
+			<MenuItem onClick={openRecordForm} id={id}>
+				Upiši novu uslugu
+			</MenuItem>
+		</Menu>
 	
 	return(
 		<Grid container spacing={24}>
@@ -34,11 +55,10 @@ function UserLayout(props){
 				openRecordForm={openRecordForm}
 				openArrivalsList={openArrivalsList}
 			/>
-			<Tooltip title="Nova usluga">
-				<Fab color="primary" className={classes.addIcon} onClick={openRecordForm}>
-					<AddIcon />
-				</Fab>
-			</Tooltip>
+			<Fab color="primary" className={classes.addIcon} onClick={openMenu}>
+				<AddIcon />
+			</Fab>
+			{OptionMenu}
 		</Grid>
 	)
 }
