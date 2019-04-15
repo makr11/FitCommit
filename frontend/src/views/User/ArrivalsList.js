@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
-import Table from '../../components/Table';
+import SimpleTable from '../../components/SimpleTable';
 
 function ArrivalsList(props){
 	const {
@@ -49,7 +49,7 @@ function ArrivalsList(props){
 			<DialogContent>
 				<Chip label={"Preostalo dolazaka: " + record.arrivals_left}/>
 				<Chip label={"Preostalo dana: " + record.days_left}/>
-				<Table
+				<SimpleTable
 					tableHead={[
 						{
 							'title': "Br.",

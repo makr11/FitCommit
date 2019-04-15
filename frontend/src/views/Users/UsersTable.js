@@ -64,21 +64,21 @@ function UsersTable(props){
           {
             'title': 'Profil',
             'padding': 'checkbox',
-            'align': 'center'
+            'align': 'center',
+            'size': 'small'
           },
           {
             'title': 'ID',
             'padding': 'dense',
-            'align': 'left'
+            'align': 'left',
+            'size': 'medium'
           },
           {
             'title': 'Ime',
-            'padding': 'dense',
             'align': 'left'
           },
           {
             'title': 'Prezime',
-            'padding': 'dense',
             'align': 'left'
           },
           {

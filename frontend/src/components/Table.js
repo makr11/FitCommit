@@ -21,16 +21,19 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
 function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
+  if(orderBy){
+    if (b[orderBy + 1]['data'] < a[orderBy + 1]['data']) {
+      return -1;
+    }
+    if (b[orderBy + 1]['data'] > a[orderBy + 1]['data']) {
+      return 1;
+    }
+    return 0;
   }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
 };
 
 function stableSort(array, cmp) {
+  console.log(array)
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -44,6 +47,15 @@ function getSorting(order, orderBy) {
   return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 };
 
+const tableHeadStyles = () => ({
+  smallCell: {
+    width: "50px"
+  },
+  mediumCell: {
+    width: "80px"
+  }
+})
+
 class EnhancedTableHead extends React.Component {
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
@@ -56,42 +68,61 @@ class EnhancedTableHead extends React.Component {
       orderBy, 
       numSelected, 
       rowCount, 
-      tableHead 
+      tableHead,
+      classes
     } = this.props;
     
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
+          <TableCell 
+            padding="checkbox"
+            align="center"  
+            className={classes.smallCell}
+          >
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount && numSelected!==0}
               onChange={onSelectAllClick}
             />
           </TableCell>
-          {tableHead.map((prop, key) => (
-              <TableCell
-                key={key}
-                align={prop.align}
-                padding={prop.padding}
-                sortDirection={orderBy === prop.title ? order : false}
+          {tableHead.map((prop, key) => {
+            let size
+            switch(prop.size){
+              case 'small':
+                size = classes.smallCell
+                break
+              case 'medium':
+                size = classes.mediumCell
+                break
+              default:
+                break
+            }
+            return(
+            <TableCell
+              key={key}
+              align={prop.align}
+              padding={prop.padding}
+              sortDirection={orderBy === key ? order : false}
+              className={size}
+            >
+              <TableSortLabel
+                active={orderBy === key}
+                direction={order}
+                onClick={this.createSortHandler(key)}
               >
-                <TableSortLabel
-                  active={orderBy === prop.title}
-                  direction={order}
-                  onClick={this.createSortHandler(prop.title)}
-                >
-                  {prop.title}
-                </TableSortLabel>
-              </TableCell>
-            ),
-            this,
-          )}
+                {prop.title}
+              </TableSortLabel>
+            </TableCell>
+            )
+          })}
         </TableRow>
       </TableHead>
     );
   }
 }
+
+EnhancedTableHead = withStyles(tableHeadStyles)(EnhancedTableHead)
 
 const toolbarStyles = theme => ({
   root: {
@@ -169,8 +200,8 @@ const style = () => ({
 
 class CustomTable extends React.Component {
   state = {
-    order: 'asc',
-    orderBy: 'calories',
+    order: '',
+    orderBy: '',
     selected: [],
     page: 0,
     rowsPerPage: 5,
@@ -186,6 +217,7 @@ class CustomTable extends React.Component {
   }
 
   handleRequestSort = (event, property) => {
+    console.log(property)
     const orderBy = property;
     let order = 'desc';
 
@@ -253,7 +285,8 @@ class CustomTable extends React.Component {
       rowsPerPage, 
       page 
     } = this.state;
-    
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
+    console.log(this.state)
     return (
       <Paper className={classes.root}>
         <EnhancedTableToolbar 
@@ -286,6 +319,8 @@ class CustomTable extends React.Component {
                 >
                   <TableCell 
                     padding="checkbox"
+                    align="center"
+                    style={{width: "40px"}}
                   >
                     <Checkbox
                       checked={isSelected}
@@ -308,6 +343,11 @@ class CustomTable extends React.Component {
                 </TableRow>
               );
             })}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 49 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
           </TableBody>
         </Table>
         <TablePagination

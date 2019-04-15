@@ -74,9 +74,10 @@ class ServicesDetail(generics.RetrieveUpdateDestroyAPIView):
 class ListCategories(generics.ListCreateAPIView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
-
+    
     def create(self, request):
         serializer = CategoriesSerializer(data=request.data)
+        print(serializer)
 
         if serializer.is_valid():
             service = Services.objects.get(pk=request.data['serviceID'])
@@ -103,6 +104,7 @@ class ListOptions(generics.ListCreateAPIView):
 
     def create(self, request):
         serializer = OptionsSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             category = Categories.objects.get(pk=request.data['categoryID'])
             options = Options(arrivals=request.data['arrivals'],
@@ -197,13 +199,14 @@ class ListArrivals(generics.ListCreateAPIView):
         now = timezone.now()
         user = CustomUser.objects.get(pk=request.data['user'])
         record = Records.objects.get(pk=request.data['record'])
+        date = datetime.datetime.strptime(request.data['date'], '%Y-%m-%d')
         record.arrivals_left -= 1
         record.save()
         record.is_active()
         arrival = Arrivals(
             userObj=user,
             recordObj=record,
-            arrival=now
+            arrival=now if now.date() == date.date() else date
         )
         arrival.save()
         return Response()

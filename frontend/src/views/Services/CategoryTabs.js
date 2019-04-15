@@ -50,7 +50,6 @@ class CategoryTabs extends React.Component{
 			...this.state,
 			categoryIndex: this.state.categoryIndex - 1
 		});
-		console.log(this.state.categoryId - 1)
 		this.props.removeServices(e)
 	}
 
@@ -84,7 +83,7 @@ class CategoryTabs extends React.Component{
           Obriši
         </MenuItem>
       </Menu>
-		console.log(this.props)	
+		
 		return(
 			<div >
 				<AppBar position="static" color="default">

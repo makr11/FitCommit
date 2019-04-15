@@ -12,7 +12,7 @@ class SetupSerializer(drf_serializers.ModelSerializer):
         fields = '__all__'
 
 class OptionsSerializer(drf_serializers.ModelSerializer):
-    serviceID = drf_serializers.IntegerField(source='categoryID.serviceID.id')
+    # serviceID = drf_serializers.IntegerField(source='categoryID.serviceID.id')
 
     class Meta:
         model = Options

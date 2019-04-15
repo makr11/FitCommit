@@ -20,6 +20,7 @@ export const requestServices = () => (dispatch) => {
 };
   
 export const submitFormService = (lead) => (dispatch) => {
+	console.log(lead)
 	let url = '';
 
 	if (lead.name==="new"){

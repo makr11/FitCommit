@@ -17,7 +17,7 @@ export const requestUsers = () => (dispatch) => {
 }
 
 export const submitUserForm = (lead) => (dispatch) => {
-  console.log(lead)
+  
   const conf = {
     method: "POST",
     headers: {
