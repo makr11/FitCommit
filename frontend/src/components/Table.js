@@ -14,11 +14,13 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
+import TextField from '@material-ui/core/TextField';
 import TablePagination from "@material-ui/core/TablePagination";
 // @material ui icons
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { lighten } from '@material-ui/core/styles/colorManipulator';
+
 
 function desc(a, b, orderBy) {
   if(orderBy){
@@ -142,6 +144,7 @@ const toolbarStyles = theme => ({
     flex: '1 1 100%',
   },
   actions: {
+    display: 'flex',
     color: theme.palette.text.secondary,
   },
   title: {
@@ -150,7 +153,18 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, remove, selected, classes } = props;
+  const { 
+    numSelected, 
+    remove, 
+    selected, 
+    classes,
+    name,
+    label,
+    filter,
+    filterBy,
+    handleInput,
+    handleFilterSelect
+    } = props;
 
   return (
     <Toolbar
@@ -176,11 +190,29 @@ let EnhancedTableToolbar = props => {
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="Filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
+          <React.Fragment>
+            <TextField
+              name={name}
+              label={label}
+              value={filter}
+              onChange={handleInput}
+              margin="normal"
+            />
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="age-simple">Age</InputLabel>
+                <Select
+                  value={filterBy}
+                  onChange={handleFilterSelect}
+                >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
+          </React.Fragment>
         )}
       </div>
     </Toolbar>
@@ -200,8 +232,10 @@ const style = () => ({
 
 class CustomTable extends React.Component {
   state = {
-    order: '',
-    orderBy: '',
+    order: 'desc',
+    orderBy: 0,
+    filter: '',
+    filterBy: 0,
     selected: [],
     page: 0,
     rowsPerPage: 5,
@@ -214,6 +248,18 @@ class CustomTable extends React.Component {
         selected: []
       })
     }
+  };
+
+  handleInput = (e) => {
+    this.setState({
+      'filter': e.target.value
+    })
+  };
+
+  handleFilterSelect = (e) => {
+    this.setState({
+      'filterBy': e.target.name
+    })
   }
 
   handleRequestSort = (event, property) => {
@@ -292,7 +338,10 @@ class CustomTable extends React.Component {
         <EnhancedTableToolbar 
           numSelected={selected.length} 
           remove={remove} 
-          selected={selected}/> 
+          selected={selected}
+          handleInput={this.handleInput}
+          handleFilterSelect={this.handleFilterSelect}
+        /> 
         <Table className={classes.table}>
           {tableHead !== undefined ? (
             <EnhancedTableHead

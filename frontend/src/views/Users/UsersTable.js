@@ -26,6 +26,13 @@ const ProfileLink = (props) => {
 function UsersTable(props){
   const { classes, users, selectUser, removeUser } = props;
 
+  let filterable = {
+    'ID': 'IDUser',
+    'Ime': 'last_name',
+    'Prezime': 'first_name',
+    'Dug': 'debt'
+  }
+
   let data = [];
   users.forEach((user) => {
     data.push([
@@ -89,6 +96,7 @@ function UsersTable(props){
         ]}
         tableData={data}
         remove={removeUser}
+        filterable={filterable}
       />
     </Paper>
   ) 
