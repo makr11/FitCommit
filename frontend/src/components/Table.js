@@ -33,7 +33,6 @@ function desc(a, b, orderBy) {
 };
 
 function stableSort(array, cmp) {
-  console.log(array)
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -200,7 +199,7 @@ const style = () => ({
 
 class CustomTable extends React.Component {
   state = {
-    order: '',
+    order: 'desc',
     orderBy: '',
     selected: [],
     page: 0,
@@ -217,7 +216,6 @@ class CustomTable extends React.Component {
   }
 
   handleRequestSort = (event, property) => {
-    console.log(property)
     const orderBy = property;
     let order = 'desc';
 
@@ -286,7 +284,7 @@ class CustomTable extends React.Component {
       page 
     } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
-    console.log(this.state)
+    
     return (
       <Paper className={classes.root}>
         <EnhancedTableToolbar 

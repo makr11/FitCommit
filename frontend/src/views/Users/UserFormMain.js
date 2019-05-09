@@ -7,38 +7,39 @@ import AddUserForm from './AddUserForm';
 import { EMAIL } from '../../assets/regex';
 import { emptyFields } from '../../assets/js/formDataValidation';
 import { isEmpty } from '../../assets/js/functions';
+// helper functions
+import { date, dateFormat } from '../../assets/js/functions.js'
 
 class UserFormMain extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      userForm: 
-        (this.props.user)?{
-          first_name: this.props.user.first_name,
-          last_name: this.props.user.last_name,
-          username: this.props.user.username,
-          password: this.props.user.password,
-          email: this.props.user.email
-        }:{
+      userForm: {
           first_name: '',
           last_name: '',
-          username: '',
-          password: '',
+          phone: '',
+          birth_date: date(),
+          address: '',
+          city: '',
           email: '',
         }
       ,
       userFormError: {
         first_name: false,
         last_name: false,
-        username: false,
-        password: false,
+        phone: false,
+        birth_date: false,
+        address: false,
+        city: false,
         email: false,
       },
       userFormErrorText: {
         first_name: "",
         last_name: "",
-        username: "",
-        password: "",
+        phone: "",
+        birth_date: "",
+        address: '',
+        city: '',
         email: "",
       },
       warning: false,
@@ -54,8 +55,10 @@ class UserFormMain extends React.Component {
         userForm: {
           first_name: user.first_name,
           last_name: user.last_name,
-          username: user.username,
-          password: user.password,
+          phone: user.phone,
+          birth_date: user.birth_date,
+          address: user.address,
+          city: user.city,
           email: user.email
         }, 
       });
@@ -96,8 +99,10 @@ class UserFormMain extends React.Component {
         userFormErrorText: {
           first_name: "",
           last_name: "",
-          username: "",
-          password: "",
+          phone: "",
+          birth_date: "",
+          address: '',
+          city: '',
           email: (validate['objEmptyFields']['email'])?emailErrorText:""
         },
         warning: validate['hasEmptyFields'],
@@ -124,29 +129,37 @@ class UserFormMain extends React.Component {
         (this.props.user)?{
           first_name: this.props.user.first_name,
           last_name: this.props.user.last_name,
-          username: this.props.user.username,
-          password: this.props.user.password,
+          phone: this.props.user.phone,
+          birth_date: dateFormat(this.props.user.birth_date),
+          address: this.props.user.address,
+          city: this.props.user.city,
           email: this.props.user.email
         }:{
           first_name: '',
           last_name: '',
-          username: '',
-          password: '',
+          phone: '',
+          birth_date: date(),
+          address: '',
+          city: '',
           email: '',
         }
       ,
       userFormError: {
         first_name: false,
         last_name: false,
-        username: false,
-        password: false,
+        phone: false,
+        birth_date: false,
+        address: false,
+        city: false,
         email: false,
       },
       userFormErrorText: {
         first_name: "",
         last_name: "",
-        username: "",
-        password: "",
+        phone: "",
+        birth_date: "",        
+        address: '',
+        city: '',
         email: "",
       },
       warning: false,

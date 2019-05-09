@@ -60,7 +60,25 @@ function Profile(props){
             <Typography variant="body1">
               {user.date_joined}
             </Typography> 
-          </div>   
+          </div>  
+          <Divider/> 
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              Adresa:
+            </Typography>
+            <Typography variant="body1">
+              {user.address}
+            </Typography> 
+          </div>
+          <Divider/>
+          <div style={div}>
+            <Typography variant="body2" align="left">
+              Grad:
+            </Typography>
+            <Typography variant="body1">
+              {user.city}
+            </Typography> 
+          </div>
         </Paper> 
 
         <ViewElementsHeading

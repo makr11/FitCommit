@@ -44,20 +44,38 @@ function AddUserForm(props){
           margin="normal"
         />
         <TextField
-          error={props.userFormError.username}
-          name="username"
-          label="Korisničko ime"
-          value={props.userForm.username}
+          error={props.userFormError.phone}
+          name="phone"
+          label="Broj mobitela"
+          value={props.userForm.phone}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
         />
         <TextField
-          error={props.userFormError.password}
-          name="password"
-          label="Lozinka"
-          type="password"
-          value={props.userForm.password}
+          error={props.userFormError.birth_date}
+          name="birth_date"
+          label="Datum rođenja"
+          type="date"
+          value={props.userForm.birth_date}
+          onChange={handleInput}
+          className={classes.textField}
+          margin="normal"
+        />
+        <TextField
+          error={props.userFormError.address}
+          name="address"
+          label="Adresa"
+          value={props.userForm.address}
+          onChange={handleInput}
+          className={classes.textField}
+          margin="normal"
+        />
+        <TextField
+          error={props.userFormError.city}
+          name="city"
+          label="Grad"
+          value={props.userForm.city}
           onChange={handleInput}
           className={classes.textField}
           margin="normal"
