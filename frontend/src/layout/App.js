@@ -1,75 +1,80 @@
-import React from 'react';
+import React from "react";
 // redux
-import { connect } from 'react-redux';
-// prop type check
-import PropTypes from 'prop-types';
+import { connect } from "react-redux";
 // redux
-import { requestUsers } from '../store/actions/usersA'; 
-import { requestServices } from '../store/actions/servicesA';
-import { requestSetup} from '../store/actions/setupA';
+import { requestUsers } from "../store/actions/usersA";
+import { requestServices } from "../store/actions/servicesA";
+import { requestSetup } from "../store/actions/setupA";
 // react router
-import { withRouter } from 'react-router-dom';
-import { Route, Switch } from 'react-router-dom';
-// material ui core
-import { withStyles } from '@material-ui/core/styles';
-// jss styles
-import { app } from './appStyle';
+import { withRouter } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 // app components
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
-import Dashboard from '../views/Dashboard/Dashboard';
-import { sidebarRoutes, mainRoutes } from '../constants/routes';
+import Signin from "./Signin";
+import { sidebarRoutes, mainRoutes } from "../constants/routes";
 
 class App extends React.Component {
   state = {
-    mobileOpen: false,
+    mobileOpen: false
   };
 
-  componentDidMount(){
-    this.props.getUsers();
-    this.props.getServices();
-    this.props.getSetup();
-  };
+  componentDidMount() {
+    if (this.props.isAuthenticated) {
+      this.props.getSetup();
+    }
+  }
 
-  handleDrawerToggle = () => {
-    this.setState(state => ({ mobileOpen: !state.mobileOpen }));
-  };
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.isAuthenticated === false) {
+      this.props.getSetup();
+    } else if (
+      this.props.isAuthenticated === false ||
+      prevProps.isAuthenticated === true
+    ) {
+      this.props.persistor();
+    }
+  }
 
-  render(){
-    const { 
-      classes,
-      location,
-      user
-    } = this.props;
-    const { 
-      mobileOpen
-    } = this.state;
+  render() {
+    const { isAuthenticated } = this.props;
     const routes = sidebarRoutes.concat(mainRoutes);
 
     return (
-      <div>
-        <Navbar 
-          handleDrawerToggle={this.handleDrawerToggle}
-          routes={routes}
-          location={location}
-          user={user}
+      <BrowserRouter>
+        <Route
+          exact
+          path="/signin"
+          render={() =>
+            isAuthenticated ? <Redirect to="/dashboard" /> : <Signin />
+          }
         />
-        <Sidebar
-          mobileOpen={mobileOpen}
-          handleDrawerToggle={this.handleDrawerToggle}
+        <Route
+          exact
+          path="/"
+          render={() =>
+            isAuthenticated ? (
+              <Redirect to="/dashboard" />
+            ) : (
+              <Redirect to="/signin" />
+            )
+          }
         />
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Switch>
-            <Route exact path="/" component={Dashboard}/>
-            {routes.map((route, key) => {
-              return(
-                <Route path={route.path} component={route.component} key={key}/>
-              )
-            })}
-          </Switch>
-        </main>
-      </div>
+        {routes.map((route, key) => {
+          return (
+            <Route
+              path={route.path}
+              key={key}
+              render={() =>
+                !isAuthenticated ? (
+                  <Redirect to="/signin" />
+                ) : (
+                  <route.component />
+                )
+              }
+            />
+          );
+        })}
+      </BrowserRouter>
     );
   }
 }
@@ -77,19 +82,21 @@ class App extends React.Component {
 const mapStateToProps = state => {
   return {
     user: state.userProfileReducer.profile,
-  }
-}
+    isAuthenticated: state.authenticationReducer.isAuthenticated
+  };
+};
 
-const mapDispatchToProps = (dispatch) => {
-  return{
-    getUsers: () => dispatch(requestUsers()),
+const mapDispatchToProps = dispatch => {
+  return {
+    requestUsers: () => dispatch(requestUsers()),
     getServices: () => dispatch(requestServices()),
-    getSetup: () => dispatch(requestSetup()),
-  }
+    getSetup: () => dispatch(requestSetup())
+  };
 };
 
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(app)(App)));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App)
+);

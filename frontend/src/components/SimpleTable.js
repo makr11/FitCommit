@@ -1,7 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 // @material-ui/core components
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -10,10 +10,13 @@ import TableCell from "@material-ui/core/TableCell";
 
 const style = () => ({
   root: {
-    overflowX: "auto",
+    overflowX: "auto"
   },
   table: {
-    tableLayout: "fixed",
+    tableLayout: "fixed"
+  },
+  textCell: {
+    width: "10px"
   }
 });
 
@@ -21,7 +24,7 @@ function SimpleTable({ ...props }) {
   const { classes, tableHead, tableData } = props;
   return (
     <Paper className={classes.root}>
-      <Table className={classes.table}>
+      <Table className={classes.table} size="medium">
         {tableHead !== undefined ? (
           <TableHead>
             <TableRow>
@@ -31,6 +34,7 @@ function SimpleTable({ ...props }) {
                     key={key}
                     padding={prop.padding}
                     align={prop.align}
+                    className={classes.textCell}
                   >
                     {prop.title}
                   </TableCell>
@@ -45,10 +49,11 @@ function SimpleTable({ ...props }) {
               <TableRow key={key}>
                 {prop.map((prop, key) => {
                   return (
-                    <TableCell 
-                    key={key} 
-                    padding={prop.padding}
-                    align={prop.align}
+                    <TableCell
+                      key={key}
+                      padding={prop.padding}
+                      align={prop.align}
+                      className={classes.textCell}
                     >
                       {prop.data}
                     </TableCell>

@@ -1,78 +1,84 @@
-import React from 'react';
+import React from "react";
 // redux
-import { connect } from 'react-redux';
-import { requestServices, removeServices, submitFormService, updateFormService } from '../../store/actions/servicesA';
+import { connect } from "react-redux";
+import {
+  requestServices,
+  removeServices,
+  submitFormService,
+  updateFormService
+} from "../../store/actions/servicesA";
 // app components
-import ServicesLayout from './ServicesLayout';
-import ServicesFormMain from './ServicesFormMain';
+import ServicesLayout from "./ServicesLayout";
+import ServicesFormMain from "./ServicesFormMain";
+// layout
+import Layout from "../../layout/Layout";
 
-class Services extends React.Component{
-
-  state={
+class Services extends React.Component {
+  state = {
     open: false,
-    name: '',
+    name: "",
     id: null,
     setStep: undefined,
-    update: undefined,
+    update: undefined
   };
 
-  openNewServicesForm = (e) => {
-    let setStep 
+  componentDidMount() {
+    this.props.requestServices();
+  }
+
+  openNewServicesForm = e => {
+    let setStep;
     let id = e.currentTarget.id;
     let name = e.currentTarget.name;
-    
-    switch(name){
-      case 'new':
-        setStep = 0
-        break
-      case 'service':
-        setStep = 1
-        break
-      case 'category':
-        setStep = 2
-        break
+
+    switch (name) {
+      case "new":
+        setStep = 0;
+        break;
+      case "service":
+        setStep = 1;
+        break;
+      case "category":
+        setStep = 2;
+        break;
       default:
-        setStep = 0
-        break
-    };
+        setStep = 0;
+        break;
+    }
 
     this.setState({
       open: true,
       name: name,
       id: id,
-      setStep: setStep,
-    })
+      setStep: setStep
+    });
   };
 
   /*Options sends name=undefined beacuse name isn't accessible in lists*/
-  openEditServicesForm = (e) => {
-    const {
-      service,
-      category,
-      option 
-    } = this.props;
-    let setStep
-    let update 
+  openEditServicesForm = e => {
+    const { service, category, option } = this.props;
+    let setStep;
+    let update;
     let id = e.currentTarget.id;
     let name = e.currentTarget.name;
-    switch(name){
-      case 'service':
-        update=service[id];
-        setStep=0;
+    switch (name) {
+      case "service":
+        update = service[id];
+        setStep = 0;
         break;
-      case 'category':
-        update=category[id];
-        setStep=1;
-        break;     
+      case "category":
+        update = category[id];
+        setStep = 1;
+        break;
       case undefined:
-        update=option[id];
-        name="option";
-        setStep=2;
+        update = option[id];
+        name = "option";
+        setStep = 2;
         break;
       default:
-        update=undefined;
+        update = undefined;
         break;
-    };
+    }
 
     this.setState({
       open: true,
@@ -80,36 +86,30 @@ class Services extends React.Component{
       id: id,
       update: update,
       setStep: setStep
-    })
+    });
   };
- 
+
   closeServicesForm = () => {
     this.setState({
       open: false,
-      name: '',
+      name: "",
       id: null,
       setStep: undefined,
-      update: undefined,
-    })
+      update: undefined
+    });
   };
 
-  render(){  
-    const {  
-      services, 
-      handleSubmit, 
-      handleUpdate, 
-      removeServices 
+  render() {
+    const {
+      services,
+      submitFormService,
+      updateFormService,
+      removeServices
     } = this.props;
-    const { 
-      open, 
-      name, 
-      id,  
-      setStep, 
-      update,
-    } = this.state;
-    
+    const { open, name, id, setStep, update } = this.state;
+
     return (
-      <React.Fragment>
+      <Layout>
         <ServicesLayout
           services={services}
           openNewServicesForm={this.openNewServicesForm}
@@ -117,37 +117,43 @@ class Services extends React.Component{
           removeServices={removeServices}
           closeMenu={this.closeMenu}
         />
-        {open && <ServicesFormMain 
-                    open={open}
-                    id={id}
-                    name={name} 
-                    setStep={setStep}     
-                    closeServicesForm={this.closeServicesForm} 
-                    update={update}
-                    handleSubmit={handleSubmit}
-                    handleUpdate={handleUpdate}
-                  />} 
-      </React.Fragment>
-    )
+        {open && (
+          <ServicesFormMain
+            open={open}
+            id={id}
+            name={name}
+            setStep={setStep}
+            closeServicesForm={this.closeServicesForm}
+            update={update}
+            submitFormService={submitFormService}
+            updateFormService={updateFormService}
+          />
+        )}
+      </Layout>
+    );
   }
-};
+}
 
 const mapStateToProps = state => {
   return {
     services: state.servicesReducer.services,
     service: state.servicesReducer.service,
     category: state.servicesReducer.category,
-    option: state.servicesReducer.option,
-  }
+    option: state.servicesReducer.option
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    handleSubmit: (lead) => dispatch(submitFormService(lead)),
-    handleUpdate: (lead) => dispatch(updateFormService(lead)),
-    getServices: () => dispatch(requestServices()),
-    removeServices: (e) => dispatch(removeServices(e.currentTarget.id, e.currentTarget.name))
-  }
+    submitFormService: lead => dispatch(submitFormService(lead)),
+    updateFormService: lead => dispatch(updateFormService(lead)),
+    requestServices: () => dispatch(requestServices()),
+    removeServices: e =>
+      dispatch(removeServices(e.currentTarget.id, e.currentTarget.name))
+  };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Services);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Services);

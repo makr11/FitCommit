@@ -1,66 +1,53 @@
-import React from 'react';
+import React from "react";
 // app components
-import { ServiceForm, CategoryForm, OptionForm } from './ServiceForm';
-import ServicesStepperForm from './ServicesStepperForm';
+import { ServiceForm, CategoryForm, OptionForm } from "./ServiceForm";
+import ServicesStepperForm from "./ServicesStepperForm";
 // material ui components
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import { emptyFields } from '../../assets/js/formDataValidation';
-
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import { emptyFields } from "../../assets/js/formDataValidation";
 
 const formState = (update, name) => {
-  if(update){
+  if (update) {
     if (update.service) {
-      return (
-        { service: update.service }
-      )
+      return { service: update.service };
     } else if (update.category) {
-      return (
-        { category: update.category }
-      )
+      return { category: update.category };
     } else if (update.duration) {
-      return (
-        {
-          duration: update.duration,
-          price: update.price,
-          arrivals: update.arrivals,
-        }
-      )
-    } 
-  }else if(name==="new"){
-    return (
-      {
-        service: '',
-        category: '',
-        duration: '',
-        arrivals: '',
-        price: '',
-      }
-    )
-  }else if(name==="service"){
-    return(
-      {
-        category: '',
-        duration: '',
-        arrivals: '',
-        price: '',
-      }
-    )
-  }else if(name==="category"){
-    return(
-      {
-        duration: '',
-        arrivals: '',
-        price: '',
-      }
-    )
+      return {
+        duration: update.duration,
+        price: update.price,
+        arrivals: update.arrivals
+      };
+    }
+  } else if (name === "new") {
+    return {
+      service: "",
+      category: "",
+      duration: "",
+      arrivals: "",
+      price: ""
+    };
+  } else if (name === "service") {
+    return {
+      category: "",
+      duration: "",
+      arrivals: "",
+      price: ""
+    };
+  } else if (name === "category") {
+    return {
+      duration: "",
+      arrivals: "",
+      price: ""
+    };
   }
-}
+};
 
 class ServicesFormMain extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       form: formState(props.update, props.name),
       formError: {
@@ -68,23 +55,17 @@ class ServicesFormMain extends React.Component {
         category: false,
         duration: false,
         arrivals: false,
-        price: false,
+        price: false
       },
       activeStep: props.setStep,
       warning: false,
-      message: "",
-    }
+      message: ""
+    };
   }
 
-  getStepContent = (stepIndex) => {
-    const { 
-      service, 
-      category, 
-      duration, 
-      arrivals, 
-      price,
-    } = this.state.form;
-  
+  getStepContent = stepIndex => {
+    const { service, category, duration, arrivals, price } = this.state.form;
+
     switch (stepIndex) {
       case 0:
         return (
@@ -113,61 +94,68 @@ class ServicesFormMain extends React.Component {
           />
         );
       default:
-        return 'Uknown stepIndex';
+        return "Uknown stepIndex";
     }
-  }
+  };
 
   handleNext = () => {
     this.setState(state => ({
-      activeStep: state.activeStep + 1,
+      activeStep: state.activeStep + 1
     }));
   };
 
   handleBack = () => {
     this.setState(state => ({
-      activeStep: state.activeStep - 1,
+      activeStep: state.activeStep - 1
     }));
   };
 
-  handleFormInput = (e) => {
+  handleFormInput = e => {
     this.setState({
       form: {
         ...this.state.form,
-        [e.target.name]: e.target.value,
+        [e.target.name]: e.target.value
       }
     });
   };
 
-  checkSubmit = (e) => {
+  checkSubmit = e => {
     e.preventDefault();
-    
-    let snackbar_message = "Potrebno je popuniti sva polja";
-    let validate = emptyFields(this.state.form)
 
-    if(validate['hasEmptyFields']){
+    let snackbar_message = "Potrebno je popuniti sva polja";
+    let validate = emptyFields(this.state.form);
+
+    if (validate["hasEmptyFields"]) {
       this.setState({
         ...this.state,
         formError: {
-          ...validate['objEmptyFields']
+          ...validate["objEmptyFields"]
         },
-        warning: validate['hasEmptyFields'],
-        message: (validate['hasEmptyFields'])?snackbar_message:""
-      })
-    }else{
-      this.submit(e)
-    };
-  }
+        warning: validate["hasEmptyFields"],
+        message: validate["hasEmptyFields"] ? snackbar_message : ""
+      });
+    } else {
+      this.submit(e);
+    }
+  };
 
-  submit = (e) => {
-    e.preventDefault()
-    const { id, name, update, handleSubmit, handleUpdate, closeServicesForm } = this.props;
+  submit = e => {
+    e.preventDefault();
+    const {
+      id,
+      name,
+      update,
+      submitFormService,
+      updateFormService,
+      closeServicesForm
+    } = this.props;
     const { service, category, duration, price, arrivals } = this.state.form;
     closeServicesForm();
     const lead = { id, name, service, category, duration, price, arrivals };
     if (update !== undefined) {
-      return (handleUpdate(lead))
+      return updateFormService(lead);
     } else {
-      return (handleSubmit(lead))
+      return submitFormService(lead);
     }
   };
 
@@ -176,22 +164,13 @@ class ServicesFormMain extends React.Component {
       ...this.state,
       warning: false,
       message: ""
-    })
-  }
+    });
+  };
 
   render() {
-    const { 
-      open, 
-      closeServicesForm, 
-      setStep,
-      update 
-    } = this.props;
-    const { 
-      activeStep,
-      warning,
-      message
-    } = this.state;
-    
+    const { open, closeServicesForm, setStep, update } = this.props;
+    const { activeStep, warning, message } = this.state;
+
     return (
       <React.Fragment>
         <ServicesStepperForm
@@ -210,7 +189,7 @@ class ServicesFormMain extends React.Component {
           open={warning}
           onClose={this.closeWarning}
           ContentProps={{
-            'aria-describedby': 'message-id',
+            "aria-describedby": "message-id"
           }}
           message={<span id="message-id">{message}</span>}
           action={[
@@ -221,12 +200,12 @@ class ServicesFormMain extends React.Component {
               onClick={this.closeWarning}
             >
               <CloseIcon />
-            </IconButton>,
+            </IconButton>
           ]}
         />
       </React.Fragment>
-    )
-  };
-};
+    );
+  }
+}
 
 export default ServicesFormMain;

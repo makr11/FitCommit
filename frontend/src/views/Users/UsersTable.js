@@ -1,97 +1,100 @@
-import React from 'react';
+import React from "react";
 // react router
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 // material ui core
-import { withStyles } from '@material-ui/core';
+import { withStyles } from "@material-ui/core";
 // styles
-import { usersTable } from './usersStyle';
+import { usersTable } from "./usersStyle";
 // material ui core components
-import Paper from '@material-ui/core/Paper';
-import Table from '../../components/Table';
-import IconButton from '@material-ui/core/IconButton';
+import Paper from "@material-ui/core/Paper";
+import Table from "../../components/Table";
+import IconButton from "@material-ui/core/IconButton";
 // material ui icons
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-const ProfileLink = (props) => {
+const ProfileLink = props => {
   const { id, selectUser } = props;
-  return(
-    <Link to={'/profile/' + id}>
+  return (
+    <Link to={"/profile/" + id}>
       <IconButton id={id} onClick={selectUser}>
-        <AccountCircleIcon/>
+        <AccountCircleIcon />
       </IconButton>
     </Link>
-  )
+  );
 };
 
-function UsersTable(props){
+function UsersTable(props) {
   const { classes, users, selectUser, removeUser } = props;
 
   let filterable = {
-    'ID': 'IDUser',
-    'Ime': 'last_name',
-    'Prezime': 'first_name',
-    'Dug': 'debt'
-  }
+    ID: "IDUser",
+    Ime: "last_name",
+    Prezime: "first_name",
+    Dug: "debt"
+  };
 
   let data = [];
-  users.forEach((user) => {
-    data.push([
-      {'identifier': user.id},
-      {
-        'data': <ProfileLink id={user.id} selectUser={selectUser}/>,
-        'padding': 'checkbox',
-        'align': 'center'
-      },
-      {
-        'data': user.IDUser,
-        'padding': 'dense',
-        'align': 'left'
-      },
-      {
-        'data': user.first_name,
-        'padding': 'dense',
-        'align': 'left'
-      },
-      {
-        'data': user.last_name,
-        'padding': 'dense',
-        'align': 'left'
-      },
-      {
-        'data': user.debt,
-        'padding': 'dense',
-        'align': 'right'
-      }
-    ])
-  });
-  return(
+  if (users) {
+    users.forEach(user => {
+      data.push([
+        { identifier: user.id },
+        {
+          data: <ProfileLink id={user.id} selectUser={selectUser} />,
+          padding: "checkbox",
+          align: "center"
+        },
+        {
+          data: user.IDUser,
+          padding: "default",
+          align: "left"
+        },
+        {
+          data: user.first_name,
+          padding: "default",
+          align: "left"
+        },
+        {
+          data: user.last_name,
+          padding: "default",
+          align: "left"
+        },
+        {
+          data: user.debt,
+          padding: "default",
+          align: "right"
+        }
+      ]);
+    });
+  }
+
+  return (
     <Paper className={classes.tableWrapper}>
-      <Table 
+      <Table
         tableHead={[
           {
-            'title': 'Profil',
-            'padding': 'checkbox',
-            'align': 'center',
-            'size': 'small'
+            title: "Profil",
+            padding: "checkbox",
+            align: "center",
+            size: "small"
           },
           {
-            'title': 'ID',
-            'padding': 'dense',
-            'align': 'left',
-            'size': 'medium'
+            title: "ID",
+            padding: "default",
+            align: "left",
+            size: "medium"
           },
           {
-            'title': 'Ime',
-            'align': 'left'
+            title: "Ime",
+            align: "left"
           },
           {
-            'title': 'Prezime',
-            'align': 'left'
+            title: "Prezime",
+            align: "left"
           },
           {
-            'title': 'Dug', 
-            'padding': 'dense',
-            'align': 'right'
+            title: "Dug",
+            padding: "default",
+            align: "right"
           }
         ]}
         tableData={data}
@@ -99,7 +102,7 @@ function UsersTable(props){
         filterable={filterable}
       />
     </Paper>
-  ) 
+  );
 }
 
 export default withStyles(usersTable)(UsersTable);

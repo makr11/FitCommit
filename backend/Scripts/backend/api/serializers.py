@@ -5,11 +5,13 @@ from .models import Setup, CustomUser, Services, Categories, Options, Records, A
 
 CustomUser = get_user_model()
 
+
 class SetupSerializer(drf_serializers.ModelSerializer):
 
     class Meta:
         model = Setup
         fields = '__all__'
+
 
 class OptionsSerializer(drf_serializers.ModelSerializer):
     # serviceID = drf_serializers.IntegerField(source='categoryID.serviceID.id')
@@ -18,15 +20,16 @@ class OptionsSerializer(drf_serializers.ModelSerializer):
         model = Options
         fields = '__all__'
 
+
 class CategoriesSerializer(drf_serializers.ModelSerializer):
 
     options = drf_serializers.SerializerMethodField()
 
-
     def get_options(self, obj):
         try:
             qs = Options.objects.filter(categoryID=obj.id)
-            serializer = OptionsSerializer(instance=qs, many=True, read_only=True)
+            serializer = OptionsSerializer(
+                instance=qs, many=True, read_only=True)
             return serializer.data
         except AttributeError:
             pass
@@ -35,6 +38,7 @@ class CategoriesSerializer(drf_serializers.ModelSerializer):
         model = Categories
         fields = '__all__'
 
+
 class ServicesSerializer(drf_serializers.ModelSerializer):
 
     categories = drf_serializers.SerializerMethodField()
@@ -42,7 +46,8 @@ class ServicesSerializer(drf_serializers.ModelSerializer):
     def get_categories(self, obj):
         try:
             qs = Categories.objects.filter(serviceID=obj.id)
-            serializer = CategoriesSerializer(instance=qs, many=True, read_only=True)
+            serializer = CategoriesSerializer(
+                instance=qs, many=True, read_only=True)
             return serializer.data
         except AttributeError:
             pass
@@ -50,6 +55,7 @@ class ServicesSerializer(drf_serializers.ModelSerializer):
     class Meta:
         model = Services
         fields = '__all__'
+
 
 class RecordsSerializer(drf_serializers.ModelSerializer):
     user = drf_serializers.ReadOnlyField()
@@ -76,27 +82,28 @@ class RecordsSerializer(drf_serializers.ModelSerializer):
         model = Records
         fields = '__all__'
 
+
 class UserSerializer(drf_serializers.ModelSerializer):
     debt = drf_serializers.SerializerMethodField()
-    date_joined = drf_serializers.DateTimeField(format="%d.%m.%Y", required=False)
-    birth_date = drf_serializers.DateField(format="%d.%m.%Y", required=False)
 
     def get_debt(self, obj):
         qs = Records.objects.filter(userObj=obj.id, paid=False)
         sum = 0
         for i in qs:
-            sum+=i.nett_price
+            sum += i.nett_price
         return sum
 
     class Meta:
         model = CustomUser
         fields = '__all__'
 
+
 class ArrivalsSerializer(drf_serializers.ModelSerializer):
     user = drf_serializers.CharField(source='userObj')
     service = drf_serializers.CharField(source='recordObj.serviceObj')
     category = drf_serializers.CharField(source='recordObj.categoryObj')
-    arrivals_left = drf_serializers.IntegerField(source='recordObj.arrivals_left')
+    arrivals_left = drf_serializers.IntegerField(
+        source='recordObj.arrivals_left')
     paid = drf_serializers.BooleanField(source='recordObj.paid')
 
     class Meta:

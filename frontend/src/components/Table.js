@@ -1,42 +1,41 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
-import classNames from 'classnames';
+import classNames from "classnames";
 // @material-ui/core components
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 import TablePagination from "@material-ui/core/TablePagination";
 // @material ui icons
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import { lighten } from '@material-ui/core/styles/colorManipulator';
-
+import { lighten } from "@material-ui/core/styles/colorManipulator";
 
 function desc(a, b, orderBy) {
-  if(orderBy){
-    if (b[orderBy + 1]['data'] < a[orderBy + 1]['data']) {
+  if (orderBy) {
+    if (b[orderBy + 1]["data"] < a[orderBy + 1]["data"]) {
       return -1;
     }
-    if (b[orderBy + 1]['data'] > a[orderBy + 1]['data']) {
+    if (b[orderBy + 1]["data"] > a[orderBy + 1]["data"]) {
       return 1;
     }
     return 0;
   }
-};
+}
 
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -46,11 +45,13 @@ function stableSort(array, cmp) {
     return a[1] - b[1];
   });
   return stabilizedThis.map(el => el[0]);
-};
+}
 
 function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-};
+  return order === "desc"
+    ? (a, b) => desc(a, b, orderBy)
+    : (a, b) => -desc(a, b, orderBy);
+}
 
 const tableHeadStyles = () => ({
   smallCell: {
@@ -59,7 +60,7 @@ const tableHeadStyles = () => ({
   mediumCell: {
     width: "80px"
   }
-})
+});
 
 class EnhancedTableHead extends React.Component {
   createSortHandler = property => event => {
@@ -67,59 +68,59 @@ class EnhancedTableHead extends React.Component {
   };
 
   render() {
-    const { 
-      onSelectAllClick, 
-      order, 
-      orderBy, 
-      numSelected, 
-      rowCount, 
+    const {
+      onSelectAllClick,
+      order,
+      orderBy,
+      numSelected,
+      rowCount,
       tableHead,
       classes
     } = this.props;
-    
+
     return (
       <TableHead>
         <TableRow>
-          <TableCell 
+          <TableCell
             padding="checkbox"
-            align="center"  
+            align="center"
             className={classes.smallCell}
           >
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount && numSelected!==0}
+              checked={numSelected === rowCount && numSelected !== 0}
               onChange={onSelectAllClick}
             />
           </TableCell>
           {tableHead.map((prop, key) => {
-            let size
-            switch(prop.size){
-              case 'small':
-                size = classes.smallCell
-                break
-              case 'medium':
-                size = classes.mediumCell
-                break
+            let size;
+            switch (prop.size) {
+              case "small":
+                size = classes.smallCell;
+                break;
+              case "medium":
+                size = classes.mediumCell;
+                break;
               default:
-                break
+                break;
             }
-            return(
-            <TableCell
-              key={key}
-              align={prop.align}
-              padding={prop.padding}
-              sortDirection={orderBy === key ? order : false}
-              className={size}
-            >
-              <TableSortLabel
-                active={orderBy === key}
-                direction={order}
-                onClick={this.createSortHandler(key)}
+            return (
+              <TableCell
+                key={key}
+                align={prop.align}
+                padding={prop.padding}
+                sortDirection={orderBy === key ? order : false}
+                className={size}
               >
-                {prop.title}
-              </TableSortLabel>
-            </TableCell>
-            )
+                <TableSortLabel
+                  active={orderBy === key}
+                  direction={order}
+                  onClick={this.createSortHandler(key)}
+                >
+                  {prop.title}
+                </TableSortLabel>
+              </TableCell>
+            );
           })}
         </TableRow>
       </TableHead>
@@ -127,39 +128,39 @@ class EnhancedTableHead extends React.Component {
   }
 }
 
-EnhancedTableHead = withStyles(tableHeadStyles)(EnhancedTableHead)
+EnhancedTableHead = withStyles(tableHeadStyles)(EnhancedTableHead);
 
 const toolbarStyles = theme => ({
   root: {
-    paddingRight: theme.spacing.unit,
+    paddingRight: theme.spacing(1)
   },
   highlight:
-    theme.palette.type === 'light'
+    theme.palette.type === "light"
       ? {
           color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85)
         }
       : {
           color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
+          backgroundColor: theme.palette.secondary.dark
         },
   spacer: {
-    flex: '1 1 100%',
+    flex: "1 1 100%"
   },
   actions: {
-    display: 'flex',
-    color: theme.palette.text.secondary,
+    display: "flex",
+    color: theme.palette.text.secondary
   },
   title: {
-    flex: '0 0 auto',
-  },
+    flex: "0 0 auto"
+  }
 });
 
 let EnhancedTableToolbar = props => {
-  const { 
-    numSelected, 
-    remove, 
-    selected, 
+  const {
+    numSelected,
+    remove,
+    selected,
     classes,
     name,
     label,
@@ -167,12 +168,12 @@ let EnhancedTableToolbar = props => {
     filterBy,
     handleInput,
     handleFilterSelect
-    } = props;
+  } = props;
 
   return (
     <Toolbar
       className={classNames(classes.root, {
-        [classes.highlight]: numSelected > 0,
+        [classes.highlight]: numSelected > 0
       })}
     >
       <div className={classes.title}>
@@ -203,10 +204,7 @@ let EnhancedTableToolbar = props => {
             />
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="age-simple">Age</InputLabel>
-                <Select
-                  value={filterBy}
-                  onChange={handleFilterSelect}
-                >
+              <Select value={filterBy} onChange={handleFilterSelect}>
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
@@ -226,51 +224,51 @@ EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const style = () => ({
   root: {
-    overflowX: "auto",
+    overflowX: "auto"
   },
   table: {
-    tableLayout: "fixed",
+    tableLayout: "fixed"
   }
 });
 
 class CustomTable extends React.Component {
   state = {
-    order: 'desc',
+    order: "desc",
     orderBy: 0,
-    filter: '',
+    filter: "",
     filterBy: 0,
     selected: [],
     page: 0,
-    rowsPerPage: 5,
+    rowsPerPage: 5
   };
 
-  componentDidUpdate(prevProps){
-    if(prevProps.tableData.length !== this.props.tableData.length){
+  componentDidUpdate(prevProps) {
+    if (prevProps.tableData.length !== this.props.tableData.length) {
       this.setState({
         ...this.state,
         selected: []
-      })
+      });
     }
-  };
-
-  handleInput = (e) => {
-    this.setState({
-      'filter': e.target.value
-    })
-  };
-
-  handleFilterSelect = (e) => {
-    this.setState({
-      'filterBy': e.target.name
-    })
   }
+
+  handleInput = e => {
+    this.setState({
+      filter: e.target.value
+    });
+  };
+
+  handleFilterSelect = e => {
+    this.setState({
+      filterBy: e.target.name
+    });
+  };
 
   handleRequestSort = (event, property) => {
     const orderBy = property;
-    let order = 'desc';
+    let order = "desc";
 
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc';
+    if (this.state.orderBy === property && this.state.order === "desc") {
+      order = "asc";
     }
 
     this.setState({ order, orderBy });
@@ -278,9 +276,9 @@ class CustomTable extends React.Component {
 
   handleSelectAllClick = event => {
     if (event.currentTarget.checked) {
-      this.setState({ 
+      this.setState({
         ...this.state,
-        selected: this.props.tableData.map((n) => n[0].identifier) 
+        selected: this.props.tableData.map(n => n[0].identifier)
       });
       return;
     }
@@ -301,10 +299,10 @@ class CustomTable extends React.Component {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
-    
+
     this.setState({ selected: newSelected });
   };
 
@@ -318,32 +316,30 @@ class CustomTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  render(){
-
-    const { 
-      classes, 
-      tableHead, 
-      tableData,
-      remove
-    } = this.props;
-    const { 
-      order, 
-      orderBy, 
-      selected, 
-      rowsPerPage, 
-      page 
+  render() {
+    const { classes, tableHead, tableData, remove } = this.props;
+    const {
+      order,
+      orderBy,
+      selected,
+      rowsPerPage,
+      page,
+      filterBy
     } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
-    
+    const emptyRows =
+      rowsPerPage -
+      Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
+
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar 
-          numSelected={selected.length} 
-          remove={remove} 
+        <EnhancedTableToolbar
+          filterBy={filterBy}
+          numSelected={selected.length}
+          remove={remove}
           selected={selected}
           handleInput={this.handleInput}
           handleFilterSelect={this.handleFilterSelect}
-        /> 
+        />
         <Table className={classes.table}>
           {tableHead !== undefined ? (
             <EnhancedTableHead
@@ -358,42 +354,44 @@ class CustomTable extends React.Component {
           ) : null}
           <TableBody>
             {stableSort(tableData, getSorting(order, orderBy))
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((props, key) => {
-              const isSelected = this.isSelected(props[0]['identifier']);
-              return (
-                <TableRow 
-                  selected={isSelected}
-                  aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={key}
-                >
-                  <TableCell 
-                    padding="checkbox"
-                    align="center"
-                    style={{width: "40px"}}
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((props, key) => {
+                const isSelected = this.isSelected(props[0]["identifier"]);
+                return (
+                  <TableRow
+                    selected={isSelected}
+                    aria-checked={isSelected}
+                    tabIndex={-1}
+                    key={key}
                   >
-                    <Checkbox
-                      checked={isSelected}
-                      onClick={e => this.handleClick(e, props[0]['identifier'])}
-                  />
-                  </TableCell>
-                  {props.map((prop, key) => {
-                    if(prop['identifier']===undefined){
-                      return (
-                        <TableCell 
-                        key={key} 
-                        padding={prop.padding}
-                        align={prop.align}
-                        >
-                          {prop.data}
-                        </TableCell>
-                      );
-                    }
-                  })}
-                </TableRow>
-              );
-            })}
+                    <TableCell
+                      padding="checkbox"
+                      align="center"
+                      style={{ width: "40px" }}
+                    >
+                      <Checkbox
+                        checked={isSelected}
+                        onClick={e =>
+                          this.handleClick(e, props[0]["identifier"])
+                        }
+                      />
+                    </TableCell>
+                    {props.map((prop, key) => {
+                      if (prop["identifier"] === undefined) {
+                        return (
+                          <TableCell
+                            key={key}
+                            padding={prop.padding}
+                            align={prop.align}
+                          >
+                            {prop.data}
+                          </TableCell>
+                        );
+                      }
+                    })}
+                  </TableRow>
+                );
+              })}
             {emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={6} />
@@ -406,13 +404,13 @@ class CustomTable extends React.Component {
           component="div"
           count={tableData.length}
           rowsPerPage={rowsPerPage}
-          labelRowsPerPage={'Broj redova po stranici'}
+          labelRowsPerPage={"Broj redova po stranici"}
           page={page}
           backIconButtonProps={{
-            'aria-label': 'Previous Page',
+            "aria-label": "Previous Page"
           }}
           nextIconButtonProps={{
-            'aria-label': 'Next Page',
+            "aria-label": "Next Page"
           }}
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}

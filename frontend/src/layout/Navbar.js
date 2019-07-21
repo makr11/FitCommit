@@ -1,48 +1,79 @@
-import React from 'react';
+import React from "react";
 // prop types check
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 // material ui core
-import { withStyles } from '@material-ui/core/styles';
-// jss styles
-import { navbar } from './appStyle'
+import { withStyles } from "@material-ui/core/styles";
 // material ui core components
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+// app components
+import UserAvatar from "../components/UserAvatar";
+// material ui icons
+import MenuIcon from "@material-ui/icons/Menu";
 // helper functions
-import { isEmpty } from '../assets/js/functions';
+import { isEmpty } from "../assets/js/functions";
+// app constants
+import { drawerWidth } from "../constants/appConstants";
+// routes
+import { sidebarRoutes, mainRoutes } from "../constants/routes";
 
-function Navbar(props){
-  function title(){
+export const styles = theme => ({
+  appBar: {
+    position: "fixed"
+  },
+  appBarToolbar: {
+    marginLeft: "0px",
+    alignItems: "center",
+    [theme.breakpoints.up("md")]: {
+      marginLeft: drawerWidth
+    }
+  },
+  menuButton: {
+    marginRight: 20,
+    [theme.breakpoints.up("md")]: {
+      display: "none"
+    }
+  },
+  avatar: {
+    margin: 10
+  },
+  spacer: {
+    width: "100%"
+  }
+});
+
+function Navbar(props) {
+  function title() {
     let name;
-    let pathname = props.location.pathname;
-    let user = props.user
-    props.routes.map((prop, key) => {
-      if (prop.path === pathname) {
+    const routes = sidebarRoutes.concat(mainRoutes);
+    let user = props.user;
+
+    routes.map((prop, key) => {
+      if (prop.path === window.location.pathname) {
         name = prop.sidebarName;
       }
       return null;
     });
-    if(pathname.startsWith("/profile/")){
-      if(!isEmpty(user)){
+    if (window.location.pathname.startsWith("/profile/")) {
+      if (!isEmpty(user)) {
         name = props.user.first_name + " " + props.user.last_name;
       }
     }
     return name;
   }
-  const { 
-    classes, 
-    handleDrawerToggle 
-  } = props;
-  
-  return(
+
+  const { classes, handleDrawerToggle, openUserMenu } = props;
+
+  return (
     <AppBar position="absolute" className={classes.appBar}>
       <Toolbar className={classes.appBarToolbar}>
-        <Typography variant="title" color="inherit" noWrap>
-          {title()}
-        </Typography>
+        <div>
+          <Typography variant="h5" color="inherit" noWrap>
+            {title()}
+          </Typography>
+        </div>
         <IconButton
           color="inherit"
           aria-label="Open drawer"
@@ -51,13 +82,15 @@ function Navbar(props){
         >
           <MenuIcon />
         </IconButton>
+        <div className={classes.spacer} />
+        <UserAvatar />
       </Toolbar>
     </AppBar>
-  )
+  );
 }
 
 Navbar.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
-export default withStyles(navbar)(Navbar);
+export default withStyles(styles)(Navbar);

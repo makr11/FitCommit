@@ -1,55 +1,55 @@
 export const user = {
-	addIcon: {
-		position: "fixed",
-		bottom: 20,
-		right: 10,
-	}
+  addIcon: {
+    position: "fixed",
+    bottom: 20,
+    right: 10
+  }
 };
 
 export const addRecord = theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   paper: {
-    padding: theme.spacing.unit,
-    textAlign: 'left',
+    padding: theme.spacing(1),
+    textAlign: "left",
     color: theme.palette.text.secondary,
     height: "115px",
     minWidth: "100px",
     overflowY: "auto"
   },
   textField: {
-		marginLeft: "1.5%",
-		marginRight: "1.5%",
-		width: "22%",
-    minWidth: 100,
+    marginLeft: "1.5%",
+    marginRight: "1.5%",
+    width: "22%",
+    minWidth: 100
   },
   form: {
-    flexDirection: 'row',
+    flexDirection: "row"
   }
 });
 
-export const editRecord = ({
+export const editRecord = {
   textField: {
     margin: "1.5%",
-    width: 200,
-  },
-});
+    width: 200
+  }
+};
 
 export const recordsTable = () => ({
   tableWrapper: {
     overflowX: "auto",
     marginTop: "20px"
-  },
+  }
 });
 
-export const titles = (theme) => ({
+export const titles = theme => ({
   headingContainer: {
     backgroundColor: "#3f51b5",
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3)
   },
   heading: {
-    marginLeft: theme.spacing.unit * 3,
+    marginLeft: theme.spacing(3),
     color: "#ffff"
-  },
-})
+  }
+});
