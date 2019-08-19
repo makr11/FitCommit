@@ -2,7 +2,7 @@ import React from "react";
 // react router
 import { Link } from "react-router-dom";
 // material ui core
-import { withStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 // styles
 import { usersTable } from "./usersStyle";
 // material ui core components
@@ -12,30 +12,50 @@ import IconButton from "@material-ui/core/IconButton";
 // material ui icons
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-const ProfileLink = props => {
+interface ProfileLinkProps {
+  id: number;
+  selectUser(): object;
+}
+
+const ProfileLink: React.SFC<ProfileLinkProps> = props => {
   const { id, selectUser } = props;
   return (
     <Link to={"/profile/" + id}>
-      <IconButton id={id} onClick={selectUser}>
+      <IconButton id={id.toString()} onClick={selectUser}>
         <AccountCircleIcon />
       </IconButton>
     </Link>
   );
 };
 
-function UsersTable(props) {
+interface UsersTableProps {
+  classes: any;
+  users: Array<any>;
+  selectUser(): object;
+  removeUser(): void;
+}
+
+interface User {
+  id: number;
+  IDUser: number;
+  first_name: string;
+  last_name: string;
+  debt: number;
+}
+
+function UsersTable(props: UsersTableProps) {
   const { classes, users, selectUser, removeUser } = props;
 
-  let filterable = {
+  let filterable: object = {
     ID: "IDUser",
     Ime: "last_name",
     Prezime: "first_name",
     Dug: "debt"
   };
 
-  let data = [];
+  let data: object[] = [];
   if (users) {
-    users.forEach(user => {
+    users.forEach((user: User) => {
       data.push([
         { identifier: user.id },
         {

@@ -3,6 +3,7 @@ import { persistConfig } from "../../index";
 import {
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAILED,
+  AUTHENTICATION_ERROR,
   LOGOUT_USER
 } from "../../constants/reduxConstants";
 
@@ -19,13 +20,19 @@ export const authenticate = lead => dispatch => {
   };
 
   fetch(authentication, conf)
-    .then(response => response.json())
+    .then(response => {
+      if (response.status == 401) {
+        dispatch({ type: AUTHENTICATION_FAILED });
+      } else {
+        return response.json();
+      }
+    })
     .then(data => {
       localStorage.setItem("access_token", data["access"]);
       localStorage.setItem("refresh_token", data["refresh"]);
       dispatch({ type: AUTHENTICATION_SUCCESS, payload: data });
     })
-    .catch(error => dispatch({ type: AUTHENTICATION_FAILED, payload: error }));
+    .catch(error => dispatch({ type: AUTHENTICATION_ERROR, payload: error }));
 };
 
 export const logout = () => dispatch => {

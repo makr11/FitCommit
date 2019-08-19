@@ -1,4 +1,4 @@
-backend/backend/.vscode/*
+backend/.idea/*
 backend/include/*
 backend/lib/*
 backend/bin/*
