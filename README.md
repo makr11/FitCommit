@@ -1,3 +1,3 @@
-# spartacus_django_react
+# Fit Commit
 
 Fitness Management Web Application
